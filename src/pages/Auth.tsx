@@ -45,7 +45,6 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      console.log("Attempting to sign in with email:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -56,23 +55,11 @@ const Auth = () => {
         throw error;
       }
       
-      // Check if we have a successful login with user data
       if (data.user) {
         toast.success("Succesvol ingelogd");
-        console.log("Login successful for user email:", data.user.email);
       }
-    } catch (error: any) {
-      console.error("Auth error:", error);
-      
-      // Provide user-friendly error messages
-      let errorMessage = error.message;
-      if (error.message.includes("Invalid login credentials")) {
-        errorMessage = "Ongeldige inloggegevens. Controleer uw e-mail en wachtwoord.";
-      } else if (error.message.includes("Email not confirmed")) {
-        errorMessage = "E-mail niet bevestigd. Controleer uw inbox voor een bevestigingslink.";
-      }
-      
-      toast.error(errorMessage || "Fout bij inloggen");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Fout bij inloggen");
     } finally {
       setLoading(false);
     }
@@ -107,6 +94,9 @@ const Auth = () => {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Bezig..." : "Inloggen"}
             </Button>
+            <p className="text-center text-sm text-muted-foreground">
+              Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.
+            </p>
           </form>
         </CardContent>
       </Card>
