@@ -103,7 +103,8 @@ export default {
 				'fade-in': 'fade-in 0.3s ease-out'
 			},
 			fontFamily: {
-				sans: ['Inter', 'sans-serif'],
+				sans: ['DM Sans', 'sans-serif'],
+				display: ['Space Grotesk', 'sans-serif'],
 				playfair: ['Playfair Display', 'serif'], // Modern font voor Home
 			}
 		}

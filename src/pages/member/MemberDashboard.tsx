@@ -29,15 +29,16 @@ const MemberDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="dashboard-shell flex min-h-screen flex-col">
       <Header />
       <div className="flex flex-1">
         <CollapsibleSidebar />
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <div className="flex flex-col gap-6">
+        <main className="flex-1 overflow-auto p-4 md:p-8">
+          <div className="mx-auto flex max-w-[1500px] flex-col gap-8">
             <div className="space-y-1.5">
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Member Dashboard</h1>
-              <p className="text-muted-foreground">
+              <div className="eyebrow">Invest Bot IQ</div>
+              <h1 className="display-font pt-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Member Dashboard</h1>
+              <p className="text-slate-500">
                 {getFirstName() ? `Welkom ${getFirstName()} bij uw Investbotiq dashboard` : "Welkom bij uw Investbotiq dashboard"}
               </p>
             </div>

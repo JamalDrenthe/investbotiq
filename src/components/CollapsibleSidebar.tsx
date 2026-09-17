@@ -59,7 +59,7 @@ const CollapsibleSidebar = () => {
     <div className="hidden md:block">
       <div 
         className={cn(
-          "fixed z-20 left-0 top-16 h-[calc(100vh-4rem)] bg-background transition-all duration-300 border-r",
+          "fixed z-20 left-0 top-20 h-[calc(100vh-5rem)] bg-[#11152c] text-white transition-all duration-300 border-r border-slate-700/40",
           expanded ? "w-64" : "w-16"
         )}
       >
@@ -74,11 +74,11 @@ const CollapsibleSidebar = () => {
                         to={link.to}
                         className={({ isActive }) =>
                           cn(
-                            "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors",
+                            "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors",
                             !expanded && "justify-center px-2",
                             isActive
-                              ? "bg-accent text-primary font-medium"
-                              : "text-muted-foreground hover:text-primary"
+                              ? "bg-cyan-400/15 font-semibold text-cyan-200"
+                              : "text-slate-400 hover:bg-white/10 hover:text-white"
                           )
                         }
                       >
@@ -87,7 +87,7 @@ const CollapsibleSidebar = () => {
                       </NavLink>
                     </TooltipTrigger>
                     {!expanded && (
-                      <TooltipContent side="right" className="bg-background border">
+                      <TooltipContent side="right" className="border-slate-700 bg-[#11152c] text-white">
                         {link.label}
                       </TooltipContent>
                     )}
@@ -124,11 +124,11 @@ const CollapsibleSidebar = () => {
             </Tooltip>
 
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
               onClick={() => setExpanded(prev => !prev)}
               className={cn(
-                "w-full flex items-center justify-center transition-transform",
+                "w-full flex items-center justify-center rounded-xl text-slate-300 transition-transform hover:bg-white/10 hover:text-white",
                 !expanded && "rotate-180"
               )}
             >

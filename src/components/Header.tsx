@@ -70,14 +70,14 @@ const Header = () => {
   const unreadNotificationsCount = 3;
 
   return (
-    <header className="bg-white border-b sticky top-0 z-40">
-      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+      <div className="flex h-20 items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-4">
           {user && (
             <Button 
               variant="ghost" 
               size="icon" 
-              className="md:hidden"
+              className="rounded-xl md:hidden"
               onClick={toggleMobileMenu}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
             >
@@ -91,7 +91,7 @@ const Header = () => {
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="hidden md:flex">
-                <Button variant="ghost" size="icon" className="relative">
+                <Button variant="ghost" size="icon" className="relative rounded-xl">
                   <Bell className="h-5 w-5" />
                   {unreadNotificationsCount > 0 && (
                     <Badge 
@@ -148,9 +148,9 @@ const Header = () => {
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="hidden md:flex">
-                <Button variant="ghost" size="sm" className="rounded-full h-9 w-9 p-0">
+                <Button variant="ghost" size="sm" className="h-10 w-10 rounded-2xl p-0">
                   <Avatar className="h-9 w-9">
-                    <AvatarFallback className="bg-primary/10 text-primary">
+                    <AvatarFallback className="bg-indigo-100 font-bold text-indigo-700">
                       {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>

@@ -17,10 +17,7 @@ export default function Home() {
   };
 
   return (
-    <motion.div
-      style={{ backgroundPositionY: yBG }}
-      className="bg-gradient-to-br from-white via-[#eef2ff] to-indigo-100 min-h-screen w-full relative overflow-x-hidden"
-    >
+    <motion.div style={{ backgroundPositionY: yBG }} className="min-h-screen w-full overflow-x-hidden bg-[#f7f8fc]">
       <PublicHeader />
       <main className="flex flex-col w-full relative z-10">
         <HeroSection onScrollToInfo={handleScroll} />
@@ -30,7 +27,7 @@ export default function Home() {
         </div>
       </main>
       {/* FOOTER */}
-      <footer className="py-8 mt-20 bg-[#1A1F2C] text-center text-white font-medium border-t border-indigo-900 shadow-inner">
+      <footer className="mt-20 border-t border-slate-200 bg-[#11152c] py-12 text-center font-medium text-white">
         <div className="flex flex-wrap items-center justify-center gap-6">
           <a href="#" className="underline hover:text-pink-200 transition">Algemene Voorwaarden</a>
           <a href="#" className="underline hover:text-pink-200 transition">Privacybeleid</a>
