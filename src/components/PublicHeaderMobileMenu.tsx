@@ -134,13 +134,13 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                   >
                     Aanmelden
                   </a>
-                  <a
-                    href="https://loginvestbotiq.netlify.app/"
+                  <Link
+                    to="/auth"
                     className="block w-full py-2 px-3 rounded bg-gray-100 text-indigo-700 font-semibold text-center hover:bg-indigo-200 transition"
                     onClick={() => setMenuOpen(false)}
                   >
                     Log-in
-                  </a>
+                  </Link>
                 </>
               )}
               {isMember && (

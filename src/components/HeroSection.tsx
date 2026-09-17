@@ -60,7 +60,7 @@ const HeroSection: React.FC<Props> = ({
         <div className="flex flex-col md:flex-row items-center gap-5 mt-2 mb-7 w-full md:w-auto">
           <FadeIn delay={0.22}>
             <Button asChild className="w-72 max-w-full md:w-56 text-lg py-6 px-6 font-semibold shadow-lg bg-indigo-500 hover:bg-indigo-600/90 focus:ring-4 focus:ring-indigo-300 transition-all duration-300 rounded-xl">
-              <a href="https://loginvestbotiq.netlify.app" target="_self">🔵 Inloggen</a>
+              <Link to="/auth">🔵 Inloggen</Link>
             </Button>
           </FadeIn>
           <FadeIn delay={0.32}>
