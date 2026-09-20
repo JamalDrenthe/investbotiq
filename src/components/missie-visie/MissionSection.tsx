@@ -38,7 +38,7 @@ export default function MissionSection() {
           duration: 0.7
         }} className="flex-1 flex justify-center">
             <div className="w-72 h-72 bg-gradient-to-br from-indigo-300 via-purple-200 to-blue-300 rounded-2xl shadow-lg flex items-center justify-center p-8">
-              <img alt="Investbotiq Mission" className="max-h-full" src="/lovable-uploads/13e43426-68a4-4317-84fe-10e8ba16ec42.png" />
+              <img alt="Investbotiq Mission" className="max-h-full" src="/brand/investbotiq-icon.png" />
             </div>
           </motion.div>
         </div>

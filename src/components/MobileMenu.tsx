@@ -103,7 +103,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen, onClose }) =
                   "flex items-center px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
                   location.pathname === item.href
                     ? "bg-primary/10 text-primary"
-                    : "text-gray-700 hover:bg-gray-100"
+                    : "text-ink-muted hover:bg-white/5 hover:text-ink"
                 )}
                 onClick={() => {
                   console.log(`Clicked menu item: ${item.label}`); 

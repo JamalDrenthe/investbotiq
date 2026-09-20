@@ -1,8 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { LumenCtaLink } from "@/components/three/LumenCta";
 
 export default function SecurityCTA() {
   return (
@@ -19,9 +18,7 @@ export default function SecurityCTA() {
         We behandelen je cashflow alsof het onze eigen is.
       </p>
       
-      <Button asChild size="lg" className="text-lg py-6 px-8 font-semibold">
-        <Link to="/auth">Start veilig met Investbotiq</Link>
-      </Button>
+      <LumenCtaLink to="/auth" dot>Start veilig met Investbotiq</LumenCtaLink>
     </motion.div>
   );
 }

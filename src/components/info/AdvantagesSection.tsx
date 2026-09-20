@@ -1,36 +1,38 @@
-
 import React from "react";
-import { motion } from "framer-motion";
+import { Check } from "lucide-react";
+import { FadeIn } from "./FadeInAnimation";
 
-function FadeIn({ children, className = "", delay = 0 }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.7 }}
-      transition={{ duration: 0.88, delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
+const ADVANTAGES = [
+  "Geen minimale investering vereist",
+  "Transparantie en maandelijkse rapportage",
+  "Non-technical: merendeels passief",
+  "Passief inkomen",
+  "Maandelijkse groei",
+];
 
 export default function AdvantagesSection() {
   return (
-    <>
-      <FadeIn delay={0.54}>
-        <h3 className="text-2xl font-semibold mb-4 text-indigo-800">Voordelen:</h3>
-      </FadeIn>
-      <FadeIn delay={0.60}>
-        <ul className="mb-8 list-none space-y-2 text-gray-700 pl-2">
-          <li>✔️ Geen minimale investering vereist</li>
-          <li>✔️ Transparantie en maandelijkse rapportage</li>
-          <li>✔️ Non-technical: merendeels passief</li>
-          <li>✔️ Passief inkomen</li>
-          <li>✔️ Maandelijkse groei</li>
-        </ul>
-      </FadeIn>
-    </>
+    <div className="mx-auto w-full max-w-content px-6 py-24 md:py-32 lg:px-10">
+      <div className="grid gap-10 lg:grid-cols-12">
+        <FadeIn delay={0.05} className="lg:col-span-4">
+          <div className="eyebrow eyebrow--paper mb-6">Voordelen</div>
+          <h3 className="font-display text-display-md font-semibold tracking-[-0.03em] text-graphite">Voordelen:</h3>
+        </FadeIn>
+        <div className="lg:col-span-8">
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {ADVANTAGES.map((item, i) => (
+              <FadeIn key={item} delay={0.1 + i * 0.05} className={i === ADVANTAGES.length - 1 ? "sm:col-span-2" : ""}>
+                <li className="card-paper flex h-full items-center gap-4 p-5 transition-shadow duration-300 hover:shadow-level-2">
+                  <span className="icon-tile icon-tile--paper h-9 w-9 shrink-0 rounded-full">
+                    <Check className="h-4 w-4" />
+                  </span>
+                  <span className="text-lg font-medium text-graphite">{item}</span>
+                </li>
+              </FadeIn>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
   );
 }

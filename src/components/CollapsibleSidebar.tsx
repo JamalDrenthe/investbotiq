@@ -59,7 +59,7 @@ const CollapsibleSidebar = () => {
     <div className="hidden md:block">
       <div 
         className={cn(
-          "fixed z-20 left-0 top-20 h-[calc(100vh-5rem)] bg-[#11152c] text-white transition-all duration-300 border-r border-slate-700/40",
+          "fixed z-20 left-0 top-20 h-[calc(100vh-5rem)] bg-canvas-elevated text-ink transition-all duration-300 border-r border-canvas-hairline",
           expanded ? "w-64" : "w-16"
         )}
       >
@@ -77,8 +77,8 @@ const CollapsibleSidebar = () => {
                             "flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-colors",
                             !expanded && "justify-center px-2",
                             isActive
-                              ? "bg-cyan-400/15 font-semibold text-cyan-200"
-                              : "text-slate-400 hover:bg-white/10 hover:text-white"
+                              ? "bg-indigo/15 font-semibold text-ink shadow-[inset_2px_0_0_#635bff]"
+                              : "text-ink-muted hover:bg-white/5 hover:text-ink"
                           )
                         }
                       >
@@ -87,7 +87,7 @@ const CollapsibleSidebar = () => {
                       </NavLink>
                     </TooltipTrigger>
                     {!expanded && (
-                      <TooltipContent side="right" className="border-slate-700 bg-[#11152c] text-white">
+                      <TooltipContent side="right">
                         {link.label}
                       </TooltipContent>
                     )}
@@ -97,18 +97,18 @@ const CollapsibleSidebar = () => {
             </ul>
           </nav>
 
-          <div className="border-t pt-4 px-2 pb-4">
+          <div className="border-t border-canvas-hairline pt-4 px-2 pb-4">
             <Tooltip delayDuration={300}>
               <TooltipTrigger asChild>
                 <NavLink
                   to={profileLink}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 px-3 py-2 mb-3 rounded-md text-sm transition-colors",
+                      "flex items-center gap-3 px-3 py-3 mb-3 rounded-xl text-sm transition-colors",
                       !expanded && "justify-center px-2",
                       isActive
-                        ? "bg-accent text-primary font-medium"
-                        : "text-muted-foreground hover:text-primary"
+                        ? "bg-indigo/15 text-ink font-medium"
+                        : "text-ink-muted hover:bg-white/5 hover:text-ink"
                     )
                   }
                 >
@@ -117,7 +117,7 @@ const CollapsibleSidebar = () => {
                 </NavLink>
               </TooltipTrigger>
               {!expanded && (
-                <TooltipContent side="right" className="bg-background border">
+                <TooltipContent side="right">
                   Profiel
                 </TooltipContent>
               )}
@@ -128,7 +128,7 @@ const CollapsibleSidebar = () => {
               size="sm"
               onClick={() => setExpanded(prev => !prev)}
               className={cn(
-                "w-full flex items-center justify-center rounded-xl text-slate-300 transition-transform hover:bg-white/10 hover:text-white",
+                "w-full flex items-center justify-center rounded-xl text-ink-muted transition-transform hover:bg-white/5 hover:text-ink",
                 !expanded && "rotate-180"
               )}
             >

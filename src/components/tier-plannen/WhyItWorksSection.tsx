@@ -21,7 +21,7 @@ export default function WhyItWorksSection() {
             <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-4">
               <Bot className="w-6 h-6 text-indigo-600" />
             </div>
-            <h3 className="text-xl font-bold mb-3 text-justify">Automatisering via IQ Bot</h3>
+            <h3 className="text-xl font-bold mb-3">Automatisering via IQ Bot</h3>
             <p className="text-gray-700 text-left">De IQ Bot voert het schema foutloos uit en neemt alle optimalisatiebeslissingen zonder enige vorm van menselijke tussenkomst.</p>
           </FadeIn>
           
@@ -49,7 +49,7 @@ De groei is voorspelbaar, meetbaar, zichtbaar en controleerbaar.</p>
               Kaspositie, Cashflow, Flowlutas en TimeGap-leningen per maand (TIER 2-6)
             </h3>
             <div className="h-[600px] w-full">
-              <img src="/lovable-uploads/315e9350-1215-4c77-af5e-ff7f4e676b66.png" alt="Grafiek van Kaspositie, Cashflow, Flowlutas en TimeGap-leningen" className="w-full h-full object-contain" />
+              <img src="/brand/growth-chart.png" alt="Grafiek van Kaspositie, Cashflow, Flowlutas en TimeGap-leningen" className="w-full h-full object-contain" />
             </div>
           </div>
         </FadeIn>

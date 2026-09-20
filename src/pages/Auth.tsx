@@ -1,13 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
-import { ArrowRight, LockKeyhole, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
+import { ThreeScene } from "@/components/three/ThreeScene";
+import { LumenCtaButton } from "@/components/three/LumenCta";
+import { BRAND_ICON, BRAND_WORDMARK } from "@/components/publicNav";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -16,28 +16,24 @@ const Auth = () => {
   const navigate = useNavigate();
   const { user, userRole } = useAuth();
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user && userRole) {
-      console.log("Auth page - Already logged in as:", userRole, "with email:", user.email);
-      
-      // Add a slight delay to ensure role is properly set
-      setTimeout(() => {
-        if (userRole === 'admin') {
-          navigate('/admin', { replace: true });
-        } else if (userRole === 'member') {
-          navigate('/member/dashboard', { replace: true });
+      const timer = setTimeout(() => {
+        if (userRole === "admin") {
+          navigate("/admin", { replace: true });
+        } else if (userRole === "member") {
+          navigate("/member/dashboard", { replace: true });
         } else {
-          // Default to home page for guests or unknown roles
-          navigate('/', { replace: true });
+          navigate("/", { replace: true });
         }
       }, 100);
+      return () => clearTimeout(timer);
     }
   }, [user, userRole, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email || !password) {
       toast.error("Vul alstublieft zowel e-mail als wachtwoord in");
       return;
@@ -46,19 +42,9 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      
-      if (error) {
-        console.error("Login error:", error);
-        throw error;
-      }
-      
-      if (data.user) {
-        toast.success("Succesvol ingelogd");
-      }
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      if (data.user) toast.success("Succesvol ingelogd");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Fout bij inloggen");
     } finally {
@@ -67,57 +53,115 @@ const Auth = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#10142a] p-4">
-      <div className="absolute -left-24 top-0 h-80 w-80 rounded-full bg-indigo-500/30 blur-3xl" />
-      <div className="absolute -bottom-32 right-0 h-96 w-96 rounded-full bg-cyan-400/20 blur-3xl" />
-      <div className="relative grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.08] shadow-2xl backdrop-blur-2xl md:grid-cols-[1.05fr_0.95fr]">
-        <div className="hidden flex-col justify-between p-10 text-white md:flex lg:p-14">
-          <div>
-            <Link to="/" className="inline-flex items-center gap-3">
-              <img src="/lovable-uploads/f072ab55-6051-4ac3-a481-2047383cf59f.png" alt="Invest Bot IQ Icon" className="h-11 w-auto" />
-              <span className="display-font text-xl font-bold">Invest Bot IQ</span>
-            </Link>
-            <div className="mt-24 max-w-sm">
-              <span className="eyebrow border-white/20 bg-white/10 text-cyan-200">Invest Bot IQ</span>
-              <h1 className="display-font mt-6 text-4xl font-bold leading-tight lg:text-5xl">Laat de IQ Bot automatisch jouw cashflow opbouwen</h1>
-              <p className="mt-5 text-base leading-7 text-slate-300">Geen kennis vereist, geen zorgen. Gewoon laten groeien.</p>
-            </div>
+    <div className="band-canvas relative grid min-h-screen w-full overflow-hidden lg:grid-cols-[1.1fr_0.9fr]">
+      {/* Storytelling side — threeui OrbitalSphereBackground as the security/network metaphor */}
+      <div className="relative isolate hidden min-h-screen overflow-hidden lg:block">
+        <ThreeScene
+          kind="orbital-sphere"
+          className="!absolute !inset-0"
+          speed={0.8}
+          particleSize={0.016}
+          particleOpacity={0.85}
+          orbitOpacity={0.3}
+          haloOpacity={0.22}
+          hue={-16}
+          scale={1.05}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(5,7,15,0.7) 0%, rgba(5,7,15,0.1) 35%, rgba(5,7,15,0.15) 65%, rgba(5,7,15,0.95) 100%)",
+          }}
+        />
+        <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
+          <Link to="/" className="inline-flex items-center gap-3" aria-label="Invest Bot IQ Homepage">
+            <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-10 w-auto" />
+            <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert h-5 w-auto" />
+          </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-lg"
+          >
+            <div className="eyebrow mb-6">Invest Bot IQ</div>
+            <h1 className="font-display text-display-md font-semibold tracking-[-0.03em] text-ink xl:text-display-lg">
+              Laat de <span className="text-gradient-light">IQ Bot</span> automatisch jouw cashflow opbouwen
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-ink-muted">Geen kennis vereist, geen zorgen. Gewoon laten groeien.</p>
+          </motion.div>
+          <div className="flex items-center gap-3 text-sm text-ink-faint">
+            <span className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_12px_rgba(34,211,238,0.9)]" />
+            Tijdelijke lokale login
           </div>
-          <div className="flex items-center gap-3 text-sm text-slate-400"><Sparkles className="h-4 w-4 text-cyan-300" /> Tijdelijke lokale login</div>
         </div>
-        <Card className="rounded-none border-0 bg-white p-7 shadow-none sm:p-10 lg:p-14">
-        <CardHeader className="p-0 pb-8">
-          <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600"><LockKeyhole className="h-5 w-5" /></div>
-          <CardTitle className="display-font text-3xl font-bold tracking-tight text-slate-900">Inloggen</CardTitle>
-          <p className="mt-2 text-sm text-slate-500">Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.</p>
-        </CardHeader>
-        <CardContent className="p-0">
-          <form onSubmit={handleLogin} className="space-y-4">
+      </div>
+
+      {/* Form side */}
+      <div className="relative flex min-h-screen items-center justify-center px-6 py-16 sm:px-10">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-40 top-1/3 h-[480px] w-[480px] rounded-full opacity-60 blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(99,91,255,0.35) 0%, rgba(5,7,15,0) 70%)" }}
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="card-glass card-glass--floating relative w-full max-w-md rounded-ds-xl p-8 sm:p-10"
+        >
+          <Link
+            to="/"
+            className="mb-8 inline-flex items-center gap-2 text-sm text-ink-muted transition-colors hover:text-ink lg:hidden"
+          >
+            <ArrowLeft className="h-4 w-4" /> Home
+          </Link>
+          <div className="icon-tile mb-7">
+            <LockKeyhole className="h-5 w-5" />
+          </div>
+          <h2 className="font-display text-heading font-semibold tracking-[-0.02em] text-ink">Inloggen</h2>
+          <p className="mt-3 text-sm leading-6 text-ink-muted">
+            Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.
+          </p>
+          <form onSubmit={handleLogin} className="mt-8 space-y-4">
             <div className="space-y-2">
-              <Input
+              <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-faint">
+                E-mail
+              </label>
+              <input
+                id="email"
                 type="email"
                 placeholder="E-mail"
+                className="input-canvas"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 required
               />
             </div>
             <div className="space-y-2">
-              <Input
+              <label htmlFor="password" className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-faint">
+                Wachtwoord
+              </label>
+              <input
+                id="password"
                 type="password"
                 placeholder="Wachtwoord"
+                className="input-canvas"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
                 required
               />
             </div>
-            <Button type="submit" className="h-12 w-full rounded-xl bg-[#635bff] font-bold shadow-lg shadow-indigo-500/20 hover:bg-indigo-600" disabled={loading}>
+            <LumenCtaButton type="submit" className="mt-2 w-full" disabled={loading} dot={!loading}>
               {loading ? "Bezig..." : "Inloggen"}
-              {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
-            </Button>
+              {!loading && <ArrowRight className="h-4 w-4" />}
+            </LumenCtaButton>
           </form>
-        </CardContent>
-      </Card>
+        </motion.div>
       </div>
     </div>
   );

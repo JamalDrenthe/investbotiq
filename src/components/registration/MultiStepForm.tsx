@@ -94,7 +94,7 @@ export const MultiStepForm = () => {
 
   return (
     <div className="space-y-8">
-      <Progress value={progress} className="w-full" />
+      <Progress value={progress} className="h-2 w-full bg-white/10" />
       
       <div className="space-y-6">
         {step === 1 && (

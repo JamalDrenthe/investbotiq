@@ -1,7 +1,6 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { LumenCtaLink } from "@/components/three/LumenCta";
 
 export default function CTASection() {
   return (
@@ -12,13 +11,8 @@ export default function CTASection() {
         </h2>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="text-lg py-6 px-8 font-semibold">
-            <Link to="/tier-plannen">🔵 Lees meer over onze Tier Strategie</Link>
-          </Button>
-          
-          <Button asChild variant="outline" size="lg" className="text-lg py-6 px-8 font-semibold border-indigo-300">
-            <Link to="/veiligheid">⚪ Bekijk onze Veiligheidsaanpak</Link>
-          </Button>
+          <LumenCtaLink to="/tier-plannen" dot>Lees meer over onze Tier Strategie</LumenCtaLink>
+          <LumenCtaLink to="/veiligheid" variant="paper">Bekijk onze Veiligheidsaanpak</LumenCtaLink>
         </div>
       </div>
     </section>

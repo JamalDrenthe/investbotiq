@@ -19,7 +19,7 @@ export default function NoExternalAccess() {
       
       <div>
         <h2 className="text-2xl md:text-3xl font-bold mb-4">Jouw data is nooit te koop</h2>
-        <p className="text-lg opacity-90 text-justify">
+        <p className="text-lg opacity-90">
           We delen niets met derde partijen. Alles blijft in het Investbotiq-ecosysteem. Geen externe brokers, geen API's naar andere platforms.
         </p>
       </div>

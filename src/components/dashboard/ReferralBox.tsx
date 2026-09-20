@@ -99,7 +99,7 @@ const ReferralBox = () => {
                 <Input 
                   value={referralLink} 
                   readOnly
-                  className="pr-10 truncate bg-white/50"
+                  className="pr-10 truncate"
                 />
                 {copied && (
                   <div className="absolute top-0 right-0 bottom-0 flex items-center pr-3 text-green-500">

@@ -37,7 +37,7 @@ export const FlowlutasChart = () => {
   });
 
   return (
-    <div className="h-[300px] w-full mt-4 bg-white p-4 rounded-lg shadow-sm">
+    <div className="h-[300px] w-full mt-4 card-glass p-4">
       {mounted && (
         <ResponsiveContainer width="100%" height="100%" debounce={50}>
           <LineChart data={flowlutasData || []}>

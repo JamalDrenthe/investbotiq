@@ -65,7 +65,8 @@ const ProgressTimeline: React.FC = () => {
           axisLine={false}
         />
         <Tooltip
-          formatter={(value) => [`€${value}`, ""]}
+          cursor={{ fill: "rgba(99, 91, 255, 0.08)" }}
+          formatter={(value, name) => [`€${value}`, name]}
           labelFormatter={(label) => `Maand: ${label}`}
         />
         <Bar
@@ -77,7 +78,8 @@ const ProgressTimeline: React.FC = () => {
         <Bar
           name="BEL-leningen"
           dataKey="afbouw"
-          fill="hsl(var(--muted))"
+          fill="#22d3ee"
+          fillOpacity={0.55}
           radius={[4, 4, 0, 0]}
         />
       </BarChart>

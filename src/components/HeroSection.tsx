@@ -1,107 +1,109 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ArrowDown, Play } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import OrbCanvas from "@/components/Shared/OrbCanvas";
-
-function OrbVisual() {
-  return (
-    <motion.div
-      initial={{ scale: 0.95, opacity: 0.62 }}
-      animate={{ scale: [0.95, 1.12, 0.96, 1], opacity: [0.62, 1, 0.67, 1] }}
-      transition={{ repeat: Infinity, repeatType: "reverse", duration: 3.2, ease: "easeInOut" }}
-      className="relative z-10 flex items-center justify-center"
-      style={{ minHeight: 120 }}
-    >
-      <OrbCanvas />
-    </motion.div>
-  );
-}
+import { ThreeScene } from "@/components/three/ThreeScene";
+import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
 
 type Props = {
   onScrollToInfo: () => void;
 };
 
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 28 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] as const },
+});
+
 const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
   const [showDemoModal, setShowDemoModal] = useState(false);
 
-  function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 42 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.7 }}
-        transition={{ duration: 0.95, delay }}
-        className={className}
-      >
-        {children}
-      </motion.div>
-    );
-  }
-
   return (
-    <section className="relative z-10 mx-auto flex min-h-[760px] w-full max-w-7xl flex-col justify-center gap-10 px-5 pb-20 pt-36 md:flex-row md:items-center md:gap-4 md:px-8">
-      <div className="flex flex-1 flex-col items-center justify-center md:items-start">
-        <FadeIn delay={0.05}>
-          <div className="eyebrow mb-6">
-            <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_12px_rgba(34,211,238,0.8)]" />
-            IQ Bot · The Next Gen AI Agent
-          </div>
-          <h1 className="display-font max-w-2xl text-center text-5xl font-bold leading-[1.02] tracking-[-0.05em] text-[#11152c] md:text-left lg:text-7xl">
-            Laat de <span className="text-indigo-500">IQ Bot</span> automatisch jouw cashflow opbouwen
-          </h1>
-        </FadeIn>
-        <FadeIn delay={0.15}>
-          <p className="mb-9 mt-6 max-w-xl text-center text-lg leading-8 text-slate-600 md:text-left">
-            Geen kennis vereist, geen zorgen. Gewoon laten groeien.
-          </p>
-        </FadeIn>
-        <div className="mb-7 mt-2 flex w-full flex-col items-center gap-3 sm:flex-row md:w-auto">
-          <FadeIn delay={0.22}>
-            <Button asChild className="h-14 w-72 max-w-full rounded-xl bg-[#635bff] px-6 text-base font-bold shadow-xl shadow-indigo-500/25 transition-all hover:-translate-y-1 hover:bg-indigo-600 focus:ring-4 focus:ring-indigo-300 md:w-48">
-              <Link to="/auth">🔵 Inloggen</Link>
-            </Button>
-          </FadeIn>
-          <FadeIn delay={0.32}>
-            <Button variant="outline" className="h-14 w-72 max-w-full rounded-xl border-slate-200 bg-white/80 px-6 text-base font-bold text-slate-700 shadow-lg shadow-slate-900/5 transition-all hover:-translate-y-1 hover:bg-white hover:text-indigo-700 md:w-56" onClick={onScrollToInfo}>
-              ⚪ Bekijk hoe het werkt
-            </Button>
-          </FadeIn>
-          <FadeIn delay={0.42}>
-            <Button variant="outline" className="h-14 w-72 max-w-full rounded-xl border-slate-200 bg-white/50 px-6 text-base font-bold text-indigo-600 shadow-lg shadow-slate-900/5 backdrop-blur-sm transition-all hover:-translate-y-1 hover:bg-white md:w-44" onClick={() => setShowDemoModal(true)}>
-              🎥 Bekijk demo
-            </Button>
-          </FadeIn>
-        </div>
-      </div>
+    <section className="band-canvas relative isolate min-h-[100svh] w-full overflow-hidden">
+      {/* threeui EnergyOrb — the IQ Bot as a living light source */}
+      <ThreeScene
+        kind="energy-orb"
+        hue={-18}
+        saturation={1.05}
+        glow={1.35}
+        smokeScale={1.1}
+        smokeStrength={1.1}
+        speed={0.85}
+        starDensity={1.2}
+        starSize={0.9}
+        brightness={1.05}
+        scale={1}
+        className="!absolute !inset-0"
+      />
+      {/* Vignette so copy stays legible over the brightest part of the orb */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(90deg, rgba(5,7,15,0.92) 0%, rgba(5,7,15,0.75) 38%, rgba(5,7,15,0.15) 70%, rgba(5,7,15,0.4) 100%), linear-gradient(180deg, rgba(5,7,15,0.4) 0%, rgba(5,7,15,0) 30%, rgba(5,7,15,0.9) 100%)",
+        }}
+      />
 
-      <div className="relative flex flex-1 flex-col items-center justify-center md:mt-10">
-        <FadeIn delay={0.23}>
-          <div className="relative flex h-[360px] w-full max-w-[470px] items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/70 bg-white/55 shadow-[0_30px_100px_rgba(77,68,180,0.18)] backdrop-blur-xl">
-            <div className="absolute inset-5 rounded-[2rem] border border-indigo-100/80 bg-gradient-to-br from-indigo-50/80 via-white/30 to-cyan-50/80" />
-            <div className="absolute left-8 top-8 rounded-2xl border border-white bg-white/80 px-4 py-3 shadow-lg">
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Cashflow</div>
-              <div className="mt-1 text-xl font-bold text-slate-900">+ €400</div>
+      <div className="relative z-10 mx-auto grid min-h-[100svh] w-full max-w-content grid-cols-1 items-center gap-12 px-6 pb-24 pt-32 lg:grid-cols-12 lg:px-10 lg:pb-28 lg:pt-36">
+        <div className="lg:col-span-7">
+          <motion.div {...fadeUp(0.05)} className="eyebrow mb-7">
+            IQ Bot · The Next Gen AI Agent
+          </motion.div>
+          <motion.h1
+            {...fadeUp(0.12)}
+            className="font-display text-[2.75rem] font-semibold leading-[1.02] tracking-[-0.035em] text-ink sm:text-display-lg lg:text-display-xl"
+          >
+            Laat de <span className="text-gradient-light">IQ Bot</span> automatisch jouw cashflow opbouwen
+          </motion.h1>
+          <motion.p {...fadeUp(0.22)} className="mt-7 max-w-[34rem] text-lg leading-8 text-ink-muted">
+            Geen kennis vereist, geen zorgen. Gewoon laten groeien.
+          </motion.p>
+          <motion.div {...fadeUp(0.32)} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <LumenCtaLink to="/auth" dot>
+              Inloggen
+            </LumenCtaLink>
+            <LumenCtaButton variant="ghost" onClick={onScrollToInfo}>
+              <ArrowDown className="h-4 w-4" />
+              Bekijk hoe het werkt
+            </LumenCtaButton>
+            <LumenCtaButton variant="ghost" onClick={() => setShowDemoModal(true)}>
+              <Play className="h-4 w-4" />
+              Bekijk demo
+            </LumenCtaButton>
+          </motion.div>
+        </div>
+
+        <div className="relative lg:col-span-5">
+          <motion.div
+            initial={{ opacity: 0, y: 32, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="card-glass card-glass--floating relative ml-auto w-full max-w-sm rounded-ds-xl p-6"
+          >
+            <div className="flex items-center justify-between">
+              <div className="eyebrow">Cashflow</div>
+              <span className="chip chip--mint">Actief</span>
             </div>
-            <div className="absolute bottom-8 right-8 rounded-2xl border border-white bg-[#11152c] px-4 py-3 text-white shadow-xl">
-              <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-300">IQ Bot</div>
-              <div className="mt-1 text-sm font-semibold">Actief</div>
+            <div className="tnum mt-5 font-display text-5xl font-semibold tracking-[-0.03em] text-ink">+ €400</div>
+            <div className="mt-2 text-sm text-ink-muted">Cashflow ontvangen</div>
+            <div className="mt-6 h-px w-full bg-canvas-hairline" />
+            <div className="mt-5 flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-mint shadow-[0_0_12px_rgba(52,211,153,0.9)]" />
+              <span className="text-sm font-medium text-ink">
+                IQ Bot <span className="text-ink-faint">· The Next Gen AI Agent</span>
+              </span>
             </div>
-            <OrbVisual />
-          </div>
-        </FadeIn>
-        <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-slate-500">
-          <span className="h-2 w-2 rounded-full bg-emerald-400" /> Automatisch in beweging
+          </motion.div>
         </div>
       </div>
 
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
-        <DialogContent className="w-[90vw] max-w-4xl">
+        <DialogContent className="w-[92vw] max-w-4xl border-canvas-hairline bg-canvas-elevated text-ink">
           <DialogHeader>
-            <DialogTitle>Bekijk hoe InvestbotIQ werkt</DialogTitle>
+            <DialogTitle className="font-display">Bekijk hoe InvestbotIQ werkt</DialogTitle>
           </DialogHeader>
-          <div className="aspect-video w-full rounded-xl bg-gray-100">
+          <div className="aspect-video w-full overflow-hidden rounded-ds-lg border border-canvas-hairline bg-canvas">
             <iframe
               width="100%"
               height="100%"
@@ -110,7 +112,7 @@ const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              style={{ borderRadius: "0.75rem", width: "100%", height: "100%" }}
+              style={{ width: "100%", height: "100%" }}
             />
           </div>
         </DialogContent>

@@ -45,7 +45,7 @@ const Sidebar = () => {
     <div className="relative hidden md:block">
       <aside
         className={cn(
-          'fixed left-0 top-20 z-30 flex h-[calc(100vh-5rem)] flex-col border-r border-slate-700/40 bg-[#11152c] text-white transition-all duration-300 lg:static lg:z-0',
+          'fixed left-0 top-20 z-30 flex h-[calc(100vh-5rem)] flex-col border-r border-canvas-hairline bg-canvas-elevated text-ink transition-all duration-300 lg:static lg:z-0',
           expanded ? 'w-64' : 'w-16'
         )}
       >
@@ -57,10 +57,10 @@ const Sidebar = () => {
                 to={link.to}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all hover:bg-white/10 hover:text-white',
+                    'flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all hover:bg-white/5 hover:text-ink',
                     isActive
-                      ? 'bg-cyan-400/15 font-semibold text-cyan-200'
-                      : 'text-slate-400'
+                      ? 'bg-indigo/15 font-semibold text-ink shadow-[inset_2px_0_0_#635bff]'
+                      : 'text-ink-muted'
                   )
                 }
               >
@@ -77,10 +77,10 @@ const Sidebar = () => {
               to={profileLink}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all hover:bg-white/10 hover:text-white',
+                  'flex items-center gap-3 rounded-xl px-3 py-3 text-sm transition-all hover:bg-white/5 hover:text-ink',
                   isActive
-                    ? 'bg-cyan-400/15 font-semibold text-cyan-200'
-                    : 'text-slate-400'
+                    ? 'bg-indigo/15 font-semibold text-ink'
+                    : 'text-ink-muted'
                 )
               }
             >

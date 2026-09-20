@@ -1,24 +1,16 @@
 import React from "react";
 import InfoPageLayout from "@/components/layouts/InfoPageLayout";
-import SecurityHero from "@/components/veiligheid/SecurityHero";
 import SecurityFeatures from "@/components/veiligheid/SecurityFeatures";
 import NoExternalAccess from "@/components/veiligheid/NoExternalAccess";
 import SecurityTimeline from "@/components/veiligheid/SecurityTimeline";
 import FutureUpdates from "@/components/veiligheid/FutureUpdates";
 import SecurityCTA from "@/components/veiligheid/SecurityCTA";
 export default function Veiligheid() {
-  return <InfoPageLayout title="" showGradientBackground>
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 px-4 overflow-hidden">
-        <div className="container mx-auto max-w-6xl relative z-10">
-          <SecurityHero />
-        </div>
-        
-        {/* Background Element */}
-        <div className="absolute -top-10 right-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-30 z-0"></div>
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-200 rounded-full filter blur-3xl opacity-20 z-0"></div>
-      </section>
-      
+  return <InfoPageLayout
+      eyebrow="Veiligheid"
+      title="Veiligheid"
+      subtitle="Wij beschermen jouw cashflow, data en traject met state-of-the-art technologie."
+    >
       {/* Security Features Grid Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-6xl">

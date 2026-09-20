@@ -1,28 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { X, ChevronDown, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
-
-const NAV_ITEMS = [
-  {
-    title: "Home",
-    to: "/",
-    desktopOnly: false
-  },
-  {
-    title: "Alles over Investbot",
-    submenu: [
-      { label: "Wat is het?", to: "/alles-over-investbot/wat-is-het" },
-      { label: "Hoe werkt het?", to: "/alles-over-investbot/hoe-werkt-het" },
-      { label: "Missie & Visie", to: "/alles-over-investbot/mission-vision" }
-    ],
-    desktopOnly: false
-  },
-  { title: "Tier Plannen", to: "/tier-plannen", desktopOnly: false },
-  { title: "Veiligheid", to: "/veiligheid", desktopOnly: false },
-  { title: "FAQ", to: "/faq", desktopOnly: false }
-];
+import { LumenCtaAnchor, LumenCtaButton } from "@/components/three/LumenCta";
+import { PUBLIC_NAV_ITEMS, SIGNUP_URL } from "./publicNav";
 
 interface Props {
   menuOpen: boolean;
@@ -35,53 +17,57 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
   const { user, userRole } = useAuth();
   const isMember = !!user && userRole === "member";
   const navigate = useNavigate();
+  const submenu = PUBLIC_NAV_ITEMS[1].submenu;
+
+  const go = (to: string) => {
+    setMenuOpen(false);
+    setSubmenuOpen(false);
+    navigate(to);
+  };
+
+  const itemClass =
+    "w-full rounded-full px-4 py-3 text-left text-base font-medium text-ink-muted transition-colors hover:bg-white/8 hover:text-ink";
 
   return (
     <AnimatePresence>
       {menuOpen && (
         <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "tween", duration: 0.27 }}
-          className="fixed inset-0 bg-white z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 bg-canvas/70 backdrop-blur-sm"
           onClick={() => setMenuOpen(false)}
         >
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ type: "tween", duration: 0.32 }}
-            className="absolute right-0 top-0 h-full w-4/5 max-w-xs sm:max-w-md bg-white shadow-2xl flex flex-col p-0 z-[100]"
+            transition={{ type: "tween", duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute right-0 top-0 z-[100] flex h-full w-[86%] max-w-sm flex-col border-l border-canvas-hairline bg-canvas-elevated text-ink shadow-level-3"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between px-6 py-4 border-b">
+            <div className="flex h-[72px] items-center justify-between border-b border-canvas-hairline px-6">
               {Logo}
               <button
-                className="p-2 rounded-full hover:bg-indigo-50 transition"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 transition hover:bg-white/10"
                 onClick={() => setMenuOpen(false)}
                 aria-label="Sluit menu"
               >
-                <X className="w-7 h-7" />
+                <X className="h-5 w-5" />
               </button>
             </div>
-            <nav className="flex-1 flex flex-col gap-1 px-6 py-5">
-              <button
-                className="font-semibold py-2 px-2 rounded hover:bg-indigo-50 text-left transition"
-                onClick={() => {
-                  setMenuOpen(false);
-                  navigate("/");
-                }}
-              >
+            <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-5">
+              <button className={itemClass} onClick={() => go("/")}>
                 Home
               </button>
               <div className="w-full">
                 <button
-                  className="flex items-center w-full justify-between font-semibold py-2 px-2 rounded hover:bg-indigo-50 transition"
+                  className={`${itemClass} flex items-center justify-between`}
                   onClick={() => setSubmenuOpen((o) => !o)}
                 >
                   <span>Alles over Investbot</span>
-                  <ChevronDown className={`ml-1 h-5 w-5 transition-transform ${submenuOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`h-5 w-5 transition-transform ${submenuOpen ? "rotate-180" : ""}`} />
                 </button>
                 <AnimatePresence>
                   {submenuOpen && (
@@ -89,18 +75,14 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.21 }}
-                      className="flex flex-col mt-1 ml-4"
+                      transition={{ duration: 0.2 }}
+                      className="ml-4 mt-1 flex flex-col border-l border-canvas-hairline pl-2"
                     >
-                      {NAV_ITEMS[1].submenu?.map((item) => (
+                      {submenu.map((item) => (
                         <button
                           key={item.label}
-                          className="py-2 w-full text-left text-gray-800 rounded hover:text-indigo-600 hover:bg-indigo-50 transition"
-                          onClick={() => {
-                            setMenuOpen(false);
-                            setSubmenuOpen(false);
-                            navigate(item.to);
-                          }}
+                          className="w-full rounded-full px-4 py-2.5 text-left text-sm text-ink-muted transition hover:bg-white/8 hover:text-ink"
+                          onClick={() => go(item.to)}
                         >
                           {item.label}
                         </button>
@@ -109,48 +91,29 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                   )}
                 </AnimatePresence>
               </div>
-              {NAV_ITEMS.slice(2).map((item) => (
-                <button
-                  key={item.title}
-                  className="font-semibold py-2 px-2 rounded hover:bg-indigo-50 text-left transition"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    navigate(item.to!);
-                  }}
-                >
-                  {item.title}
-                </button>
-              ))}
-              
-              <div className="flex-1" />
+              {PUBLIC_NAV_ITEMS.slice(2).map((item) =>
+                "to" in item ? (
+                  <button key={item.title} className={itemClass} onClick={() => go(item.to)}>
+                    {item.title}
+                  </button>
+                ) : null,
+              )}
             </nav>
-            <div className="border-t mt-0 pt-3 pb-5 px-6 flex flex-col gap-2">
+            <div className="flex flex-col gap-3 border-t border-canvas-hairline px-6 pb-8 pt-5">
               {!user && (
                 <>
-                  <a
-                    href="https://leadsinvestbotiq.netlify.app"
-                    className="block w-full py-2 px-3 rounded bg-indigo-500 text-white font-semibold text-center hover:bg-indigo-700 transition"
-                    onClick={() => setMenuOpen(false)}
-                  >
+                  <LumenCtaAnchor href={SIGNUP_URL} dot className="w-full" onClick={() => setMenuOpen(false)}>
                     Aanmelden
-                  </a>
-                  <Link
-                    to="/auth"
-                    className="block w-full py-2 px-3 rounded bg-gray-100 text-indigo-700 font-semibold text-center hover:bg-indigo-200 transition"
-                    onClick={() => setMenuOpen(false)}
-                  >
+                  </LumenCtaAnchor>
+                  <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/auth")}>
                     Log-in
-                  </Link>
+                  </LumenCtaButton>
                 </>
               )}
               {isMember && (
-                <Link
-                  to="/member/dashboard"
-                  className="block w-full py-2 px-3 rounded bg-blue-100 text-blue-700 font-semibold text-center hover:bg-blue-200 transition"
-                  onClick={() => setMenuOpen(false)}
-                >
+                <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/member/dashboard")}>
                   Member Dashboard
-                </Link>
+                </LumenCtaButton>
               )}
             </div>
           </motion.div>

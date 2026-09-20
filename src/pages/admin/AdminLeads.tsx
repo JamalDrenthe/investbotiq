@@ -85,7 +85,7 @@ const AdminLeads = () => {
       <Header />
       <div className="container mx-auto px-2 md:px-6 py-6 relative z-10">
         <AdminNavBar />
-        <h2 className="text-2xl font-bold mb-2 tracking-tight text-gray-800 flex items-center gap-2">
+        <h2 className="text-2xl font-bold mb-2 tracking-tight text-ink flex items-center gap-2">
           <svg width="28" height="28" fill="none" viewBox="0 0 24 24" className="inline-block align-middle text-indigo-500"><circle cx="12" cy="12" r="12" fill="#eef2ff" /><path d="M7 13l3 3 7-7" stroke="#6366f1" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           Leads Overzicht
         </h2>
@@ -142,11 +142,11 @@ const AdminLeads = () => {
                         <div className="grid md:grid-cols-4 gap-4 items-center">
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Naam</p>
-                            <p className="font-medium text-gray-900">{lead.general.voornaam} {lead.general.achternaam}</p>
+                            <p className="font-medium text-ink">{lead.general.voornaam} {lead.general.achternaam}</p>
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Email</p>
-                            <p className="font-medium text-gray-900">{lead.general.email}</p>
+                            <p className="font-medium text-ink">{lead.general.email}</p>
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Rol</p>
@@ -154,7 +154,7 @@ const AdminLeads = () => {
                           </div>
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Aangemeld op</p>
-                            <p className="font-medium text-gray-900">{new Date(lead.created_at).toLocaleDateString()}</p>
+                            <p className="font-medium text-ink">{new Date(lead.created_at).toLocaleDateString()}</p>
                           </div>
                         </div>
                         <div className="mt-4 flex flex-col sm:flex-row justify-end gap-2">

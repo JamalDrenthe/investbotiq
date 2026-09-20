@@ -1,64 +1,78 @@
-
 import React from "react";
 import { motion } from "framer-motion";
 import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
+import { ThreeScene } from "@/components/three/ThreeScene";
 
 interface InfoPageLayoutProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
+  eyebrow?: string;
   showGradientBackground?: boolean;
 }
 
-export default function InfoPageLayout({
-  children,
-  title,
-  subtitle,
-  showGradientBackground = true,
-}: InfoPageLayoutProps) {
+export default function InfoPageLayout({ children, title, subtitle, eyebrow }: InfoPageLayoutProps) {
   return (
-    <div className={`min-h-screen ${showGradientBackground ? "bg-gradient-to-br from-white via-[#eef2ff] to-indigo-100" : ""}`}>
+    <div className="band-canvas min-h-screen w-full overflow-x-hidden">
       <PublicHeader />
-      
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 px-4 overflow-hidden">
-        <div className="container mx-auto max-w-6xl relative z-10">
-          <motion.h1 
+
+      <section className="relative isolate overflow-hidden pb-20 pt-36 md:pb-28 md:pt-44">
+        {/* threeui DotMatrixBackground — quiet shader field behind every info-page title */}
+        <ThreeScene
+          kind="dot-matrix"
+          className="!absolute !inset-0"
+          speed={0.6}
+          gridScale={64}
+          mouseAmount={0.05}
+          pulseSpeed={0.3}
+          radius={0.13}
+          opacity={0.4}
+          hue={-20}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 20%, rgba(99,91,255,0.28) 0%, rgba(5,7,15,0) 55%), linear-gradient(180deg, rgba(5,7,15,0.2) 0%, rgba(5,7,15,0.1) 50%, rgba(5,7,15,1) 100%)",
+          }}
+        />
+        <div className="relative mx-auto w-full max-w-content px-6 lg:px-10">
+          {eyebrow && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="eyebrow mb-6"
+            >
+              {eyebrow}
+            </motion.div>
+          )}
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-gray-900 mb-4"
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-4xl font-display text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.035em] text-ink sm:text-display-md lg:text-display-lg"
           >
             {title}
           </motion.h1>
           {subtitle && (
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-xl text-center text-gray-700 max-w-3xl mx-auto"
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="mt-6 max-w-2xl text-lg leading-8 text-ink-muted md:text-xl md:leading-9"
             >
               {subtitle}
             </motion.p>
           )}
         </div>
-        
-        {/* Background Element */}
-        <div className="absolute -top-10 right-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-30 z-0"></div>
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-200 rounded-full filter blur-3xl opacity-20 z-0"></div>
       </section>
-      
-      {children}
-      
-      {/* Footer */}
-      <footer className="py-8 bg-[#1A1F2C] text-center text-white font-medium">
-        <div className="flex flex-wrap items-center justify-center gap-6">
-          <a href="#" className="underline hover:text-pink-200 transition">Algemene Voorwaarden</a>
-          <a href="#" className="underline hover:text-pink-200 transition">Privacybeleid</a>
-          <a href="#" className="underline hover:text-pink-200 transition">Contact</a>
-        </div>
-        <div className="mt-4 text-xs text-indigo-200">© {new Date().getFullYear()} Invest Bot IQ</div>
-      </footer>
+
+      <div className="band-paper info-body">{children}</div>
+
+      <PublicFooter />
     </div>
   );
 }

@@ -1,29 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ChevronDown, LogIn } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
-import { Button } from "@/components/ui/button";
-
-const NAV_ITEMS = [
-  {
-    title: "Home",
-    to: "/",
-    desktopOnly: false
-  },
-  {
-    title: "Alles over Investbot",
-    submenu: [
-      { label: "Wat is het?", to: "/alles-over-investbot/wat-is-het" },
-      { label: "Hoe werkt het?", to: "/alles-over-investbot/hoe-werkt-het" },
-      { label: "Missie & Visie", to: "/alles-over-investbot/mission-vision" }
-    ],
-    desktopOnly: false
-  },
-  { title: "Tier Plannen", to: "/tier-plannen", desktopOnly: false },
-  { title: "Veiligheid", to: "/veiligheid", desktopOnly: false },
-  { title: "FAQ", to: "/faq", desktopOnly: false }
-];
+import { LumenCtaAnchor, LumenCtaLink } from "@/components/three/LumenCta";
+import { PUBLIC_NAV_ITEMS, SIGNUP_URL } from "./publicNav";
 
 interface Props {
   handleNav: (to: string) => void;
@@ -33,83 +14,75 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   const { user, userRole } = useAuth();
   const isMember = !!user && userRole === "member";
   const [desktopSubmenuOpen, setDesktopSubmenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const submenu = PUBLIC_NAV_ITEMS[1].submenu;
+  const submenuActive = pathname.startsWith("/alles-over-investbot");
 
   return (
-    <nav className="relative hidden items-center gap-1 md:flex lg:gap-2 xl:gap-3">
-      <Link to="/" className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-indigo-50 hover:text-indigo-700">
+    <nav className="hidden items-center gap-1 md:flex">
+      <Link to="/" className={`nav-pill ${pathname === "/" ? "nav-pill--active" : ""}`}>
         Home
       </Link>
-      {/* Alles over Investbot (Dropdown) */}
       <div
-        className="relative group"
+        className="relative"
         onMouseEnter={() => setDesktopSubmenuOpen(true)}
         onMouseLeave={() => setDesktopSubmenuOpen(false)}
       >
         <button
-          className="flex items-center rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-indigo-50 hover:text-indigo-700"
+          className={`nav-pill ${submenuActive ? "nav-pill--active" : ""}`}
           tabIndex={0}
           onClick={() => setDesktopSubmenuOpen((v) => !v)}
         >
           Alles over Investbot
-          <ChevronDown
-            className={`ml-1 h-4 w-4 transition-transform ${
-              desktopSubmenuOpen ? "rotate-180" : ""
-            }`}
-          />
+          <ChevronDown className={`h-4 w-4 transition-transform ${desktopSubmenuOpen ? "rotate-180" : ""}`} />
         </button>
         <AnimatePresence>
-        {desktopSubmenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            transition={{ duration: 0.24 }}
-            className="absolute left-0 top-full z-[100] mt-3 min-w-[240px] rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl animate-fade-in"
-          >
-            {NAV_ITEMS[1].submenu?.map((item) => (
-              <button
-                key={item.label}
-                className="w-full rounded-xl px-4 py-3 text-left text-sm font-medium text-slate-600 transition-colors hover:bg-indigo-50 hover:text-indigo-700"
-                onClick={() => handleNav(item.to)}
-              >
-                {item.label}
-              </button>
-            ))}
-          </motion.div>
-        )}
+          {desktopSubmenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
+              className="card-glass card-glass--floating absolute left-0 top-full z-[100] mt-3 min-w-[240px] p-2"
+            >
+              {submenu.map((item) => (
+                <button
+                  key={item.label}
+                  className="w-full rounded-full px-4 py-2.5 text-left text-sm font-medium text-ink-muted transition-colors hover:bg-white/8 hover:text-ink"
+                  onClick={() => handleNav(item.to)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
-      {/* Single nav items */}
-      {NAV_ITEMS.slice(2).map((item) => (
-        <button
-          key={item.title}
-          className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-indigo-50 hover:text-indigo-700"
-          onClick={() => handleNav(item.to!)}
-        >
-          {item.title}
-        </button>
-      ))}
-      {/* Inloggen knop + Registreren knop */}
-      <Link to="/auth" className="ml-2 flex items-center rounded-xl bg-[#635bff] px-4 py-2.5 text-sm font-bold text-white shadow-lg shadow-indigo-500/20 transition-all hover:-translate-y-0.5 hover:bg-indigo-600">
-        <LogIn className="mr-2 h-4 w-4" /> Log-in
-      </Link>
-      <a
-        href="https://leadsinvestbotiq.netlify.app"
-        className="ml-1 inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-slate-900/10 transition-all hover:-translate-y-0.5 hover:bg-slate-800"
-      >
-        Aanmelden
-      </a>
-      {/* Register / Member */}
-
-      {isMember && (
-        <Link
-          to="/member/dashboard"
-          className="px-5 py-2 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 font-semibold transition-all ml-2"
-        >
-          Member Dashboard
-        </Link>
+      {PUBLIC_NAV_ITEMS.slice(2).map((item) =>
+        "to" in item ? (
+          <button
+            key={item.title}
+            className={`nav-pill ${pathname === item.to ? "nav-pill--active" : ""}`}
+            onClick={() => handleNav(item.to)}
+          >
+            {item.title}
+          </button>
+        ) : null,
       )}
+      <div className="ml-3 flex items-center gap-2">
+        {isMember ? (
+          <LumenCtaLink to="/member/dashboard" size="sm" variant="ghost">
+            Member Dashboard
+          </LumenCtaLink>
+        ) : (
+          <LumenCtaLink to="/auth" size="sm" variant="ghost">
+            Log-in
+          </LumenCtaLink>
+        )}
+        <LumenCtaAnchor href={SIGNUP_URL} size="sm" dot>
+          Aanmelden
+        </LumenCtaAnchor>
+      </div>
     </nav>
   );
 };

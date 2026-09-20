@@ -1,9 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import PublicHeader from "@/components/PublicHeader";
-import { CalendarDays, CircleCheck, CircleUser, Bot, TrendingUp } from "lucide-react";
+import { LumenCtaLink } from "@/components/three/LumenCta";
+import InfoPageLayout from "@/components/layouts/InfoPageLayout";
+import { CalendarDays, CircleCheck, CircleUser, Bot, TrendingUp, Briefcase, Lightbulb, LineChart } from "lucide-react";
 
 // Animation variants
 const containerVariants = {
@@ -32,42 +31,11 @@ const itemVariants = {
   }
 };
 export default function HoeWerktHet() {
-  return <div className="min-h-screen bg-gradient-to-br from-white via-[#eef2ff] to-indigo-100">
-      <PublicHeader />
-      
-      {/* Hero Section */}
-      <section className="relative pt-24 pb-12 md:pt-32 md:pb-16 px-4 overflow-hidden">
-        <div className="container mx-auto max-w-6xl relative z-10">
-          <motion.h1 initial={{
-          opacity: 0,
-          y: 30
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6
-        }} className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-gray-900 mb-4">
-            Hoe werkt Investbot IQ?
-          </motion.h1>
-          <motion.p initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.6,
-          delay: 0.2
-        }} className="text-xl text-center text-gray-700 max-w-3xl mx-auto">
-            Eenvoudig, transparant en volledig geautomatiseerd.
-          </motion.p>
-        </div>
-        
-        {/* Background Element */}
-        <div className="absolute -top-10 right-0 w-72 h-72 bg-indigo-200 rounded-full filter blur-3xl opacity-30 z-0"></div>
-        <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-200 rounded-full filter blur-3xl opacity-20 z-0"></div>
-      </section>
-      
+  return <InfoPageLayout
+      eyebrow="Hoe werkt het"
+      title="Hoe werkt Investbot IQ?"
+      subtitle="Eenvoudig, transparant en volledig geautomatiseerd."
+    >
       {/* Steps Section */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-5xl">
@@ -197,28 +165,28 @@ export default function HoeWerktHet() {
         }} className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Benefit 1 */}
             <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-              <p className="text-2xl mb-4">💼</p>
+              <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo/10 text-indigo"><Briefcase className="h-5 w-5" /></span>
               <h3 className="text-xl font-semibold mb-3">Geen minimale investering vereist</h3>
               <p className="text-gray-600">Begin gratis. Het systeem bouwt geleidelijk op.</p>
             </motion.div>
             
             {/* Benefit 2 */}
             <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-              <p className="text-2xl mb-4">💡</p>
+              <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo/10 text-indigo"><Lightbulb className="h-5 w-5" /></span>
               <h3 className="text-xl font-semibold mb-3">Automatische opbouw via de IQ Bot</h3>
               <p className="text-gray-600">Geen handmatige stappen of ingewikkelde beslissingen. De IQ Bot regelt alles voor je.</p>
             </motion.div>
             
             {/* Benefit 3 */}
             <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-              <p className="text-2xl mb-4">📈</p>
+              <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo/10 text-indigo"><LineChart className="h-5 w-5" /></span>
               <h3 className="text-xl font-semibold mb-3">Maandelijkse cashflow die groeit</h3>
               <p className="text-gray-600">Zie je cashflow elke drie maanden groeien.</p>
             </motion.div>
             
             {/* Benefit 4 */}
             <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-              <p className="text-2xl mb-4">🤖</p>
+              <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo/10 text-indigo"><Bot className="h-5 w-5" /></span>
               <h3 className="text-xl font-semibold mb-3">Persoonlijk IQ Bot Algoritme</h3>
               <p className="text-gray-600">Direct en efficiënt.</p>
             </motion.div>
@@ -234,25 +202,11 @@ export default function HoeWerktHet() {
           </h2>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="text-lg py-6 px-8 font-semibold">
-              <Link to="/tier-plannen">🔵 Bekijk jouw route</Link>
-            </Button>
-            
-            <Button asChild variant="outline" size="lg" className="text-lg py-6 px-8 font-semibold border-indigo-300">
-              <Link to="/member/dashboard">⚪ Ga naar Member Dashboard</Link>
-            </Button>
+            <LumenCtaLink to="/tier-plannen" dot>Bekijk jouw route</LumenCtaLink>
+            <LumenCtaLink to="/member/dashboard" variant="paper">Ga naar Member Dashboard</LumenCtaLink>
           </div>
         </div>
       </section>
       
-      {/* Footer */}
-      <footer className="py-8 bg-[#1A1F2C] text-center text-white font-medium">
-        <div className="flex flex-wrap items-center justify-center gap-6">
-          <a href="#" className="underline hover:text-pink-200 transition">Algemene Voorwaarden</a>
-          <a href="#" className="underline hover:text-pink-200 transition">Privacybeleid</a>
-          <a href="#" className="underline hover:text-pink-200 transition">Contact</a>
-        </div>
-        <div className="mt-4 text-xs text-indigo-200">© {new Date().getFullYear()} Invest Bot IQ</div>
-      </footer>
-    </div>;
+    </InfoPageLayout>;
 }

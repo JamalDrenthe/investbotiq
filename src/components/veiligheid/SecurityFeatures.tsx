@@ -65,7 +65,7 @@ export default function SecurityFeatures() {
           </div>
           <h3 className="text-xl font-bold">Rolgebaseerde policies</h3>
         </div>
-        <p className="text-gray-700 ml-12 text-justify">
+        <p className="text-gray-700 ml-12">
           Geen toegang tot andermans data. Members hebben alleen toegang tot hun eigen gegevens, admins hebben beperkte toegang.
         </p>
       </motion.div>
@@ -88,7 +88,7 @@ export default function SecurityFeatures() {
           </div>
           <h3 className="text-xl font-bold">Auditlogging</h3>
         </div>
-        <p className="text-gray-700 ml-12 text-justify">
+        <p className="text-gray-700 ml-12">
           Elke wijziging wordt gelogd, zodat er volledige transparantie is over wie wat heeft gedaan en wanneer.
         </p>
       </motion.div>

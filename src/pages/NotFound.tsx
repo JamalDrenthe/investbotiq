@@ -1,11 +1,10 @@
-
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 import { ArrowLeft, Home } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { ThreeScene } from "@/components/three/ThreeScene";
+import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -24,62 +23,61 @@ const NotFound = () => {
       : "Terug naar Home";
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
-      <Card className="max-w-md w-full">
-        <CardContent className="pt-6 pb-0 text-center">
-          <motion.div 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="rounded-full bg-primary/10 w-16 h-16 flex items-center justify-center mx-auto mb-4"
-          >
-            <span className="text-3xl">404</span>
-          </motion.div>
-          
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h1 className="text-xl md:text-2xl font-bold mb-2">Pagina niet gevonden</h1>
-            <p className="text-muted-foreground">
-              Deze pagina is momenteel niet beschikbaar of bestaat niet.
-              {userRole && " De IQ Bot is eraan aan het werken."}
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="h-32 md:h-48 relative my-8 opacity-50"
-          >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-r from-primary/20 via-purple-500/20 to-secondary/20 animate-pulse"></div>
-              <div className="w-16 h-16 rounded-full absolute bg-gradient-to-r from-primary/30 via-purple-500/30 to-secondary/30 animate-pulse" style={{ animationDelay: "0.5s" }}></div>
-            </div>
-          </motion.div>
-        </CardContent>
-        
-        <CardFooter className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            variant="outline" 
-            className="flex items-center gap-2 w-full sm:w-auto" 
-            onClick={() => navigate(-1)}
-          >
+    <div className="band-canvas relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4">
+      {/* threeui OrbitalSphereBackground — lost-in-orbit motif for the 404 */}
+      <ThreeScene
+        kind="orbital-sphere"
+        className="!absolute !inset-0"
+        speed={0.6}
+        particleSize={0.014}
+        particleOpacity={0.7}
+        orbitOpacity={0.25}
+        haloOpacity={0.18}
+        hue={-16}
+        scale={1.15}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 50%, rgba(5,7,15,0) 0%, rgba(5,7,15,0.55) 60%, rgba(5,7,15,0.95) 100%)",
+        }}
+      />
+
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="card-glass card-glass--floating relative z-10 w-full max-w-lg p-8 text-center md:p-10"
+      >
+        <div className="eyebrow justify-center">Fout 404</div>
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="tnum mt-6 font-display text-7xl font-semibold leading-none tracking-[-0.05em] text-gradient-light md:text-8xl"
+        >
+          404
+        </motion.div>
+
+        <h1 className="mt-6 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
+          Pagina niet gevonden
+        </h1>
+        <p className="mt-3 text-base leading-7 text-ink-muted">
+          Deze pagina is momenteel niet beschikbaar of bestaat niet.
+          {userRole && " De IQ Bot is eraan aan het werken."}
+        </p>
+
+        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <LumenCtaButton variant="ghost" onClick={() => navigate(-1)}>
             <ArrowLeft className="h-4 w-4" /> Ga terug
-          </Button>
-          
-          <Button 
-            className="flex items-center gap-2 w-full sm:w-auto"
-            asChild
-          >
-            <Link to={getDashboardLink()}>
-              <Home className="h-4 w-4" /> {dashboardLabel}
-            </Link>
-          </Button>
-        </CardFooter>
-      </Card>
+          </LumenCtaButton>
+          <LumenCtaLink to={getDashboardLink()} dot>
+            <Home className="h-4 w-4" /> {dashboardLabel}
+          </LumenCtaLink>
+        </div>
+      </motion.div>
     </div>
   );
 };

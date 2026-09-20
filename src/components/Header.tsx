@@ -70,7 +70,7 @@ const Header = () => {
   const unreadNotificationsCount = 3;
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-canvas-hairline bg-canvas/80 backdrop-blur-xl">
       <div className="flex h-20 items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-4">
           {user && (

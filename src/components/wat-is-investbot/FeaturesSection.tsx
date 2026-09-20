@@ -64,7 +64,7 @@ export default function FeaturesSection() {
                 <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
               </div>
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-              <p className="text-gray-600 text-justify">{feature.description}</p>
+              <p className="text-gray-600">{feature.description}</p>
             </motion.div>)}
         </motion.div>
       </div>

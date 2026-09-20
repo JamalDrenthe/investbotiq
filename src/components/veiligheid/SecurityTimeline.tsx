@@ -58,7 +58,7 @@ function TimelineItem({
       </div>
       
       <div className={`ml-16 md:ml-0 md:flex-1 ${reverse ? 'md:text-right' : ''}`}>
-        <p className="text-gray-700 text-justify">
+        <p className="text-gray-700">
           {description}
         </p>
       </div>

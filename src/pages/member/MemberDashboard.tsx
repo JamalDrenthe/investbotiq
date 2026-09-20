@@ -13,6 +13,7 @@ import { withRoleGuard } from "@/utils/withRoleGuard";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/components/AuthProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { ThreeScene } from "@/components/three/ThreeScene";
 
 // Let only 'member' users access this page
 const MemberDashboard = () => {
@@ -35,13 +36,34 @@ const MemberDashboard = () => {
         <CollapsibleSidebar />
         <main className="flex-1 overflow-auto p-4 md:p-8">
           <div className="mx-auto flex max-w-[1500px] flex-col gap-8">
-            <div className="space-y-1.5">
-              <div className="eyebrow">Invest Bot IQ</div>
-              <h1 className="display-font pt-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Member Dashboard</h1>
-              <p className="text-slate-500">
-                {getFirstName() ? `Welkom ${getFirstName()} bij uw Investbotiq dashboard` : "Welkom bij uw Investbotiq dashboard"}
-              </p>
-            </div>
+            <section className="card-glass relative isolate overflow-hidden px-6 py-8 md:px-10 md:py-10">
+              {/* threeui PredictiveArc — the growth arc sits behind the greeting */}
+              <ThreeScene
+                kind="predictive-arc"
+                className="!absolute !inset-0 opacity-70"
+                mode="dark"
+                speed={0.6}
+                spacing={6}
+                dotSize={4}
+                archHeight={0.6}
+                thickness={0.9}
+                brightness={0.9}
+                hue={-10}
+                saturation={1}
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{ background: "linear-gradient(90deg, rgba(17,24,50,0.95) 0%, rgba(17,24,50,0.6) 55%, rgba(17,24,50,0.1) 100%)" }}
+              />
+              <div className="relative space-y-3">
+                <div className="eyebrow">Invest Bot IQ</div>
+                <h1 className="font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">Member Dashboard</h1>
+                <p className="max-w-xl text-ink-muted">
+                  {getFirstName() ? `Welkom ${getFirstName()} bij uw Investbotiq dashboard` : "Welkom bij uw Investbotiq dashboard"}
+                </p>
+              </div>
+            </section>
             
             {/* Four statistic cards - responsive grid with hover effects */}
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

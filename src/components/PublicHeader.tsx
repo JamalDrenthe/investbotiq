@@ -1,90 +1,52 @@
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import PublicHeaderDesktopMenu from "./PublicHeaderDesktopMenu";
 import PublicHeaderMobileMenu from "./PublicHeaderMobileMenu";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/AuthProvider";
-
-const NAV_ITEMS = [{
-  title: "Home",
-  to: "/",
-  desktopOnly: false
-}, {
-  title: "Alles over Investbot",
-  submenu: [{
-    label: "Wat is het?",
-    to: "/alles-over-investbot/wat-is-het"
-  }, {
-    label: "Hoe werkt het?",
-    to: "/alles-over-investbot/hoe-werkt-het"
-  }, {
-    label: "Missie & Visie",
-    to: "/alles-over-investbot/mission-vision"
-  }],
-  desktopOnly: false
-}, {
-  title: "Tier Plannen",
-  to: "/tier-plannen",
-  desktopOnly: false
-}, {
-  title: "Veiligheid",
-  to: "/veiligheid",
-  desktopOnly: false
-}, {
-  title: "FAQ",
-  to: "/faq",
-  desktopOnly: false
-}];
+import { BRAND_ICON, BRAND_WORDMARK } from "./publicNav";
 
 const PublicHeader: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
-  const { user, userRole } = useAuth();
-  const isMember = !!user && userRole === "member";
 
-  // Add the missing handleNav function here
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const handleNav = (to: string) => {
     navigate(to);
     setMenuOpen(false);
   };
 
   const Logo = (
-    <Link 
-      to="/" 
-      className="flex items-center gap-4 cursor-pointer select-none" 
-      aria-label="Invest Bot IQ Homepage"
-    >
-      <img 
-        src="/lovable-uploads/f072ab55-6051-4ac3-a481-2047383cf59f.png" 
-        alt="Invest Bot IQ Icon" 
-        className="h-10 w-auto"
-      />
-      <img 
-        src="/lovable-uploads/4befc6ee-1b19-4552-af1f-062bf7191a8a.png" 
-        alt="Invest Bot IQ Logo" 
-        className="h-8 w-auto hidden md:block"
-      />
-      <img
-        src="/lovable-uploads/4befc6ee-1b19-4552-af1f-062bf7191a8a.png"
-        alt="Extra Logo"
-        className="h-8 w-auto block md:hidden"
-      />
+    <Link to="/" className="flex select-none items-center gap-3" aria-label="Invest Bot IQ Homepage">
+      <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-9 w-auto" />
+      <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert h-5 w-auto" />
     </Link>
   );
 
   return (
-    <header className="fixed left-0 top-0 z-40 w-full border-b border-white/50 bg-white/75 shadow-[0_10px_40px_rgba(38,44,92,0.08)] backdrop-blur-xl">
-      <div className="container flex h-20 items-center justify-between px-4 md:h-24">
+    <header
+      className={`fixed left-0 top-0 z-40 w-full transition-[background,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? "border-b border-canvas-hairline bg-canvas/95 backdrop-blur-xl shadow-level-2"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-[72px] w-full max-w-content items-center justify-between px-6 lg:px-10">
         {Logo}
-        <div className="flex items-center space-x-4">
-
-          <PublicHeaderDesktopMenu handleNav={handleNav} />
-          <button className="rounded-xl border border-slate-200 bg-white/70 p-2.5 transition-colors hover:bg-indigo-50 md:hidden" aria-label={menuOpen ? "Sluit menu" : "Open menu"} onClick={() => setMenuOpen(v => !v)}>
-            {menuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-          </button>
-        </div>
+        <PublicHeaderDesktopMenu handleNav={handleNav} />
+        <button
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10 md:hidden"
+          aria-label={menuOpen ? "Sluit menu" : "Open menu"}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
       <PublicHeaderMobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} Logo={Logo} />
     </header>

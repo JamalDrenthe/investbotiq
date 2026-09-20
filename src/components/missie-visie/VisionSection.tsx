@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Globe } from "lucide-react";
 
 export default function VisionSection() {
   return (
@@ -38,7 +38,7 @@ export default function VisionSection() {
           >
             <div className="w-64 h-64 rounded-full bg-gradient-to-br from-purple-400 via-indigo-300 to-blue-300 shadow-lg flex items-center justify-center">
               <div className="w-40 h-40 rounded-full bg-white/25 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center">
-                <span className="text-6xl">🌍</span>
+                <Globe className="h-20 w-20 text-white" strokeWidth={1.5} />
               </div>
             </div>
           </motion.div>

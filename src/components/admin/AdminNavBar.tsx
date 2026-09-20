@@ -35,8 +35,8 @@ export const AdminNavBar = () => {
               <NavLink
                 to={item.href}
                 className={({ isActive }) =>
-                  `flex items-center space-x-3 p-3 rounded-md hover:bg-gray-100 transition-colors ${
-                    isActive ? "bg-gray-100 font-semibold" : ""
+                  `flex items-center space-x-3 p-3 rounded-xl hover:bg-white/5 transition-colors ${
+                    isActive ? "bg-indigo/15 font-semibold text-ink" : "text-ink-muted"
                   }`
                 }
               >

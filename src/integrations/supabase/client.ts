@@ -12,7 +12,8 @@ export type LocalSession = {
 };
 
 type AuthStateChange = (event: "SIGNED_IN" | "SIGNED_OUT", session: LocalSession | null) => void;
-type QueryResult = { data: unknown; error: Error | null };
+type QueryError = Error & { code?: string };
+type QueryResult = { data: unknown; error: QueryError | null };
 
 const SESSION_KEY = "investbotiq.local-session";
 const USERS_KEY = "investbotiq.local-users";
@@ -53,6 +54,9 @@ const getOrCreateUser = (email: string): LocalUser => {
 
 class LocalQueryBuilder implements PromiseLike<QueryResult> {
   private filters: Record<string, unknown> = {};
+  private negatedFilters: Record<string, unknown> = {};
+  private inFilters: Record<string, unknown[]> = {};
+  private allowEmpty = false;
   private operation: "select" | "insert" | "update" = "select";
   private payload: unknown;
   private singleResult = false;
@@ -81,7 +85,26 @@ class LocalQueryBuilder implements PromiseLike<QueryResult> {
     return this;
   }
 
+  is(column: string, value: unknown) {
+    this.filters[column] = value;
+    return this;
+  }
+
+  neq(column: string, value: unknown) {
+    this.negatedFilters[column] = value;
+    return this;
+  }
+
+  in(column: string, values: unknown[]) {
+    this.inFilters[column] = values;
+    return this;
+  }
+
   order(_column: string, _options?: { ascending?: boolean }) {
+    return this;
+  }
+
+  limit(_count: number) {
     return this;
   }
 
@@ -92,6 +115,7 @@ class LocalQueryBuilder implements PromiseLike<QueryResult> {
 
   maybeSingle() {
     this.singleResult = true;
+    this.allowEmpty = true;
     return this;
   }
 
@@ -119,12 +143,15 @@ class LocalQueryBuilder implements PromiseLike<QueryResult> {
       return { data: null, error: null };
     }
 
-    const filteredRows = rows.filter((row) =>
-      Object.entries(this.filters).every(([key, value]) => row[key] === value),
+    const filteredRows = rows.filter(
+      (row) =>
+        Object.entries(this.filters).every(([key, value]) => row[key] === value) &&
+        Object.entries(this.negatedFilters).every(([key, value]) => row[key] !== value) &&
+        Object.entries(this.inFilters).every(([key, values]) => values.includes(row[key])),
     );
     const data = this.singleResult ? (filteredRows[0] ?? null) : filteredRows;
-    return this.singleResult && !data
-      ? { data: null, error: new Error("Geen lokale gegevens gevonden") }
+    return this.singleResult && !data && !this.allowEmpty
+      ? { data: null, error: Object.assign(new Error("Geen lokale gegevens gevonden"), { code: "PGRST116" }) }
       : { data, error: null };
   }
 

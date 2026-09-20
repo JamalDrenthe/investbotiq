@@ -5,6 +5,7 @@ import { withRoleGuard } from "@/utils/withRoleGuard";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { ThreeScene } from "@/components/three/ThreeScene";
 import { 
   Users, 
   CheckSquare, 
@@ -72,42 +73,42 @@ const AdminDashboard = () => {
       description: "Beheer alle gebruikers en hun toegang",
       icon: <Users className="h-8 w-8" />,
       path: "/admin/users",
-      color: "bg-blue-100",
+      color: "bg-cyan/15 text-cyan-300",
     },
     {
       title: "Taken Beheer",
       description: "Taken configureren en toewijzen aan gebruikers",
       icon: <CheckSquare className="h-8 w-8" />,
       path: "/admin/tasks",
-      color: "bg-green-100",
+      color: "bg-mint/15 text-mint",
     },
     {
       title: "Cashflow Beheer",
       description: "Beheer cashflow settings en rapportages",
       icon: <CircleDollarSign className="h-8 w-8" />,
       path: "/admin/cashflows",
-      color: "bg-yellow-100",
+      color: "bg-amber/15 text-amber",
     },
     {
       title: "Spirits Beheer",
       description: "Configureer en beheer de spirits voor gebruikers",
       icon: <Sparkles className="h-8 w-8" />,
       path: "/admin/spirits",
-      color: "bg-purple-100",
+      color: "bg-indigo/20 text-indigo-300",
     },
     {
       title: "Notificaties",
       description: "Beheer systeem en gebruiker notificaties",
       icon: <Bell className="h-8 w-8" />,
       path: "/admin/notifications",
-      color: "bg-red-100",
+      color: "bg-rose/15 text-rose",
     },
     {
       title: "Referrals",
       description: "Beheer referrals en beloningen",
       icon: <Share2 className="h-8 w-8" />,
       path: "/admin/referrals",
-      color: "bg-indigo-100",
+      color: "bg-indigo/15 text-indigo-200",
     },
   ];
 
@@ -120,7 +121,7 @@ const AdminDashboard = () => {
       case "task":
         return <CheckSquare className="h-4 w-4 text-green-500" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-500" />;
+        return <Activity className="h-4 w-4 text-ink-faint" />;
     }
   };
 
@@ -131,12 +132,31 @@ const AdminDashboard = () => {
         <Sidebar />
         <main className="flex-1 p-4 md:p-6 overflow-auto">
           <div className="flex flex-col gap-6">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Admin Dashboard</h1>
-              <p className="text-muted-foreground">
-                Welkom bij het beheerderspanel van Investbotiq. Als admin kun je hier het volledige platform beheren.
-              </p>
-            </div>
+            <section className="card-glass relative isolate overflow-hidden px-6 py-8 md:px-10 md:py-10">
+              <ThreeScene
+                kind="dot-matrix"
+                className="!absolute !inset-0"
+                speed={0.5}
+                gridScale={48}
+                mouseAmount={0.04}
+                pulseSpeed={0.3}
+                radius={0.12}
+                opacity={0.35}
+                hue={-20}
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0"
+                style={{ background: "linear-gradient(90deg, rgba(17,24,50,0.95) 0%, rgba(17,24,50,0.5) 60%, rgba(17,24,50,0.1) 100%)" }}
+              />
+              <div className="relative space-y-3">
+                <div className="eyebrow">Beheer</div>
+                <h1 className="font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl">Admin Dashboard</h1>
+                <p className="max-w-2xl text-ink-muted">
+                  Welkom bij het beheerderspanel van Investbotiq. Als admin kun je hier het volledige platform beheren.
+                </p>
+              </div>
+            </section>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Card className="fade-in">
@@ -189,7 +209,7 @@ const AdminDashboard = () => {
             </div>
             
             {alerts.length > 0 && (
-              <Card className="bg-yellow-50 border-yellow-200 fade-in" style={{ animationDelay: "0.4s" }}>
+              <Card className="border-amber/30 bg-amber/10 fade-in" style={{ animationDelay: "0.4s" }}>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium flex items-center">
                     <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />
@@ -200,8 +220,8 @@ const AdminDashboard = () => {
                   <ul className="space-y-1">
                     {alerts.map(alert => (
                       <li key={alert.id} className="flex items-start">
-                        <span className="text-yellow-600 mr-2">⚠️</span>
-                        <span>{alert.message}</span>
+                        <AlertTriangle className="mr-2 mt-0.5 h-4 w-4 shrink-0 text-amber" />
+                        <span className="text-ink">{alert.message}</span>
                       </li>
                     ))}
                   </ul>
@@ -213,11 +233,11 @@ const AdminDashboard = () => {
               {adminMenuItems.map((item, index) => (
                 <Card 
                   key={index} 
-                  className="cursor-pointer hover:shadow-md transition-shadow fade-in"
+                  className="cursor-pointer overflow-hidden transition-shadow hover:shadow-glow fade-in"
                   style={{ animationDelay: `${0.5 + index * 0.1}s` }}
                   onClick={() => navigate(item.path)}
                 >
-                  <CardHeader className={`${item.color} rounded-t-lg`}>
+                  <CardHeader className={`${item.color} rounded-t-[inherit] border-b border-canvas-hairline`}>
                     <div className="flex items-center gap-4">
                       {item.icon}
                       <CardTitle>{item.title}</CardTitle>

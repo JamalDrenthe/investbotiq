@@ -1,73 +1,45 @@
-# Welcome to your Lovable project
+# INVESTBOTIQ
 
-## Project info
+Automated Cashflow Platform — de publieke website en het member/admin-dashboard van Investbotiq.
 
-**URL**: https://lovable.dev/projects/a7b7b9f7-a62b-4149-a802-31d87c3b5733
+## Stack
 
-## How can I edit this code?
+- Vite 5 + React 18 + TypeScript
+- Tailwind CSS + shadcn/ui
+- Framer Motion
+- three.js (WebGL-scènes overgenomen uit threeui)
+- react-router-dom, TanStack Query, Recharts
 
-There are several ways of editing your application.
+## Design system
 
-**Use Lovable**
+Het visuele systeem is vastgelegd in [`DESIGN.md`](./DESIGN.md) (kleuren, typografie, radii, spacing, componenten,
+do's & don'ts). Tokens uit dat bestand zijn geïmplementeerd in `tailwind.config.ts` en `src/index.css`;
+de 3D-componenten staan in `src/components/three/`.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a7b7b9f7-a62b-4149-a802-31d87c3b5733) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Lokaal draaien
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+De dev-server draait op `http://localhost:8080`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Login
 
-**Use GitHub Codespaces**
+Authenticatie draait momenteel volledig lokaal (geen Supabase of andere backend):
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- elk geldig e-mailadres werkt, wachtwoord minimaal vier tekens;
+- e-mailadressen die met `admin` beginnen krijgen de admin-rol (`/admin`);
+- overige gebruikers krijgen de member-rol (`/member/dashboard`).
 
-## What technologies are used for this project?
+Sessies en gebruikers worden opgeslagen in `localStorage` (`investbotiq.local-session`, `investbotiq.local-users`).
 
-This project is built with:
+## Scripts
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a7b7b9f7-a62b-4149-a802-31d87c3b5733) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+| Script            | Doel                              |
+| ----------------- | --------------------------------- |
+| `npm run dev`     | Dev-server met HMR                |
+| `npm run build`   | Productiebuild naar `dist/`       |
+| `npm run preview` | Productiebuild lokaal serveren    |
+| `npm run lint`    | ESLint                            |

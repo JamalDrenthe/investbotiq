@@ -10,11 +10,11 @@ export default function TierExplanationSection() {
               Wat is het Tier Plan?
             </h2>
             
-            <p className="text-lg text-gray-700 mb-6 leading-relaxed text-justify">
+            <p className="text-lg text-gray-700 mb-6 leading-relaxed">
               Een Tier Plan is een gefaseerde structuur waarin elke deelnemer groeit van kleine cashflowopbouw naar een stabiel, zelfstandig passief inkomen. Elke tier duurt gemiddeld 3 maanden.
             </p>
             
-            <p className="text-lg text-gray-700 leading-relaxed text-justify">Elke gebruiker volgt een vooraf bepaald groeitraject, bestaande uit 6 actieve tiers. Elke tier draagt je naar een hogere maandelijkse cashflow.</p>
+            <p className="text-lg text-gray-700 leading-relaxed">Elke gebruiker volgt een vooraf bepaald groeitraject, bestaande uit 6 actieve tiers. Elke tier draagt je naar een hogere maandelijkse cashflow.</p>
           </FadeIn>
           
           <FadeIn delay={0.4} className="flex-1 flex justify-center">
