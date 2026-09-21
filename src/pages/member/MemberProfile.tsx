@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import MemberPortalLayout from "@/components/member/MemberPortalLayout";
 import { useAuth } from "@/components/AuthProvider";
 import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
@@ -31,15 +30,16 @@ const MemberProfile = () => {
         .from("profiles")
         .select("*")
         .eq("id", user.id)
-        .single();
-      
+        .maybeSingle();
+
       if (error) throw error;
-      
-      if (data.telefoonnummer) {
-        setPhoneNumber(data.telefoonnummer);
+
+      const profile = (data ?? {}) as { telefoonnummer?: string; voornaam?: string; achternaam?: string };
+      if (profile.telefoonnummer) {
+        setPhoneNumber(profile.telefoonnummer);
       }
-      
-      return data;
+
+      return profile;
     },
     enabled: !!user,
   });
@@ -114,12 +114,8 @@ const MemberProfile = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-6">
-          <div className="max-w-3xl mx-auto">
+    <MemberPortalLayout>
+      <div className="max-w-3xl mx-auto">
             <h1 className="text-3xl font-bold tracking-tight mb-6">Mijn Profiel</h1>
             
             <div className="space-y-6">
@@ -221,10 +217,8 @@ const MemberProfile = () => {
                 )}
               </Card>
             </div>
-          </div>
-        </main>
       </div>
-    </div>
+    </MemberPortalLayout>
   );
 };
 

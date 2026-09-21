@@ -4,6 +4,7 @@ import {
   PREDICTIVE_ARC_DEFAULTS,
   type PredictiveArcOptions,
 } from "./predictiveArcRenderer";
+import { createPointerTracker } from "./pointerInteraction";
 
 export type PredictiveArcCanvasProps = Partial<PredictiveArcOptions> & {
   className?: string;
@@ -19,8 +20,12 @@ export function PredictiveArcCanvas({ className = "", ...props }: PredictiveArcC
     const host = hostRef.current;
     const canvas = canvasRef.current;
     if (!host || !canvas) return undefined;
-    const renderer = createPredictiveArcRenderer(canvas, () => optionsRef.current);
-    if (!renderer) return undefined;
+    const pointer = createPointerTracker(host, { follow: 0.07, pulseDuration: 1.6 });
+    const renderer = createPredictiveArcRenderer(canvas, () => optionsRef.current, () => pointer.state);
+    if (!renderer) {
+      pointer.dispose();
+      return undefined;
+    }
     let frame = 0;
     let visible = true;
     const resize = () => {
@@ -28,7 +33,8 @@ export function PredictiveArcCanvas({ className = "", ...props }: PredictiveArcC
       renderer.resize(bounds.width, bounds.height);
       renderer.render();
     };
-    const tick = () => {
+    const tick = (now: number) => {
+      pointer.update(now);
       renderer.render();
       frame = visible && !document.hidden ? requestAnimationFrame(tick) : 0;
     };
@@ -58,6 +64,7 @@ export function PredictiveArcCanvas({ className = "", ...props }: PredictiveArcC
       if (frame) cancelAnimationFrame(frame);
       observer.disconnect();
       intersection.disconnect();
+      pointer.dispose();
       document.removeEventListener("visibilitychange", visibility);
     };
   }, []);

@@ -6,17 +6,20 @@ const OrbitalSphereLazy = lazy(() =>
 );
 const DotMatrixLazy = lazy(() => import("./DotMatrixBackground").then((m) => ({ default: m.DotMatrixBackground })));
 const PredictiveArcLazy = lazy(() => import("./PredictiveArcCanvas").then((m) => ({ default: m.PredictiveArcCanvas })));
+const IqBotLazy = lazy(() => import("./IqBot").then((m) => ({ default: m.IqBot })));
 
 type EnergyOrbProps = ComponentProps<typeof EnergyOrbLazy>;
 type OrbitalSphereProps = ComponentProps<typeof OrbitalSphereLazy>;
 type DotMatrixProps = ComponentProps<typeof DotMatrixLazy>;
 type PredictiveArcProps = ComponentProps<typeof PredictiveArcLazy>;
+type IqBotProps = ComponentProps<typeof IqBotLazy>;
 
 export type ThreeSceneProps =
   | ({ kind: "energy-orb" } & EnergyOrbProps)
   | ({ kind: "orbital-sphere" } & OrbitalSphereProps)
   | ({ kind: "dot-matrix" } & DotMatrixProps)
-  | ({ kind: "predictive-arc" } & PredictiveArcProps);
+  | ({ kind: "predictive-arc" } & PredictiveArcProps)
+  | ({ kind: "iq-bot" } & IqBotProps);
 
 function useCanRender3D() {
   const [ready, setReady] = useState(false);
@@ -40,6 +43,8 @@ const FALLBACK: Record<ThreeSceneProps["kind"], string> = {
     "radial-gradient(circle at 50% 50%, rgba(99,91,255,0.18) 0%, rgba(5,7,15,0) 60%), #05070f",
   "predictive-arc":
     "radial-gradient(ellipse at 50% 100%, rgba(99,91,255,0.35) 0%, rgba(5,7,15,0) 60%), #05070f",
+  "iq-bot":
+    "radial-gradient(circle at 50% 50%, rgba(99,91,255,0.4) 0%, rgba(34,211,238,0.12) 40%, rgba(5,7,15,0) 65%), transparent",
 };
 
 /**
@@ -71,6 +76,9 @@ export function ThreeScene(props: ThreeSceneProps) {
       break;
     case "predictive-arc":
       scene = <PredictiveArcLazy {...(rest as PredictiveArcProps)} />;
+      break;
+    case "iq-bot":
+      scene = <IqBotLazy {...(rest as IqBotProps)} />;
       break;
   }
 

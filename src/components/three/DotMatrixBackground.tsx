@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { CORE_UPLINK_FRAGMENT_SHADER, CORE_UPLINK_VERTEX_SHADER } from "./dotMatrixShaders";
+import { createPointerTracker } from "./pointerInteraction";
 
 export type DotMatrixBackgroundProps = {
   speed?: number;
@@ -10,6 +11,8 @@ export type DotMatrixBackgroundProps = {
   radius?: number;
   opacity?: number;
   hue?: number;
+  /** Pointer influence: spotlight follows the cursor, clicks emit ripples. */
+  interaction?: number;
   className?: string;
 };
 
@@ -21,11 +24,13 @@ export const DOT_MATRIX_DEFAULTS = {
   radius: 0.15,
   opacity: 0.35,
   hue: 0,
+  interaction: 1,
 } as const;
 
 /**
  * Ported from threeui `DotMatrixBackground` (core-uplink shader): a full-screen dot grid
  * with a pulsing wave and pointer parallax, rendered on an orthographic plane.
+ * Interactive: a spotlight follows the cursor and clicks emit expanding ripples.
  */
 export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackgroundProps) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -54,6 +59,9 @@ export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackg
       uPulseSpeed: { value: 0.4 },
       uRadius: { value: 0.15 },
       uOpacity: { value: 0.35 },
+      uHover: { value: 0 },
+      uPulse: { value: 0 },
+      uClick: { value: new THREE.Vector2() },
     };
 
     const geometry = new THREE.PlaneGeometry(2, 2);
@@ -66,17 +74,10 @@ export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackg
     });
     scene.add(new THREE.Mesh(geometry, material));
 
-    const mouse = new THREE.Vector2();
-    const target = new THREE.Vector2();
+    const tracker = createPointerTracker(host, { follow: 0.07, pulseDuration: 1.5 });
     const startedAt = performance.now();
     let frame = 0;
     let visible = true;
-
-    const pointer = (event: PointerEvent) => {
-      const bounds = canvas.getBoundingClientRect();
-      target.x = ((event.clientX - bounds.left) / Math.max(1, bounds.width)) * 2 - 1;
-      target.y = -(((event.clientY - bounds.top) / Math.max(1, bounds.height)) * 2 - 1);
-    };
 
     const resize = () => {
       const bounds = host.getBoundingClientRect();
@@ -86,9 +87,13 @@ export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackg
 
     const render = (now: number) => {
       const options = optionsRef.current;
-      mouse.lerp(target, 0.05);
+      const p = tracker.update(now);
+      const interaction = Math.max(0, options.interaction);
       uniforms.uTime.value = (now - startedAt) * 0.001 * options.speed;
-      uniforms.uMouse.value = mouse;
+      uniforms.uMouse.value.set(p.x, p.y);
+      uniforms.uHover.value = p.hover * interaction;
+      uniforms.uPulse.value = p.pulse * interaction;
+      uniforms.uClick.value.set(p.clickX, p.clickY);
       uniforms.uGridScale.value = options.gridScale;
       uniforms.uMouseAmount.value = options.mouseAmount;
       uniforms.uPulseSpeed.value = options.pulseSpeed;
@@ -111,7 +116,6 @@ export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackg
 
     resizeObserver.observe(host);
     intersection.observe(host);
-    canvas.addEventListener("pointermove", pointer, { passive: true });
     resize();
     frame = requestAnimationFrame(render);
 
@@ -119,7 +123,7 @@ export function DotMatrixBackground({ className = "", ...props }: DotMatrixBackg
       if (frame) cancelAnimationFrame(frame);
       resizeObserver.disconnect();
       intersection.disconnect();
-      canvas.removeEventListener("pointermove", pointer);
+      tracker.dispose();
       geometry.dispose();
       material.dispose();
       renderer.dispose();

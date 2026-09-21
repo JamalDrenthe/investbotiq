@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { NXA_ENERGY_ORB_CONFIGURABLE_FRAGMENT_SHADER, NXA_ENERGY_ORB_VERTEX_SHADER } from "./energyOrbShaders";
+import { createPointerTracker } from "./pointerInteraction";
 
 export type EnergyOrbProps = {
   speed?: number;
@@ -15,6 +16,8 @@ export type EnergyOrbProps = {
   starSize?: number;
   brightness?: number;
   opacity?: number;
+  /** How strongly the orb, light and stars follow the pointer (0 disables). */
+  interaction?: number;
   className?: string;
 };
 
@@ -32,6 +35,7 @@ export const ENERGY_ORB_DEFAULTS = {
   starSize: 1,
   brightness: 1,
   opacity: 1,
+  interaction: 1,
 } as const;
 
 type Star = { x: number; y: number; depth: number; phase: number; drift: number; size: number };
@@ -119,12 +123,17 @@ export function EnergyOrb({ className = "", ...props }: EnergyOrbProps) {
       hue: gl.getUniformLocation(program, "uHue"),
       saturation: gl.getUniformLocation(program, "uSaturation"),
       glow: gl.getUniformLocation(program, "uGlow"),
+      mouse: gl.getUniformLocation(program, "uMouse"),
+      hover: gl.getUniformLocation(program, "uHover"),
+      pulse: gl.getUniformLocation(program, "uPulse"),
+      click: gl.getUniformLocation(program, "uClick"),
     };
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.clearColor(0, 0, 0, 0);
 
     const stars = createStars(180);
+    const pointer = createPointerTracker(host, { follow: 0.07, pulseDuration: 1.6 });
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let reducedMotion = motionQuery.matches;
     let width = 1;
@@ -169,10 +178,13 @@ export function EnergyOrb({ className = "", ...props }: EnergyOrbProps) {
       starContext.globalCompositeOperation = "screen";
       const particleTime = reducedMotion ? 0 : elapsed * Math.max(0, options.starSpeed);
       const colorHue = fract((252 + options.hue) / 360) * 360;
+      const parallax = options.interaction * 0.035;
+      const px = pointer.state.x * parallax;
+      const py = -pointer.state.y * parallax;
       for (let index = 0; index < count; index += 1) {
         const star = stars[index];
-        const x = fract(star.x + particleTime * 0.0022 * star.drift) * width;
-        const y = fract(star.y - particleTime * 0.0008 * star.depth + 1) * height;
+        const x = fract(star.x + particleTime * 0.0022 * star.drift + px * star.depth + 1) * width;
+        const y = fract(star.y - particleTime * 0.0008 * star.depth + py * star.depth + 1) * height;
         const twinkle = reducedMotion ? 0.78 : 0.58 + Math.sin(particleTime * (0.8 + star.depth) + star.phase) * 0.24;
         const alpha = Math.max(0.08, twinkle * (0.22 + star.depth * 0.48));
         const radius = Math.max(0.35, star.size * star.depth * Math.max(0.25, options.starSize));
@@ -188,8 +200,14 @@ export function EnergyOrb({ className = "", ...props }: EnergyOrbProps) {
       frame = 0;
       const options = optionsRef.current;
       const elapsed = (now - startedAt) * 0.001;
+      const interaction = reducedMotion ? 0 : Math.max(0, options.interaction);
+      const p = pointer.update(now);
       drawStars(elapsed);
       gl.uniform1f(uniforms.time, elapsed * options.speed);
+      gl.uniform2f(uniforms.mouse, p.x * interaction, p.y * interaction);
+      gl.uniform1f(uniforms.hover, p.hover * interaction);
+      gl.uniform1f(uniforms.pulse, p.pulse * interaction);
+      gl.uniform2f(uniforms.click, p.clickX, p.clickY);
       gl.uniform1f(uniforms.smokeScale, Math.max(0.01, options.smokeScale));
       gl.uniform1f(uniforms.smokeStrength, Math.max(0, options.smokeStrength));
       gl.uniform1f(uniforms.smokeSpeed, Math.max(0, options.smokeSpeed));
@@ -231,6 +249,7 @@ export function EnergyOrb({ className = "", ...props }: EnergyOrbProps) {
 
     return () => {
       stop();
+      pointer.dispose();
       resizeObserver.disconnect();
       intersection.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);

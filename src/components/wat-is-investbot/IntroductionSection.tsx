@@ -1,7 +1,6 @@
 
-import React from "react";
 import { motion } from "framer-motion";
-import { Bot } from "lucide-react";
+import { ThreeScene } from "@/components/three/ThreeScene";
 export default function IntroductionSection() {
   return <section className="py-12 px-4">
       <div className="container mx-auto max-w-6xl">
@@ -34,10 +33,8 @@ Vandaag nog weg met al die moeilijke investeringskeuzes! CashFlow Intelligence r
         }} transition={{
           duration: 0.6
         }} className="flex-1 flex justify-center">
-            <div className="w-64 h-64 rounded-full bg-gradient-to-br from-indigo-400 via-purple-300 to-blue-300 shadow-lg flex items-center justify-center">
-              <div className="w-40 h-40 rounded-full bg-white/25 backdrop-blur-sm border-4 border-white/30 flex items-center justify-center">
-                <Bot className="h-20 w-20 text-white" strokeWidth={1.5} />
-              </div>
+            <div className="relative h-64 w-64 overflow-hidden rounded-full bg-canvas shadow-glow sm:h-80 sm:w-80">
+              <ThreeScene kind="iq-bot" scale={0.9} />
             </div>
           </motion.div>
         </div>

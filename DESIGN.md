@@ -309,7 +309,22 @@ Product images (growth chart, dashboard screenshots) sit inside `lg`-rounded fra
 - **Predictive Arc** — 2D canvas dot arc (threeui `PredictiveArcCanvas`) behind "Hoe werkt het?" and cashflow statements; the arc *is* the growth curve.
 - **Dot Matrix** — three.js shader dot grid with pointer parallax (threeui `DotMatrixBackground`) behind CTA bands and the dashboard hero card.
 - **Orbital Sphere** — three.js particle sphere with orbit rings (threeui `OrbitalSphereBackground`) behind the auth panel; signals security and system.
+- **IQ Bot** — interactive three.js bot head: glossy sphere, cyan emissive eyes that follow the cursor, antenna tip, twin gyroscopic rings and a data-mote halo. Used on the CashFlow Intelligence page, the member welcome card and the “Wat is het?” intro.
 - **Lumen CTA** — gradient pill button with ring-dot indicator (threeui `LumenCta`), used as every primary action on canvas.
+
+### Pointer Interaction Model
+
+All WebGL/canvas scenes are pointer-transparent (`pointer-events: none`) yet interactive: `createPointerTracker` captures `pointermove`/`pointerenter`/`pointerdown` on the *parent surface* (the section or card the scene decorates), smooths the input and exposes `x, y, hover, pulse, velocity` per frame.
+
+- **Follow** — every scene turns, drifts or spotlights toward the cursor (`interaction` prop scales it, `0` disables).
+- **Hover** — brightness, ring speed and particle size ramp up while the pointer is inside the surface.
+- **Click** — an expanding shockwave/ripple decays over ~1.5s (orb ripple, sphere burst, bot shockwave, arc surge, dot-matrix ring).
+- **Velocity** — fast flicks add angular momentum (Orbital Sphere spin).
+- The member portal uses this everywhere: scenes react while copy stays readable and buttons stay clickable.
+
+### Member Portal
+
+Top-tab navigation (ported from investbotiq-hub): a sticky `canvas/90` header with a pill tab bar (Dashboard, Voortgang, Takenlijst, CashFlow Intelligence, Mijn Referrals, Profiel), an “Autonoom Live” chip and a logout action; on mobile it collapses to a drawer. Tabs render hub-style content: welcome/status bar, KPI cards with gradient top hairlines, ComposedChart projections, milestone roadmap, Flowluta unit grid, live AI decision feed and the parameter simulator.
 
 ## Do's and Don'ts
 

@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import MemberPortalLayout from "@/components/member/MemberPortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -41,11 +40,7 @@ const MemberReferrals = () => {
   const totalRewards = summary?.total_bonus || 0;
   
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-4 md:p-6">
+    <MemberPortalLayout>
           <div className="flex flex-col gap-6">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Mijn Referrals</h1>
@@ -212,9 +207,7 @@ const MemberReferrals = () => {
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+        </MemberPortalLayout>
   );
 };
 
