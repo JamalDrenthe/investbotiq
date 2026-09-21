@@ -33,13 +33,6 @@ const angleFor = (spec: GaugeSpec, value: number) => {
   return start + ((value - spec.min) / (spec.max - spec.min)) * spec.sweep;
 };
 
-const SCREWS = [
-  { a: 26, top: "6.4cqw", left: "6.4cqw" },
-  { a: -15, top: "6.4cqw", right: "6.4cqw" },
-  { a: 42, bottom: "6.4cqw", left: "6.4cqw" },
-  { a: 7, bottom: "6.4cqw", right: "6.4cqw" },
-] as const;
-
 /**
  * Analogue instrument gauge ported from the performance-diagnostics design:
  * machined plate, bezel ring, tick scale, sweeping needle with self-test cycle.
@@ -115,13 +108,6 @@ export const InstrumentGauge = ({ spec }: { spec: GaugeSpec }) => {
   return (
     <div className="iqg-card group">
       <div className="iqg-plate">
-        {SCREWS.map((s, i) => (
-          <span
-            key={i}
-            className="iqg-screw"
-            style={{ "--a": `${s.a}deg`, ...("top" in s ? { top: s.top } : { bottom: s.bottom }), ...("left" in s ? { left: s.left } : { right: s.right }) } as React.CSSProperties}
-          />
-        ))}
         <div className="iqg-shell">
           <div className="iqg-bezel">
             <div className="iqg-face" style={{ background: spec.face }}>

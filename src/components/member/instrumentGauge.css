@@ -12,21 +12,12 @@
   position: absolute;
   inset: 0;
   border-radius: 11.5cqw;
-  background: radial-gradient(120% 100% at 30% 0%, #121215 0%, #09090a 55%, #060607 100%);
-  border: 1px solid rgba(255,255,255,0.03);
-  box-shadow:
-    0 1px 1px -0.5px rgba(0,0,0,0.5),
-    0 3px 3px -1.5px rgba(0,0,0,0.4),
-    0 6px 6px -3px rgba(0,0,0,0.35),
-    0 12px 12px -6px rgba(0,0,0,0.3),
-    0 24px 24px -12px rgba(0,0,0,0.25);
-  transition: border-color 0.5s;
+  background: transparent;
 }
-.iqg-card:hover .iqg-plate { border-color: rgba(255,255,255,0.08); }
 
 .iqg-shell {
   position: absolute;
-  inset: 13cqw;
+  inset: 8cqw;
   border-radius: 50%;
   padding: 2.2%;
   background: conic-gradient(from 210deg, #3a3a3d 0deg, #17171a 60deg, #2c2c30 130deg, #0d0d0f 200deg, #313135 280deg, #131316 340deg, #3a3a3d 360deg);
