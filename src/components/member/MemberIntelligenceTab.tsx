@@ -10,12 +10,88 @@ import {
   Pause,
 } from "lucide-react";
 import { toast } from "sonner";
-import { InstrumentGauge } from "@/components/member/InstrumentGauge";
+import { X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { InstrumentGauge, type GaugeSpec } from "@/components/member/InstrumentGauge";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { Slider } from "@/components/ui/slider";
 
+interface GaugeEntry {
+  spec: GaugeSpec;
+  detail: string;
+}
+
+const GAUGES: GaugeEntry[] = [
+  {
+    spec: {
+      min: 0, max: 8, majorStep: 2, minorPerMajor: 4,
+      idle: 0, value: 6,
+      label: "Actieve Slots", unit: "Flowlutas",
+      readoutText: "6 / 8",
+      accent: "#818cf8",
+      face: "radial-gradient(closest-side at 50% 28%, #1c1c2e 0%, #14141f 50%, #0a0a0b 100%)",
+    },
+    detail: "6 van de 8 Flowluta slots zijn actief en genereren cashflow in de autonome cyclus.",
+  },
+  {
+    spec: {
+      min: 0, max: 160, majorStep: 40, minorPerMajor: 4,
+      idle: 0, value: 120, alertFrom: 140,
+      label: "Markt Scansnelheid", unit: "scans/sec",
+      accent: "#22d3ee",
+      face: "radial-gradient(closest-side at 50% 28%, #17324f 0%, #0f172a 48%, #030816 100%)",
+    },
+    detail: "Het neurale netwerk scant 120 markten en liquiditeitspools per seconde op koersafwijkingen.",
+  },
+  {
+    spec: {
+      min: 0, max: 100, majorStep: 25, minorPerMajor: 5,
+      idle: 0, value: 99.6,
+      label: "Efficiëntiescore", unit: "%",
+      numeral: (v) => String(v),
+      accent: "#34d399",
+      face: "radial-gradient(closest-side at 50% 28%, #12291f 0%, #0d1a15 50%, #060b09 100%)",
+    },
+    detail: "99.6% van de beslissingen wordt binnen de optimale parameters uitgevoerd zonder slippage.",
+  },
+  {
+    spec: {
+      min: 0, max: 10, majorStep: 5, minorPerMajor: 5,
+      idle: 0, value: 4,
+      label: "Volgende Cyclus", unit: "min",
+      readoutText: "In 4 min",
+      accent: "#c084fc",
+      face: "radial-gradient(closest-side at 50% 28%, #191624 0%, #111016 50%, #08070b 100%)",
+    },
+    detail: "De volgende compounding- en herverdelingscyclus start over 4 minuten.",
+  },
+  {
+    spec: {
+      min: 0, max: 2000, majorStep: 500, minorPerMajor: 5,
+      idle: 0, value: 1620,
+      label: "Maandelijkse Cashflow", unit: "EUR",
+      readoutText: "€ 1.620",
+      accent: "#fbbf24",
+      face: "radial-gradient(closest-side at 50% 28%, #292113 0%, #1a150d 50%, #0b0806 100%)",
+    },
+    detail: "De geborgde maandelijkse cashflow reserve van €1.620,00 staat veilig in de kluis.",
+  },
+  {
+    spec: {
+      min: 0, max: 100, majorStep: 20, minorPerMajor: 4,
+      idle: 0, value: 100,
+      label: "Dekkingsgraad", unit: "%",
+      numeral: (v) => String(v),
+      accent: "#38bdf8",
+      face: "radial-gradient(closest-side at 50% 28%, #0f2030 0%, #0b141f 50%, #04080d 100%)",
+    },
+    detail: "De BEL leningen buffer heeft een dekkingsgraad van 100% voor maximale kapitaalbescherming.",
+  },
+];
+
 export const MemberIntelligenceTab: React.FC = () => {
   const [isRunning, setIsRunning] = useState(true);
+  const [zoomedGauge, setZoomedGauge] = useState<GaugeEntry | null>(null);
   const [activeSimFlowlutas, setActiveSimFlowlutas] = useState<number>(6);
   const [riskProfile, setRiskProfile] = useState<"defensief" | "gebalanceerd" | "groeigericht">("gebalanceerd");
   
@@ -127,48 +203,15 @@ export const MemberIntelligenceTab: React.FC = () => {
             </div>
           </div>
 
-          {/* Real-time Instrument Gauges */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full max-w-5xl mt-10 justify-items-center">
-            <InstrumentGauge
-              spec={{
-                min: 0, max: 8, majorStep: 2, minorPerMajor: 4,
-                idle: 0, value: 6,
-                label: "Actieve Slots", unit: "Flowlutas",
-                readoutText: "6 / 8",
-                accent: "#818cf8",
-                face: "radial-gradient(closest-side at 50% 28%, #1c1c2e 0%, #14141f 50%, #0a0a0b 100%)",
-              }}
-            />
-            <InstrumentGauge
-              spec={{
-                min: 0, max: 160, majorStep: 40, minorPerMajor: 4,
-                idle: 0, value: 120, alertFrom: 140,
-                label: "Markt Scansnelheid", unit: "scans/sec",
-                accent: "#22d3ee",
-                face: "radial-gradient(closest-side at 50% 28%, #17324f 0%, #0f172a 48%, #030816 100%)",
-              }}
-            />
-            <InstrumentGauge
-              spec={{
-                min: 0, max: 100, majorStep: 25, minorPerMajor: 5,
-                idle: 0, value: 99.6,
-                label: "Efficiëntiescore", unit: "%",
-                numeral: (v) => String(v),
-                accent: "#34d399",
-                face: "radial-gradient(closest-side at 50% 28%, #12291f 0%, #0d1a15 50%, #060b09 100%)",
-              }}
-            />
-            <InstrumentGauge
-              spec={{
-                min: 0, max: 10, majorStep: 5, minorPerMajor: 5,
-                idle: 0, value: 4,
-                label: "Volgende Cyclus", unit: "min",
-                readoutText: "In 4 min",
-                accent: "#c084fc",
-                face: "radial-gradient(closest-side at 50% 28%, #191624 0%, #111016 50%, #08070b 100%)",
-              }}
-            />
+          {/* Real-time Instrument Gauges — click to enlarge */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 w-full max-w-5xl mt-10 justify-items-center">
+            {GAUGES.map((g) => (
+              <InstrumentGauge key={g.spec.label} spec={g.spec} onActivate={() => setZoomedGauge(g)} />
+            ))}
           </div>
+          <p className="mt-6 text-[10px] uppercase tracking-[0.3em] text-slate-400 dark:text-slate-500">
+            Klik op een instrument voor een vergrote weergave
+          </p>
         </div>
 
       </div>
@@ -297,6 +340,49 @@ export const MemberIntelligenceTab: React.FC = () => {
         </div>
 
       </div>
+
+      {/* Enlarged gauge view */}
+      <AnimatePresence>
+        {zoomedGauge && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+            className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-6"
+            onClick={() => setZoomedGauge(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.82, opacity: 0, y: 24 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.85, opacity: 0, y: 16 }}
+              transition={{ type: "spring", stiffness: 260, damping: 24 }}
+              className="relative flex flex-col items-center gap-5 max-w-md w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setZoomedGauge(null)}
+                className="absolute -top-2 right-0 sm:-right-2 z-10 p-2.5 rounded-full bg-slate-800/90 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors"
+                aria-label="Sluiten"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <div className="iqg-zoom w-[min(80vw,480px)]">
+                <InstrumentGauge spec={zoomedGauge.spec} />
+              </div>
+              <div className="text-center space-y-1.5 px-4">
+                <div className="text-xs font-black uppercase tracking-[0.3em]" style={{ color: zoomedGauge.spec.accent }}>
+                  {zoomedGauge.spec.label}
+                </div>
+                <p className="text-sm text-slate-300 leading-relaxed">
+                  {zoomedGauge.detail}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

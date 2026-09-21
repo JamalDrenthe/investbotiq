@@ -37,7 +37,7 @@ const angleFor = (spec: GaugeSpec, value: number) => {
  * Analogue instrument gauge ported from the performance-diagnostics design:
  * machined plate, bezel ring, tick scale, sweeping needle with self-test cycle.
  */
-export const InstrumentGauge = ({ spec }: { spec: GaugeSpec }) => {
+export const InstrumentGauge = ({ spec, onActivate }: { spec: GaugeSpec; onActivate?: () => void }) => {
   const needleRef = useRef<HTMLDivElement>(null);
   const flutterRef = useRef<HTMLDivElement>(null);
 
@@ -59,6 +59,14 @@ export const InstrumentGauge = ({ spec }: { spec: GaugeSpec }) => {
       return;
     }
 
+    // stagger instruments so needles don't sweep in lockstep
+    const stagger = 240 + Math.random() * 1400;
+    const flutterPeriod = 1.7 + Math.random() * 1.4;
+    if (flutter) {
+      flutter.style.animationDuration = `${flutterPeriod}s`;
+      flutter.style.animationDelay = `-${Math.random() * flutterPeriod}s`;
+    }
+
     let cancelled = false;
     const timers: number[] = [];
 
@@ -66,14 +74,16 @@ export const InstrumentGauge = ({ spec }: { spec: GaugeSpec }) => {
     const cycle = () => {
       if (cancelled || !needle) return;
       flutter?.removeAttribute("data-live");
+      // small jitter so every needle parks on a slightly different angle
+      const jittered = spec.value + (spec.max - spec.min) * (Math.random() * 0.03 - 0.015);
       setAngle(spec.max, 1100);
       timers.push(window.setTimeout(() => setAngle(spec.idle, 900), 1350));
-      timers.push(window.setTimeout(() => setAngle(spec.value, 1200), 2500));
+      timers.push(window.setTimeout(() => setAngle(jittered, 1200), 2500));
       timers.push(window.setTimeout(() => flutter?.setAttribute("data-live", ""), 3900));
     };
 
-    cycle();
-    const interval = window.setInterval(cycle, 8000);
+    timers.push(window.setTimeout(cycle, stagger));
+    const interval = window.setInterval(cycle, 9000 + stagger);
     return () => {
       cancelled = true;
       timers.forEach(clearTimeout);
@@ -106,7 +116,14 @@ export const InstrumentGauge = ({ spec }: { spec: GaugeSpec }) => {
   const readout = spec.readoutText ?? (spec.format ? spec.format(spec.value) : String(spec.value));
 
   return (
-    <div className="iqg-card group">
+    <div
+      className={`iqg-card group ${onActivate ? "iqg-clickable" : ""}`}
+      role={onActivate ? "button" : undefined}
+      tabIndex={onActivate ? 0 : undefined}
+      onClick={onActivate}
+      onKeyDown={onActivate ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onActivate(); } } : undefined}
+      title={onActivate ? "Klik om te vergroten" : undefined}
+    >
       <div className="iqg-plate">
         <div className="iqg-shell">
           <div className="iqg-bezel">

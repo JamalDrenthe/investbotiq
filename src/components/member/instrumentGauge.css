@@ -185,8 +185,18 @@
 .iqg-cap-sm { font-size: 2.43cqw; letter-spacing: 0.3em; text-indent: 0.3em; line-height: 1; }
 .iqg-readout { font-size: 8.55cqw; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
 
-@keyframes iqg-flutter { 0%, 100% { transform: rotate(-0.4deg); } 50% { transform: rotate(0.4deg); } }
+@keyframes iqg-flutter { 0%, 100% { transform: rotate(-0.9deg); } 50% { transform: rotate(0.9deg); } }
 .iqg-flutter[data-live] { animation: iqg-flutter 2.6s ease-in-out infinite; }
+
+/* clickable instrument: hover lift + press feedback */
+.iqg-clickable { cursor: pointer; transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.25, 1.3), filter 0.35s ease; }
+.iqg-clickable:hover { transform: translateY(-6px) scale(1.04); }
+.iqg-clickable:hover .iqg-shell { filter: drop-shadow(0 0 22px rgba(129, 140, 248, 0.35)); }
+.iqg-clickable:active { transform: translateY(-2px) scale(1.0); }
+.iqg-clickable:focus-visible { outline: 2px solid rgba(129, 140, 248, 0.8); outline-offset: 4px; border-radius: 11.5cqw; }
+
+/* enlarged overlay rendering */
+.iqg-zoom .iqg-card { max-width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
   .iqg-needle, .iqg-flutter[data-live] { transition: none !important; animation: none !important; }
