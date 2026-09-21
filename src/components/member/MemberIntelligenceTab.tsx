@@ -81,7 +81,7 @@ export const MemberIntelligenceTab: React.FC = () => {
             </div>
 
             <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-              CashFlow Intelligence
+              Intelligence
             </h1>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl mt-1 leading-relaxed">
               Het autonome neurale netwerk van Investbotiq beheert, optimaliseert en beveiligt uw cashflowgeneratie 24/7 zonder handmatige interventie.

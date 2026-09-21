@@ -9,7 +9,7 @@ import CTASection from "@/components/tier-plannen/CTASection";
 export default function WatIsInvestBotIQ() {
   return (
     <InfoPageLayout
-      title="Wat is CashFlow Intelligence?"
+      title="Wat is Intelligence?"
       subtitle="Slimme Intelligentie. Automatische cashflow. Geen zorgen."
     >
       <IntroductionSection />

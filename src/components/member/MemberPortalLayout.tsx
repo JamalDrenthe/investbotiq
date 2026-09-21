@@ -12,6 +12,7 @@ import {
   User,
 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
+import { IqBotBubble } from "@/components/member/IqBotBubble";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -21,7 +22,7 @@ const TABS: Array<{ id: MemberTab; label: string; icon: React.ReactNode; badge?:
   { id: "dashboard", label: "Member Dashboard", icon: <TrendingUp className="h-4 w-4" /> },
   { id: "voortgang", label: "Voortgang", icon: <PiggyBank className="h-4 w-4" /> },
   { id: "takenlijst", label: "Takenlijst", icon: <ListTodo className="h-4 w-4" />, badge: "2" },
-  { id: "intelligence", label: "CashFlow Intelligence", icon: <Brain className="h-4 w-4" /> },
+  { id: "intelligence", label: "Intelligence", icon: <Brain className="h-4 w-4" /> },
   { id: "referrals", label: "Mijn Referrals", icon: <Users className="h-4 w-4" /> },
   { id: "profile", label: "Profiel", icon: <User className="h-4 w-4" /> },
 ];
@@ -185,6 +186,8 @@ export default function MemberPortalLayout({ children }: { children: React.React
       <main className="mx-auto w-full max-w-7xl flex-1 space-y-8 px-4 py-8 sm:px-6 lg:px-8">
         {children}
       </main>
+
+      <IqBotBubble />
     </div>
   );
 }

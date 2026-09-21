@@ -16,10 +16,10 @@ export default function IntroductionSection() {
         }} transition={{
           duration: 0.6
         }} className="flex-1">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Jouw persoonlijke CashFlow Intelligence</h2>
-            <p className="text-lg text-gray-700 mb-6">CashFlow Intelligence is jouw persoonlijke Invest Agent. Wij zijn er om je de toegang te geven tot deze krachtige tool!
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Jouw persoonlijke Intelligence</h2>
+            <p className="text-lg text-gray-700 mb-6">Intelligence is jouw persoonlijke Invest Agent. Wij zijn er om je de toegang te geven tot deze krachtige tool!
 Ontvang maandelijkse cashflow via ons unieke Tier-systeem.
-Vandaag nog weg met al die moeilijke investeringskeuzes! CashFlow Intelligence regelt het voor je.</p>
+Vandaag nog weg met al die moeilijke investeringskeuzes! Intelligence regelt het voor je.</p>
           </motion.div>
           
           <motion.div initial={{
