@@ -90,7 +90,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             className={cn(
               "leading-none transition-colors",
               sizeConfig.title,
-              isDark ? "text-white group-hover:text-indigo-200" : "text-slate-900 dark:text-white group-hover:text-indigo-900 dark:group-hover:text-indigo-200"
+              isDark ? "text-ink group-hover:text-indigo-300" : "text-slate-900 dark:text-white group-hover:text-indigo-900 dark:group-hover:text-indigo-200"
             )}
           >
             INVESTBOTIQ
@@ -100,7 +100,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
               className={cn(
                 "uppercase transition-colors",
                 sizeConfig.subtitle,
-                isDark ? "text-indigo-300/90" : "text-indigo-600 dark:text-indigo-300"
+                isDark ? "text-ink-muted" : "text-indigo-600 dark:text-indigo-300"
               )}
             >
               {subtitle}

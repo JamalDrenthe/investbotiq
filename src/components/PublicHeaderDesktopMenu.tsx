@@ -4,6 +4,8 @@ import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import { LumenCtaLink } from "@/components/three/LumenCta";
+import { usePreferences } from "@/lib/preferences";
+import PreferenceToggles from "@/components/PreferenceToggles";
 import { PUBLIC_NAV_ITEMS } from "./publicNav";
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 
 const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   const { user, userRole } = useAuth();
+  const { t } = usePreferences();
   const isMember = !!user && userRole === "member";
   const [desktopSubmenuOpen, setDesktopSubmenuOpen] = useState(false);
   const { pathname } = useLocation();
@@ -21,7 +24,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   return (
     <nav className="hidden items-center gap-1 md:flex">
       <Link to="/" className={`nav-pill ${pathname === "/" ? "nav-pill--active" : ""}`}>
-        Home
+        {t(PUBLIC_NAV_ITEMS[0].title)}
       </Link>
       <div
         className="relative"
@@ -33,7 +36,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           tabIndex={0}
           onClick={() => setDesktopSubmenuOpen((v) => !v)}
         >
-          Alles over Investbot
+          {t(PUBLIC_NAV_ITEMS[1].title)}
           <ChevronDown className={`h-4 w-4 transition-transform ${desktopSubmenuOpen ? "rotate-180" : ""}`} />
         </button>
         <AnimatePresence>
@@ -51,7 +54,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
                   className="w-full rounded-full px-4 py-2.5 text-left text-sm font-medium text-ink-muted transition-colors hover:bg-white/8 hover:text-ink"
                   onClick={() => handleNav(item.to)}
                 >
-                  {item.label}
+                  {t(item.label)}
                 </button>
               ))}
             </motion.div>
@@ -65,22 +68,23 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
             className={`nav-pill ${pathname === item.to ? "nav-pill--active" : ""}`}
             onClick={() => handleNav(item.to)}
           >
-            {item.title}
+            {t(item.title)}
           </button>
         ) : null,
       )}
       <div className="ml-3 flex items-center gap-2">
+        <PreferenceToggles />
         {isMember ? (
           <LumenCtaLink to="/member/dashboard" size="sm" variant="ghost">
-            Member Dashboard
+            {t("Member Dashboard")}
           </LumenCtaLink>
         ) : (
           <LumenCtaLink to="/auth" size="sm" variant="ghost">
-            Login
+            {t("Login")}
           </LumenCtaLink>
         )}
         <LumenCtaLink to="/register" size="sm" dot>
-          Aanmelden
+          {t("Aanmelden")}
         </LumenCtaLink>
       </div>
     </nav>

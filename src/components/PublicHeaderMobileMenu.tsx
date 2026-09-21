@@ -4,6 +4,8 @@ import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
 import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
+import { usePreferences } from "@/lib/preferences";
+import PreferenceToggles from "@/components/PreferenceToggles";
 import { PUBLIC_NAV_ITEMS } from "./publicNav";
 
 interface Props {
@@ -15,6 +17,7 @@ interface Props {
 const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }) => {
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const { user, userRole } = useAuth();
+  const { t } = usePreferences();
   const isMember = !!user && userRole === "member";
   const navigate = useNavigate();
   const submenu = PUBLIC_NAV_ITEMS[1].submenu;
@@ -52,21 +55,21 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
               <button
                 className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 transition hover:bg-white/10"
                 onClick={() => setMenuOpen(false)}
-                aria-label="Sluit menu"
+                aria-label={t("Sluit menu")}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
             <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-4 py-5">
               <button className={itemClass} onClick={() => go("/")}>
-                Home
+                {t(PUBLIC_NAV_ITEMS[0].title)}
               </button>
               <div className="w-full">
                 <button
                   className={`${itemClass} flex items-center justify-between`}
                   onClick={() => setSubmenuOpen((o) => !o)}
                 >
-                  <span>Alles over Investbot</span>
+                  <span>{t(PUBLIC_NAV_ITEMS[1].title)}</span>
                   <ChevronDown className={`h-5 w-5 transition-transform ${submenuOpen ? "rotate-180" : ""}`} />
                 </button>
                 <AnimatePresence>
@@ -84,7 +87,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                           className="w-full rounded-full px-4 py-2.5 text-left text-sm text-ink-muted transition hover:bg-white/8 hover:text-ink"
                           onClick={() => go(item.to)}
                         >
-                          {item.label}
+                          {t(item.label)}
                         </button>
                       ))}
                     </motion.div>
@@ -94,25 +97,28 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
               {PUBLIC_NAV_ITEMS.slice(2).map((item) =>
                 "to" in item ? (
                   <button key={item.title} className={itemClass} onClick={() => go(item.to)}>
-                    {item.title}
+                    {t(item.title)}
                   </button>
                 ) : null,
               )}
             </nav>
             <div className="flex flex-col gap-3 border-t border-canvas-hairline px-6 pb-8 pt-5">
+              <div className="flex justify-center pb-1">
+                <PreferenceToggles />
+              </div>
               {!user && (
                 <>
                   <LumenCtaLink to="/register" dot className="w-full" onClick={() => setMenuOpen(false)}>
-                    Aanmelden
+                    {t("Aanmelden")}
                   </LumenCtaLink>
                   <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/auth")}>
-                    Login
+                    {t("Login")}
                   </LumenCtaButton>
                 </>
               )}
               {isMember && (
                 <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/member/dashboard")}>
-                  Member Dashboard
+                  {t("Member Dashboard")}
                 </LumenCtaButton>
               )}
             </div>

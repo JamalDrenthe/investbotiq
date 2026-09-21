@@ -12,6 +12,8 @@ import {
   UserPlus,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import PreferenceToggles from "@/components/PreferenceToggles";
+import { usePreferences } from "@/lib/preferences";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: Home },
@@ -26,8 +28,12 @@ const navigation = [
 ];
 
 export const AdminNavBar = () => {
+  const { t } = usePreferences();
   return (
     <div className="mb-8">
+      <div className="mb-4 flex justify-start">
+        <PreferenceToggles />
+      </div>
       <nav className="space-y-1">
         <ul className="space-y-2">
           {navigation.map((item) => (
@@ -41,7 +47,7 @@ export const AdminNavBar = () => {
                 }
               >
                 <item.icon className="w-5 h-5" />
-                <span>{item.name}</span>
+                <span>{t(item.name)}</span>
               </NavLink>
             </li>
           ))}

@@ -8,6 +8,8 @@ import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { LumenCtaButton } from "@/components/three/LumenCta";
 import BrandLogo from "@/components/BrandLogo";
+import PreferenceToggles from "@/components/PreferenceToggles";
+import { usePreferences } from "@/lib/preferences";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +17,7 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user, userRole } = useAuth();
+  const { t } = usePreferences();
 
   useEffect(() => {
     if (user && userRole) {
@@ -35,7 +38,7 @@ const Auth = () => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error("Vul alstublieft zowel e-mail als wachtwoord in");
+      toast.error(t("Vul alstublieft zowel e-mail als wachtwoord in"));
       return;
     }
 
@@ -44,9 +47,9 @@ const Auth = () => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      if (data.user) toast.success("Succesvol ingelogd");
+      if (data.user) toast.success(t("Succesvol ingelogd"));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Fout bij inloggen");
+      toast.error(error instanceof Error ? error.message : t("Fout bij inloggen"));
     } finally {
       setLoading(false);
     }
@@ -67,14 +70,7 @@ const Auth = () => {
           hue={-16}
           scale={1.05}
         />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(5,7,15,0.7) 0%, rgba(5,7,15,0.1) 35%, rgba(5,7,15,0.15) 65%, rgba(5,7,15,0.95) 100%)",
-          }}
-        />
+        <div aria-hidden="true" className="scene-veil scene-veil--auth" />
         <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
           <BrandLogo variant="dark" size="lg" to="/" />
           <motion.div
@@ -85,19 +81,22 @@ const Auth = () => {
           >
             <div className="eyebrow mb-6">Invest Bot IQ</div>
             <h1 className="font-display text-display-md font-semibold tracking-[-0.03em] text-ink xl:text-display-lg">
-              Laat de <span className="text-gradient-light">IQ Bot</span> automatisch jouw cashflow opbouwen
+              {t("Laat de")} <span className="text-gradient-light">IQ Bot</span> {t("automatisch jouw cashflow opbouwen")}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-ink-muted">Geen kennis vereist, geen zorgen. Gewoon laten groeien.</p>
+            <p className="mt-6 text-lg leading-8 text-ink-muted">{t("Geen kennis vereist, geen zorgen. Gewoon laten groeien.")}</p>
           </motion.div>
           <div className="flex items-center gap-3 text-sm text-ink-faint">
             <span className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_12px_rgba(34,211,238,0.9)]" />
-            Tijdelijke lokale login
+            {t("Tijdelijke lokale login")}
           </div>
         </div>
       </div>
 
       {/* Form side */}
       <div className="relative flex min-h-screen items-center justify-center px-6 py-16 sm:px-10">
+        <div className="absolute right-6 top-6 z-10">
+          <PreferenceToggles />
+        </div>
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -right-40 top-1/3 h-[480px] w-[480px] rounded-full opacity-60 blur-3xl"
@@ -118,19 +117,19 @@ const Auth = () => {
           <div className="icon-tile mb-7">
             <LockKeyhole className="h-5 w-5" />
           </div>
-          <h2 className="font-display text-heading font-semibold tracking-[-0.02em] text-ink">Inloggen</h2>
+          <h2 className="font-display text-heading font-semibold tracking-[-0.02em] text-ink">{t("Inloggen")}</h2>
           <p className="mt-3 text-sm leading-6 text-ink-muted">
-            Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.
+            {t("Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.")}
           </p>
           <form onSubmit={handleLogin} className="mt-8 space-y-4">
             <div className="space-y-2">
               <label htmlFor="email" className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-faint">
-                E-mail
+                {t("E-mail")}
               </label>
               <input
                 id="email"
                 type="email"
-                placeholder="E-mail"
+                placeholder={t("E-mail")}
                 className="input-canvas"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -140,12 +139,12 @@ const Auth = () => {
             </div>
             <div className="space-y-2">
               <label htmlFor="password" className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-faint">
-                Wachtwoord
+                {t("Wachtwoord")}
               </label>
               <input
                 id="password"
                 type="password"
-                placeholder="Wachtwoord"
+                placeholder={t("Wachtwoord")}
                 className="input-canvas"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -154,7 +153,7 @@ const Auth = () => {
               />
             </div>
             <LumenCtaButton type="submit" className="mt-2 w-full" disabled={loading} dot={!loading}>
-              {loading ? "Bezig..." : "Inloggen"}
+              {loading ? t("Bezig...") : t("Inloggen")}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </LumenCtaButton>
           </form>

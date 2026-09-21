@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import PublicHeader from "@/components/PublicHeader";
 import PublicFooter from "@/components/PublicFooter";
 import { ThreeScene } from "@/components/three/ThreeScene";
+import { usePreferences } from "@/lib/preferences";
 
 interface InfoPageLayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface InfoPageLayoutProps {
 }
 
 export default function InfoPageLayout({ children, title, subtitle, eyebrow }: InfoPageLayoutProps) {
+  const { t } = usePreferences();
   return (
     <div className="band-canvas min-h-screen w-full overflow-x-hidden">
       <PublicHeader />
@@ -30,14 +32,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
           opacity={0.4}
           hue={-20}
         />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse at 50% 20%, rgba(99,91,255,0.28) 0%, rgba(5,7,15,0) 55%), linear-gradient(180deg, rgba(5,7,15,0.2) 0%, rgba(5,7,15,0.1) 50%, rgba(5,7,15,1) 100%)",
-          }}
-        />
+        <div aria-hidden="true" className="scene-veil scene-veil--info" />
         <div className="relative mx-auto w-full max-w-content px-6 lg:px-10">
           {eyebrow && (
             <motion.div
@@ -46,7 +41,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
               transition={{ duration: 0.5 }}
               className="eyebrow mb-6"
             >
-              {eyebrow}
+              {t(eyebrow)}
             </motion.div>
           )}
           <motion.h1
@@ -55,7 +50,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-4xl font-display text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.035em] text-ink sm:text-display-md lg:text-display-lg"
           >
-            {title}
+            {t(title)}
           </motion.h1>
           {subtitle && (
             <motion.p
@@ -64,7 +59,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
               transition={{ duration: 0.6, delay: 0.15 }}
               className="mt-6 max-w-2xl text-lg leading-8 text-ink-muted md:text-xl md:leading-9"
             >
-              {subtitle}
+              {t(subtitle)}
             </motion.p>
           )}
         </div>

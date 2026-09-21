@@ -26,14 +26,7 @@ export default function WhySection() {
         opacity={0.45}
         hue={-20}
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(5,7,15,1) 0%, rgba(5,7,15,0.35) 25%, rgba(5,7,15,0.35) 75%, rgba(5,7,15,1) 100%)",
-        }}
-      />
+      <div aria-hidden="true" className="scene-veil scene-veil--why" />
       <div className="relative mx-auto w-full max-w-content px-6 py-24 md:py-32 lg:px-10">
         <FadeIn delay={0.05} className="max-w-2xl">
           <div className="eyebrow mb-6">Waarom</div>

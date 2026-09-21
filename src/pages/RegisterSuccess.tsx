@@ -2,8 +2,10 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { LumenCtaLink } from "@/components/three/LumenCta";
+import { usePreferences } from "@/lib/preferences";
 
 const RegisterSuccess = () => {
+  const { t } = usePreferences();
   return (
     <div className="band-canvas relative flex min-h-screen items-center justify-center overflow-hidden p-4">
       {/* threeui OrbitalSphereBackground — the bot "takes your request into orbit" */}
@@ -18,14 +20,7 @@ const RegisterSuccess = () => {
         hue={-16}
         scale={1.1}
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 50%, rgba(5,7,15,0) 0%, rgba(5,7,15,0.5) 60%, rgba(5,7,15,0.95) 100%)",
-        }}
-      />
+      <div aria-hidden="true" className="scene-veil scene-veil--register-success" />
 
       <motion.div
         initial={{ opacity: 0, y: 32 }}
@@ -42,9 +37,9 @@ const RegisterSuccess = () => {
           <Check className="h-8 w-8 text-white" strokeWidth={2.5} />
         </motion.div>
 
-        <div className="eyebrow mt-8 justify-center">Aanmelding ontvangen</div>
+        <div className="eyebrow mt-8 justify-center">{t("Aanmelding ontvangen")}</div>
         <h1 className="mt-4 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-          Bedankt voor uw aanmelding!
+          {t("Bedankt voor uw aanmelding!")}
         </h1>
 
         <motion.p
@@ -53,13 +48,13 @@ const RegisterSuccess = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <span className="font-semibold text-ink">De IQ Bot</span> bekijkt uw aanvraag.<br/>
-          U ontvangt binnen <span className="tnum font-semibold text-ink">48 uur</span> bericht via e-mail.<br/>
-          Wij nemen zo spoedig mogelijk contact met u op.
+          <span className="font-semibold text-ink">{t("De IQ Bot")}</span> {t("bekijkt uw aanvraag.")}<br/>
+          {t("U ontvangt binnen")} <span className="tnum font-semibold text-ink">{t("48 uur")}</span> {t("bericht via e-mail.")}<br/>
+          {t("Wij nemen zo spoedig mogelijk contact met u op.")}
         </motion.p>
 
         <div className="mt-8">
-          <LumenCtaLink to="/" dot className="w-full">Terug naar home</LumenCtaLink>
+          <LumenCtaLink to="/" dot className="w-full">{t("Terug naar Home")}</LumenCtaLink>
         </div>
       </motion.div>
     </div>

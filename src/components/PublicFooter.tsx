@@ -2,8 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import BrandLogo from "./BrandLogo";
 import { PUBLIC_NAV_ITEMS } from "./publicNav";
+import { usePreferences } from "@/lib/preferences";
 
 const PublicFooter: React.FC = () => {
+  const { t } = usePreferences();
   const year = new Date().getFullYear();
   return (
     <footer className="band-canvas hairline-top">
@@ -11,23 +13,23 @@ const PublicFooter: React.FC = () => {
         <div className="flex flex-col gap-5">
           <BrandLogo variant="dark" size="md" to="/" />
           <p className="max-w-sm text-sm leading-relaxed text-ink-muted">Automated Cashflow Platform</p>
-          <div className="chip chip--cyan w-fit">IQ Bot actief</div>
+          <div className="chip chip--cyan w-fit">{t("IQ Bot actief")}</div>
         </div>
         <div>
-          <div className="eyebrow mb-5">Navigatie</div>
+          <div className="eyebrow mb-5">{t("Navigatie")}</div>
           <ul className="flex flex-col gap-3 text-sm">
             {PUBLIC_NAV_ITEMS.map((item) =>
               "to" in item ? (
                 <li key={item.title}>
                   <Link to={item.to} className="text-ink-muted transition-colors hover:text-ink">
-                    {item.title}
+                    {t(item.title)}
                   </Link>
                 </li>
               ) : (
                 item.submenu.map((sub) => (
                   <li key={sub.to}>
                     <Link to={sub.to} className="text-ink-muted transition-colors hover:text-ink">
-                      {sub.label}
+                      {t(sub.label)}
                     </Link>
                   </li>
                 ))
@@ -36,16 +38,16 @@ const PublicFooter: React.FC = () => {
           </ul>
         </div>
         <div>
-          <div className="eyebrow mb-5">Juridisch</div>
+          <div className="eyebrow mb-5">{t("Juridisch")}</div>
           <ul className="flex flex-col gap-3 text-sm">
             <li>
               <a href="#" className="text-ink-muted transition-colors hover:text-ink">
-                Algemene Voorwaarden
+                {t("Algemene Voorwaarden")}
               </a>
             </li>
             <li>
               <a href="#" className="text-ink-muted transition-colors hover:text-ink">
-                Privacybeleid
+                {t("Privacybeleid")}
               </a>
             </li>
             <li>

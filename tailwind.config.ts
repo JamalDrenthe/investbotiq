@@ -72,10 +72,10 @@ export default {
 				},
 				// DESIGN.md tokens
 				canvas: {
-					DEFAULT: '#05070f',
-					elevated: '#0b1020',
-					panel: '#111832',
-					hairline: 'rgba(148, 163, 255, 0.14)'
+					DEFAULT: 'hsl(var(--ds-canvas-hsl) / <alpha-value>)',
+					elevated: 'hsl(var(--ds-canvas-elevated-hsl) / <alpha-value>)',
+					panel: 'hsl(var(--ds-canvas-panel-hsl) / <alpha-value>)',
+					hairline: 'var(--ds-canvas-hairline)'
 				},
 				paper: {
 					DEFAULT: '#f6f7fb',
@@ -94,9 +94,9 @@ export default {
 				amber: { DEFAULT: '#fbbf24', 50: '#fffbeb', 100: '#fef3c7', 200: '#fde68a', 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309', 800: '#92400e', 900: '#78350f', 950: '#451a03' },
 				rose: '#fb7185',
 				ink: {
-					DEFAULT: '#f5f7ff',
-					muted: '#a4adcf',
-					faint: '#5f6a94'
+					DEFAULT: 'hsl(var(--ds-ink-hsl) / <alpha-value>)',
+					muted: 'hsl(var(--ds-ink-muted-hsl) / <alpha-value>)',
+					faint: 'hsl(var(--ds-ink-faint-hsl) / <alpha-value>)'
 				},
 				graphite: {
 					DEFAULT: '#0b1020',

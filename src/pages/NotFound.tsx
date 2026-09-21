@@ -5,10 +5,12 @@ import { ArrowLeft, Home } from "lucide-react";
 import { motion } from "framer-motion";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
+import { usePreferences } from "@/lib/preferences";
 
 const NotFound = () => {
   const navigate = useNavigate();
   const { userRole } = useAuth();
+  const { t } = usePreferences();
 
   const getDashboardLink = () => {
     if (userRole === "admin") return "/admin";
@@ -17,10 +19,10 @@ const NotFound = () => {
   };
 
   const dashboardLabel = userRole === "admin" 
-    ? "Terug naar Admin Dashboard" 
+    ? t("Terug naar Admin Dashboard") 
     : userRole === "member" 
-      ? "Terug naar Member Dashboard" 
-      : "Terug naar Home";
+      ? t("Terug naar Member Dashboard") 
+      : t("Terug naar Home");
 
   return (
     <div className="band-canvas relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-4">
@@ -36,14 +38,7 @@ const NotFound = () => {
         hue={-16}
         scale={1.15}
       />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 50%, rgba(5,7,15,0) 0%, rgba(5,7,15,0.55) 60%, rgba(5,7,15,0.95) 100%)",
-        }}
-      />
+      <div aria-hidden="true" className="scene-veil scene-veil--notfound" />
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
@@ -51,7 +46,7 @@ const NotFound = () => {
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="card-glass card-glass--floating relative z-10 w-full max-w-lg p-8 text-center md:p-10"
       >
-        <div className="eyebrow justify-center">Fout 404</div>
+        <div className="eyebrow justify-center">{t("Fout 404")}</div>
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -62,16 +57,16 @@ const NotFound = () => {
         </motion.div>
 
         <h1 className="mt-6 font-display text-2xl font-semibold tracking-tight text-ink md:text-3xl">
-          Pagina niet gevonden
+          {t("Pagina niet gevonden")}
         </h1>
         <p className="mt-3 text-base leading-7 text-ink-muted">
-          Deze pagina is momenteel niet beschikbaar of bestaat niet.
-          {userRole && " De IQ Bot is eraan aan het werken."}
+          {t("Deze pagina is momenteel niet beschikbaar of bestaat niet.")}
+          {userRole && t(" De IQ Bot is eraan aan het werken.")}
         </p>
 
         <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
           <LumenCtaButton variant="ghost" onClick={() => navigate(-1)}>
-            <ArrowLeft className="h-4 w-4" /> Ga terug
+            <ArrowLeft className="h-4 w-4" /> {t("Ga terug")}
           </LumenCtaButton>
           <LumenCtaLink to={getDashboardLink()} dot>
             <Home className="h-4 w-4" /> {dashboardLabel}

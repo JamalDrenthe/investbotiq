@@ -4,8 +4,10 @@ import { Menu, X } from "lucide-react";
 import PublicHeaderDesktopMenu from "./PublicHeaderDesktopMenu";
 import PublicHeaderMobileMenu from "./PublicHeaderMobileMenu";
 import BrandLogo from "./BrandLogo";
+import { usePreferences } from "@/lib/preferences";
 
 const PublicHeader: React.FC = () => {
+  const { t } = usePreferences();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ const PublicHeader: React.FC = () => {
         <PublicHeaderDesktopMenu handleNav={handleNav} />
         <button
           className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10 md:hidden"
-          aria-label={menuOpen ? "Sluit menu" : "Open menu"}
+          aria-label={menuOpen ? t("Sluit menu") : t("Open menu")}
           onClick={() => setMenuOpen((v) => !v)}
         >
           {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

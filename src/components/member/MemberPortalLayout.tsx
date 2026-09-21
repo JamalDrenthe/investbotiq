@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import { IqBotBubble } from "@/components/member/IqBotBubble";
+import PreferenceToggles from "@/components/PreferenceToggles";
+import { usePreferences } from "@/lib/preferences";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -63,6 +65,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<MemberTab>(() => getTabFromPath(location.pathname));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { t } = usePreferences();
 
   useEffect(() => {
     setActiveTab(getTabFromPath(location.pathname));
@@ -79,10 +82,10 @@ export default function MemberPortalLayout({ children }: { children: React.React
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      toast.success("Succesvol uitgelogd");
+      toast.success(t("Succesvol uitgelogd"));
       navigate("/auth");
     } catch {
-      toast.error("Fout bij uitloggen");
+      toast.error(t("Fout bij uitloggen"));
     }
   };
 
@@ -96,7 +99,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
               className="rounded-xl border border-canvas-hairline p-2.5 text-ink-muted transition-colors hover:bg-white/5 lg:hidden"
-              aria-label="Menu"
+              aria-label={t("Menu")}
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -117,7 +120,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
                 }`}
               >
                 {tab.icon}
-                <span>{tab.label}</span>
+                <span>{t(tab.label)}</span>
                 {tab.badge && (
                   <span className="rounded-full bg-amber px-1.5 py-0.5 text-[9px] font-black text-graphite">
                     {tab.badge}
@@ -130,16 +133,17 @@ export default function MemberPortalLayout({ children }: { children: React.React
           <div className="flex items-center gap-3">
             <div className="hidden items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-3 py-1.5 text-xs font-bold text-mint sm:flex">
               <span className="h-2 w-2 animate-pulse rounded-full bg-mint" />
-              <span>Autonoom Live</span>
+              <span>{t("Autonoom Live")}</span>
             </div>
+            <PreferenceToggles />
             <button
               type="button"
               onClick={handleLogout}
               className="flex items-center gap-1.5 rounded-xl border border-rose/30 px-3.5 py-2 text-xs font-bold text-rose transition-all hover:bg-rose/10"
-              title="Uitloggen"
+              title={t("Uitloggen")}
             >
               <LogOut className="h-3.5 w-3.5" />
-              <span className="hidden md:inline">Uitloggen</span>
+              <span className="hidden md:inline">{t("Uitloggen")}</span>
             </button>
           </div>
         </div>
@@ -160,7 +164,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
               >
                 <span className="flex items-center gap-3">
                   {React.cloneElement(tab.icon as React.ReactElement, { className: "h-5 w-5" })}
-                  {tab.label}
+                  {t(tab.label)}
                 </span>
                 {tab.badge && (
                   <span className="rounded-full bg-amber px-2 py-0.5 text-xs font-black text-graphite">
@@ -176,7 +180,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
                 className="flex w-full items-center justify-center gap-2 rounded-2xl border border-rose/30 bg-rose/10 px-4 py-3 text-sm font-bold text-rose"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Uitloggen</span>
+                <span>{t("Uitloggen")}</span>
               </button>
             </div>
           </div>
