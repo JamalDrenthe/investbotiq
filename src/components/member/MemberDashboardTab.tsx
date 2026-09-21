@@ -7,11 +7,9 @@ import {
   Sparkles, 
   ShieldCheck, 
   ArrowUpRight, 
-  Download, 
   Clock, 
   Zap, 
   Activity, 
-  Wallet, 
   CheckCircle2, 
   ChevronRight,
   ExternalLink,
@@ -30,7 +28,6 @@ import {
   ResponsiveContainer, 
   CartesianGrid 
 } from "recharts";
-import { toast } from "sonner";
 import { MemberTab } from "@/components/member/MemberPortalLayout";
 import { ThreeScene } from "@/components/three/ThreeScene";
 
@@ -65,14 +62,6 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
   const [chartView, setChartView] = useState<"cashflow" | "opbouw">("cashflow");
   const [selectedPeriod, setSelectedPeriod] = useState<"6m" | "1j" | "all">("1j");
 
-  const handleDownloadReport = () => {
-    toast.success("Maandrapportage Augustus 2026 wordt gedownload");
-  };
-
-  const handlePayoutRequest = () => {
-    toast.info("Uw volgende automatische cashflow uitbetaling staat gepland op 28 september 2026.");
-  };
-
   return (
     <div className="space-y-8 fade-in">
       {/* Welcome & Status Bar */}
@@ -104,24 +93,6 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={handlePayoutRequest}
-              className="px-5 py-3 rounded-2xl text-xs sm:text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 transition-all shadow-lg shadow-indigo-600/25 flex items-center gap-2"
-            >
-              <Wallet className="w-4 h-4" />
-              <span>Uitbetalingsschema</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleDownloadReport}
-              className="px-5 py-3 rounded-2xl text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 active:scale-95 border border-slate-200 dark:border-slate-700 transition-all flex items-center gap-2"
-            >
-              <Download className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-              <span>Download Rapport</span>
-            </button>
-          </div>
         </div>
       </div>
 
