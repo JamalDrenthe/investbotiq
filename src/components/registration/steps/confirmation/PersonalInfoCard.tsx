@@ -17,9 +17,9 @@ interface PersonalInfoCardProps {
 
 export const PersonalInfoCard = ({ generalInfo }: PersonalInfoCardProps) => {
   return (
-    <Card className="shadow-xl">
+    <Card className="border-white/10 bg-white/[0.03] text-ink shadow-none">
       <CardContent className="pt-6">
-        <h3 className="text-lg font-medium mb-3 text-indigo-700">Persoonlijke gegevens</h3>
+        <h3 className="text-lg font-medium mb-3 text-indigo-300">Persoonlijke gegevens</h3>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <dt className="text-sm font-medium text-muted-foreground">Naam</dt>

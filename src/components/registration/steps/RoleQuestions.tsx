@@ -91,7 +91,7 @@ export const RoleQuestions = ({ role, answers, onUpdate, onNext, onBack }: RoleQ
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-center">Vragen voor {getRoleLabel(role)}</h2>
+      <h2 className="font-display text-xl font-semibold text-center text-ink">Vragen voor {getRoleLabel(role)}</h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {questions.map((question) => (
@@ -111,10 +111,10 @@ export const RoleQuestions = ({ role, answers, onUpdate, onNext, onBack }: RoleQ
         ))}
 
         <div className="flex justify-between pt-4">
-          <Button type="button" variant="outline" onClick={onBack}>
+          <Button type="button" variant="ghost" onClick={onBack} className="text-ink-muted hover:text-ink">
             Terug
           </Button>
-          <Button type="submit">
+          <Button type="submit" className="rounded-full bg-gradient-to-r from-indigo-600 to-indigo-500 px-8 text-white shadow-glow hover:brightness-110">
             Volgende
           </Button>
         </div>
