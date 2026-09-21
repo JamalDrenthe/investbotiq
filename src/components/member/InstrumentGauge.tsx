@@ -30,7 +30,7 @@ export interface GaugeSpec {
 const angleFor = (spec: GaugeSpec, value: number) => {
   const start = spec.start ?? -135;
   const sweep = spec.sweep ?? 270;
-  return start + ((value - spec.min) / (spec.max - spec.min)) * spec.sweep;
+  return start + ((value - spec.min) / (spec.max - spec.min)) * sweep;
 };
 
 /**

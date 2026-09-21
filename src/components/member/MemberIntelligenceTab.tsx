@@ -24,8 +24,8 @@ interface GaugeEntry {
 const GAUGES: GaugeEntry[] = [
   {
     spec: {
-      min: 0, max: 8, majorStep: 2, minorPerMajor: 4,
-      idle: 0, value: 6,
+      min: 0, max: 8, majorStep: 1, minorPerMajor: 2,
+      idle: 0, value: 6, start: -135, sweep: 270,
       label: "Actieve Slots", unit: "Flowlutas",
       readoutText: "6 / 8",
       accent: "#818cf8",
@@ -35,8 +35,8 @@ const GAUGES: GaugeEntry[] = [
   },
   {
     spec: {
-      min: 0, max: 160, majorStep: 40, minorPerMajor: 4,
-      idle: 0, value: 120, alertFrom: 140,
+      min: 0, max: 160, majorStep: 20, minorPerMajor: 4,
+      idle: 0, value: 120, alertFrom: 140, start: -120, sweep: 300,
       label: "Markt Scansnelheid", unit: "scans/sec",
       accent: "#22d3ee",
       face: "radial-gradient(closest-side at 50% 28%, #17324f 0%, #0f172a 48%, #030816 100%)",
@@ -45,8 +45,8 @@ const GAUGES: GaugeEntry[] = [
   },
   {
     spec: {
-      min: 0, max: 100, majorStep: 25, minorPerMajor: 5,
-      idle: 0, value: 99.6,
+      min: 0, max: 100, majorStep: 10, minorPerMajor: 2,
+      idle: 0, value: 99.6, start: -135, sweep: 270,
       label: "Efficiëntiescore", unit: "%",
       numeral: (v) => String(v),
       accent: "#34d399",
@@ -56,8 +56,8 @@ const GAUGES: GaugeEntry[] = [
   },
   {
     spec: {
-      min: 0, max: 10, majorStep: 5, minorPerMajor: 5,
-      idle: 0, value: 4,
+      min: 0, max: 10, majorStep: 1, minorPerMajor: 2,
+      idle: 0, value: 4, start: -135, sweep: 270,
       label: "Volgende Cyclus", unit: "min",
       readoutText: "In 4 min",
       accent: "#c084fc",
@@ -67,8 +67,8 @@ const GAUGES: GaugeEntry[] = [
   },
   {
     spec: {
-      min: 0, max: 2000, majorStep: 500, minorPerMajor: 5,
-      idle: 0, value: 1620,
+      min: 0, max: 2000, majorStep: 250, minorPerMajor: 5,
+      idle: 0, value: 1620, start: -40, sweep: 280,
       label: "Maandelijkse Cashflow", unit: "EUR",
       readoutText: "€ 1.620",
       accent: "#fbbf24",
@@ -78,8 +78,8 @@ const GAUGES: GaugeEntry[] = [
   },
   {
     spec: {
-      min: 0, max: 100, majorStep: 20, minorPerMajor: 4,
-      idle: 0, value: 100,
+      min: 0, max: 100, majorStep: 10, minorPerMajor: 2,
+      idle: 0, value: 100, start: -170, sweep: 330,
       label: "Dekkingsgraad", unit: "%",
       numeral: (v) => String(v),
       accent: "#38bdf8",
