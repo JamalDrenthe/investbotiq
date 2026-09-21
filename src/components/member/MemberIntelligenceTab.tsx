@@ -10,6 +10,7 @@ import {
   Pause,
 } from "lucide-react";
 import { toast } from "sonner";
+import { InstrumentGauge } from "@/components/member/InstrumentGauge";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { Slider } from "@/components/ui/slider";
 
@@ -126,24 +127,47 @@ export const MemberIntelligenceTab: React.FC = () => {
             </div>
           </div>
 
-          {/* Real-time Status Badges */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-3xl mt-8">
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Actieve Slots</span>
-              <span className="text-lg font-black text-slate-900 dark:text-white">6 / 8 Flowlutas</span>
-            </div>
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Markt Scansnelheid</span>
-              <span className="text-lg font-black text-indigo-600 dark:text-indigo-300">120/sec</span>
-            </div>
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Efficiëntiescore</span>
-              <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">99.6%</span>
-            </div>
-            <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-center">
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold tracking-wider block">Volgende Cyclus</span>
-              <span className="text-lg font-black text-indigo-600 dark:text-indigo-300">In 4 min</span>
-            </div>
+          {/* Real-time Instrument Gauges */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full max-w-5xl mt-10 justify-items-center">
+            <InstrumentGauge
+              spec={{
+                min: 0, max: 8, majorStep: 2, minorPerMajor: 4,
+                idle: 0, value: 6,
+                label: "Actieve Slots", unit: "Flowlutas",
+                readoutText: "6 / 8",
+                accent: "#818cf8",
+                face: "radial-gradient(closest-side at 50% 28%, #1c1c2e 0%, #14141f 50%, #0a0a0b 100%)",
+              }}
+            />
+            <InstrumentGauge
+              spec={{
+                min: 0, max: 160, majorStep: 40, minorPerMajor: 4,
+                idle: 0, value: 120, alertFrom: 140,
+                label: "Markt Scansnelheid", unit: "scans/sec",
+                accent: "#22d3ee",
+                face: "radial-gradient(closest-side at 50% 28%, #17324f 0%, #0f172a 48%, #030816 100%)",
+              }}
+            />
+            <InstrumentGauge
+              spec={{
+                min: 0, max: 100, majorStep: 25, minorPerMajor: 5,
+                idle: 0, value: 99.6,
+                label: "Efficiëntiescore", unit: "%",
+                numeral: (v) => String(v),
+                accent: "#34d399",
+                face: "radial-gradient(closest-side at 50% 28%, #12291f 0%, #0d1a15 50%, #060b09 100%)",
+              }}
+            />
+            <InstrumentGauge
+              spec={{
+                min: 0, max: 10, majorStep: 5, minorPerMajor: 5,
+                idle: 0, value: 4,
+                label: "Volgende Cyclus", unit: "min",
+                readoutText: "In 4 min",
+                accent: "#c084fc",
+                face: "radial-gradient(closest-side at 50% 28%, #191624 0%, #111016 50%, #08070b 100%)",
+              }}
+            />
           </div>
         </div>
 

@@ -13,4 +13,3 @@ export const PUBLIC_NAV_ITEMS = [
   { title: "FAQ", to: "/faq" },
 ] as const;
 
-export const SIGNUP_URL = "https://leadsinvestbotiq.netlify.app";

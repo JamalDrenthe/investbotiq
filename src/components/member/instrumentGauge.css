@@ -1,0 +1,202 @@
+/* Ported instrument gauge styling (scoped under .iqg-*) */
+.iqg-card {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+  aspect-ratio: 1;
+}
+.iqg-card * { box-sizing: border-box; }
+
+.iqg-plate {
+  position: absolute;
+  inset: 0;
+  border-radius: 11.5cqw;
+  background: radial-gradient(120% 100% at 30% 0%, #121215 0%, #09090a 55%, #060607 100%);
+  border: 1px solid rgba(255,255,255,0.03);
+  box-shadow:
+    0 1px 1px -0.5px rgba(0,0,0,0.5),
+    0 3px 3px -1.5px rgba(0,0,0,0.4),
+    0 6px 6px -3px rgba(0,0,0,0.35),
+    0 12px 12px -6px rgba(0,0,0,0.3),
+    0 24px 24px -12px rgba(0,0,0,0.25);
+  transition: border-color 0.5s;
+}
+.iqg-card:hover .iqg-plate { border-color: rgba(255,255,255,0.08); }
+
+.iqg-shell {
+  position: absolute;
+  inset: 13cqw;
+  border-radius: 50%;
+  padding: 2.2%;
+  background: conic-gradient(from 210deg, #3a3a3d 0deg, #17171a 60deg, #2c2c30 130deg, #0d0d0f 200deg, #313135 280deg, #131316 340deg, #3a3a3d 360deg);
+  box-shadow:
+    0 18px 40px -12px rgba(0,0,0,0.9),
+    0 2px 0 rgba(255,255,255,0.05),
+    inset 0 2px 6px rgba(255,255,255,0.10),
+    inset 0 -6px 14px rgba(0,0,0,0.65);
+}
+.iqg-bezel {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 3.4%;
+  background: radial-gradient(closest-side, #0b0b0d 76%, #212125 92%, #08080a 100%);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.10), inset 0 -3px 8px rgba(0,0,0,0.8);
+}
+.iqg-bezel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0.16) 0deg 0.5deg, rgba(0,0,0,0) 0.5deg 2.2deg);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 92%, #000 93.5%, #000 99%, transparent 100%);
+  mask-image: radial-gradient(closest-side, transparent 92%, #000 93.5%, #000 99%, transparent 100%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.iqg-screw {
+  position: absolute;
+  width: 5cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 26%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.08) 26%, rgba(255,255,255,0) 46%),
+    radial-gradient(closest-side, rgba(0,0,0,0) 58%, rgba(0,0,0,0.45) 84%, rgba(0,0,0,0.7) 100%),
+    conic-gradient(from calc(var(--a, 0deg) - 52deg),
+      #9a9ba1 0deg, #43444a 34deg, #c3c4ca 74deg, #4d4e55 118deg,
+      #a7a8ae 168deg, #37383d 214deg, #b2b3b9 262deg, #45464c 312deg, #9a9ba1 360deg);
+  box-shadow:
+    0 0 0 0.16cqw rgba(0,0,0,0.6),
+    0 0.12cqw 0 0.16cqw rgba(255,255,255,0.05),
+    0 0.3cqw 0.6cqw rgba(0,0,0,0.75),
+    inset 0 -0.16cqw 0.32cqw rgba(0,0,0,0.6),
+    inset 0 0.12cqw 0.24cqw rgba(255,255,255,0.4);
+}
+.iqg-screw::before {
+  content: "";
+  position: absolute;
+  inset: 22%;
+  transform: rotate(var(--a, 0deg));
+  background:
+    linear-gradient(#050506, #1e1e23) center / 100% 20% no-repeat,
+    linear-gradient(#050506, #1e1e23) center / 20% 100% no-repeat,
+    linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.62)) center calc(50% + 0.11cqw) / 100% 20% no-repeat,
+    linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.62)) calc(50% + 0.11cqw) center / 20% 100% no-repeat;
+}
+
+.iqg-face {
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: inset 0 5px 16px rgba(0,0,0,0.5), inset 0 -2px 9px rgba(0,0,0,0.4);
+}
+.iqg-layer { position: absolute; inset: 0; pointer-events: none; }
+.iqg-spoke { position: absolute; inset: 0; }
+
+.iqg-tick {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 1px;
+}
+.iqg-tick-minor { top: 9%; width: 0.9%; height: 2.8%; opacity: 0.5; }
+.iqg-tick-major { top: 8%; width: 1.8%; height: 6.4%; }
+
+.iqg-numeral {
+  position: absolute;
+  left: 50%;
+  top: 17.5%;
+  line-height: 1;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.iqg-needle {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--angle, 0deg));
+  transition: transform var(--needle-duration, 1200ms) var(--needle-ease, cubic-bezier(0.2, 0.9, 0.25, 1));
+  will-change: transform;
+}
+.iqg-flutter { position: absolute; inset: 0; }
+.iqg-blade {
+  position: absolute;
+  left: 50%;
+  top: 11.5%;
+  bottom: 50%;
+  width: 3.2%;
+  transform: translateX(-50%);
+  clip-path: polygon(41% 0, 59% 0, 100% 97%, 100% 100%, 0 100%, 0 97%);
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.55));
+}
+.iqg-blade::after {
+  content: "";
+  position: absolute;
+  inset: 7% 40% 20% 40%;
+  border-radius: 999px;
+  background: linear-gradient(rgba(255,255,255,0.34), rgba(255,255,255,0));
+}
+.iqg-tail {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2%;
+  height: 9.5%;
+  transform: translateX(-50%);
+  border-radius: 0 0 999px 999px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+}
+.iqg-hub {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 34% 30%, #5c5c63, #1b1b1f 60%, #050506);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.75), inset 0 1px 2px rgba(255,255,255,0.35);
+  display: grid;
+  place-items: center;
+}
+
+.iqg-glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(120% 78% at 22% 6%, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.05) 32%, rgba(255,255,255,0) 56%),
+    linear-gradient(148deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 40%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.iqg-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+.iqg-stack {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.iqg-cap { font-size: 2.89cqw; letter-spacing: 0.42em; text-indent: 0.42em; line-height: 1; }
+.iqg-cap-sm { font-size: 2.43cqw; letter-spacing: 0.3em; text-indent: 0.3em; line-height: 1; }
+.iqg-readout { font-size: 8.55cqw; font-weight: 300; line-height: 1; font-variant-numeric: tabular-nums; }
+
+@keyframes iqg-flutter { 0%, 100% { transform: rotate(-0.4deg); } 50% { transform: rotate(0.4deg); } }
+.iqg-flutter[data-live] { animation: iqg-flutter 2.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .iqg-needle, .iqg-flutter[data-live] { transition: none !important; animation: none !important; }
+}

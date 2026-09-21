@@ -3,8 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
-import { LumenCtaAnchor, LumenCtaLink } from "@/components/three/LumenCta";
-import { PUBLIC_NAV_ITEMS, SIGNUP_URL } from "./publicNav";
+import { LumenCtaLink } from "@/components/three/LumenCta";
+import { PUBLIC_NAV_ITEMS } from "./publicNav";
 
 interface Props {
   handleNav: (to: string) => void;
@@ -76,12 +76,12 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           </LumenCtaLink>
         ) : (
           <LumenCtaLink to="/auth" size="sm" variant="ghost">
-            Log-in
+            Login
           </LumenCtaLink>
         )}
-        <LumenCtaAnchor href={SIGNUP_URL} size="sm" dot>
+        <LumenCtaLink to="/register" size="sm" dot>
           Aanmelden
-        </LumenCtaAnchor>
+        </LumenCtaLink>
       </div>
     </nav>
   );

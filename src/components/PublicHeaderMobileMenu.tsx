@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/components/AuthProvider";
-import { LumenCtaAnchor, LumenCtaButton } from "@/components/three/LumenCta";
-import { PUBLIC_NAV_ITEMS, SIGNUP_URL } from "./publicNav";
+import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
+import { PUBLIC_NAV_ITEMS } from "./publicNav";
 
 interface Props {
   menuOpen: boolean;
@@ -102,11 +102,11 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
             <div className="flex flex-col gap-3 border-t border-canvas-hairline px-6 pb-8 pt-5">
               {!user && (
                 <>
-                  <LumenCtaAnchor href={SIGNUP_URL} dot className="w-full" onClick={() => setMenuOpen(false)}>
+                  <LumenCtaLink to="/register" dot className="w-full" onClick={() => setMenuOpen(false)}>
                     Aanmelden
-                  </LumenCtaAnchor>
+                  </LumenCtaLink>
                   <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/auth")}>
-                    Log-in
+                    Login
                   </LumenCtaButton>
                 </>
               )}
