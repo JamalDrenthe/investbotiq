@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { MultiStepForm } from "@/components/registration/MultiStepForm";
 import { ThreeScene } from "@/components/three/ThreeScene";
-import { BRAND_ICON, BRAND_WORDMARK } from "@/components/publicNav";
+import BrandLogo from "@/components/BrandLogo";
 
 const Register = () => {
   return (
@@ -31,10 +31,7 @@ const Register = () => {
 
       <div className="relative z-10 mx-auto w-full max-w-4xl">
         <div className="mb-8 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-9 w-auto" />
-            <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert hidden h-4 w-auto sm:block" />
-          </Link>
+          <BrandLogo variant="dark" size="md" showSubtitle={false} to="/" />
           <Link to="/" className="nav-pill inline-flex items-center gap-2 text-sm">
             <ArrowLeft className="h-4 w-4" /> Terug naar home
           </Link>

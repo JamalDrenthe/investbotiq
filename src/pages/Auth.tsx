@@ -7,7 +7,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
 import { ThreeScene } from "@/components/three/ThreeScene";
 import { LumenCtaButton } from "@/components/three/LumenCta";
-import { BRAND_ICON, BRAND_WORDMARK } from "@/components/publicNav";
+import BrandLogo from "@/components/BrandLogo";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -76,10 +76,7 @@ const Auth = () => {
           }}
         />
         <div className="relative flex h-full flex-col justify-between p-12 xl:p-16">
-          <Link to="/" className="inline-flex items-center gap-3" aria-label="Invest Bot IQ Homepage">
-            <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-10 w-auto" />
-            <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert h-5 w-auto" />
-          </Link>
+          <BrandLogo variant="dark" size="lg" to="/" />
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}

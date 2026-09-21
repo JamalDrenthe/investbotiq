@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import PublicHeaderDesktopMenu from "./PublicHeaderDesktopMenu";
 import PublicHeaderMobileMenu from "./PublicHeaderMobileMenu";
-import { BRAND_ICON, BRAND_WORDMARK } from "./publicNav";
+import BrandLogo from "./BrandLogo";
 
 const PublicHeader: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -22,12 +22,7 @@ const PublicHeader: React.FC = () => {
     setMenuOpen(false);
   };
 
-  const Logo = (
-    <Link to="/" className="flex select-none items-center gap-3" aria-label="Invest Bot IQ Homepage">
-      <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-9 w-auto" />
-      <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert h-5 w-auto" />
-    </Link>
-  );
+  const Logo = <BrandLogo variant="dark" size="md" showSubtitle={false} to="/" />;
 
   return (
     <header

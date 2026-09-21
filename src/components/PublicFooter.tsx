@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { BRAND_ICON, BRAND_WORDMARK, PUBLIC_NAV_ITEMS } from "./publicNav";
+import BrandLogo from "./BrandLogo";
+import { PUBLIC_NAV_ITEMS } from "./publicNav";
 
 const PublicFooter: React.FC = () => {
   const year = new Date().getFullYear();
@@ -8,10 +9,7 @@ const PublicFooter: React.FC = () => {
     <footer className="band-canvas hairline-top">
       <div className="mx-auto grid w-full max-w-content gap-10 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
         <div className="flex flex-col gap-5">
-          <Link to="/" className="flex items-center gap-3" aria-label="Invest Bot IQ Homepage">
-            <img src={BRAND_ICON} alt="Invest Bot IQ Icon" className="logo-invert h-9 w-auto" />
-            <img src={BRAND_WORDMARK} alt="Invest Bot IQ Logo" className="logo-invert h-5 w-auto" />
-          </Link>
+          <BrandLogo variant="dark" size="md" to="/" />
           <p className="max-w-sm text-sm leading-relaxed text-ink-muted">Automated Cashflow Platform</p>
           <div className="chip chip--cyan w-fit">IQ Bot actief</div>
         </div>
