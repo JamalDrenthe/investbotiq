@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/components/AuthProvider";
 import { ArrowLeft, ArrowRight, LockKeyhole } from "lucide-react";
@@ -10,6 +9,7 @@ import { LumenCtaButton } from "@/components/three/LumenCta";
 import BrandLogo from "@/components/BrandLogo";
 import PreferenceToggles from "@/components/PreferenceToggles";
 import { usePreferences } from "@/lib/preferences";
+import { isAuthAvailable, isDemoModeEnabled, signInWithPassword } from "@/lib/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -45,9 +45,8 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      if (data.user) toast.success(t("Succesvol ingelogd"));
+      await signInWithPassword(email, password);
+      toast.success(t("Succesvol ingelogd"));
     } catch (error) {
       toast.error(error instanceof Error ? error.message : t("Fout bij inloggen"));
     } finally {
@@ -87,7 +86,7 @@ const Auth = () => {
           </motion.div>
           <div className="flex items-center gap-3 text-sm text-ink-faint">
             <span className="h-2 w-2 rounded-full bg-cyan shadow-[0_0_12px_rgba(34,211,238,0.9)]" />
-            {t("Tijdelijke lokale login")}
+            {isDemoModeEnabled ? t("Lokale demo-login") : t("Beveiligde Firebase-login")}
           </div>
         </div>
       </div>
@@ -119,7 +118,9 @@ const Auth = () => {
           </div>
           <h2 className="font-display text-heading font-semibold tracking-[-0.02em] text-ink">{t("Inloggen")}</h2>
           <p className="mt-3 text-sm leading-6 text-ink-muted">
-            {t("Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.")}
+            {isDemoModeEnabled
+              ? t("Demo-login is lokaal ingeschakeld; gebruik geen echte persoonsgegevens.")
+              : t("Log in met het e-mailadres en wachtwoord van je Investbotiq-account.")}
           </p>
           <form onSubmit={handleLogin} className="mt-8 space-y-4">
             <div className="space-y-2">
@@ -149,10 +150,16 @@ const Auth = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
+                minLength={isDemoModeEnabled ? 4 : 6}
                 required
               />
             </div>
-            <LumenCtaButton type="submit" className="mt-2 w-full" disabled={loading} dot={!loading}>
+            {!isAuthAvailable && (
+              <p role="status" className="text-sm text-amber-300">
+                {t("Firebase Authentication is nog niet geconfigureerd voor deze omgeving.")}
+              </p>
+            )}
+            <LumenCtaButton type="submit" className="mt-2 w-full" disabled={loading || !isAuthAvailable} dot={!loading}>
               {loading ? t("Bezig...") : t("Inloggen")}
               {!loading && <ArrowRight className="h-4 w-4" />}
             </LumenCtaButton>

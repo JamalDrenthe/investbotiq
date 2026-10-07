@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { LocalUser, supabase } from "@/integrations/supabase/client";
+import type { LocalUser } from "@/types/auth";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,15 +21,15 @@ const PersonalInfoCard = ({ user }: PersonalInfoCardProps) => {
   const { data: profile, refetch } = useQuery({
     queryKey: ["userProfile", user.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("profiles")
+      const { data, error } = await firebaseStore
+        .collection("profiles")
         .select("*")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
       
-      if (data.telefoonnummer) {
+      if (data?.telefoonnummer) {
         setPhoneNumber(data.telefoonnummer);
       }
       
@@ -41,12 +42,13 @@ const PersonalInfoCard = ({ user }: PersonalInfoCardProps) => {
     try {
       setIsUpdating(true);
       
-      const { error } = await supabase
-        .from("profiles")
+      const { data, error } = await firebaseStore
+        .collection("profiles")
         .update({ telefoonnummer: phoneNumber })
         .eq("id", user.id);
-      
+
       if (error) throw error;
+      if (data.length === 0) throw new Error("Profiel niet gevonden.");
       
       await refetch();
       toast.success("Profiel bijgewerkt");

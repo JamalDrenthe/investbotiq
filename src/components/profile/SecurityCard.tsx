@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { updatePassword } from "@/lib/auth";
 
 const SecurityCard = () => {
   const [isUpdating, setIsUpdating] = React.useState(false);
@@ -23,11 +23,7 @@ const SecurityCard = () => {
     try {
       setIsUpdating(true);
       
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
-      
-      if (error) throw error;
+      await updatePassword(password);
       
       setPassword("");
       setConfirmPassword("");

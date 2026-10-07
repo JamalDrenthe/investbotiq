@@ -84,7 +84,7 @@ export const CashflowTable = ({
                 <div className="w-24">
                   <Input
                     type="number"
-                    value={cashflowValues[user.id]}
+                    value={cashflowValues[user.id] ?? user.currentCashflow}
                     onChange={(e) => onCashflowChange(user.id, e.target.value)}
                     className="text-right"
                   />

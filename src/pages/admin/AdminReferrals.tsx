@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
@@ -61,8 +61,8 @@ const AdminReferrals = () => {
     
     try {
       // Update the referral status
-      const { error: updateError } = await supabase
-        .from("referrals")
+      const { error: updateError } = await firebaseStore
+        .collection("referrals")
         .update({ status: "successful" })
         .eq("id", referralId);
         
@@ -85,8 +85,8 @@ const AdminReferrals = () => {
     setIsProcessing(prev => ({ ...prev, [referralId]: true }));
     
     try {
-      const { error } = await supabase
-        .from("referrals")
+      const { error } = await firebaseStore
+        .collection("referrals")
         .delete()
         .eq("id", referralId);
         

@@ -26,11 +26,10 @@ export const MessageTypeSelector = ({ value, onChange }: MessageTypeSelectorProp
           <SelectValue placeholder="Selecteer type" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="info">Informatie</SelectItem>
-          <SelectItem value="task">Taak Update</SelectItem>
-          <SelectItem value="success">Succes Melding</SelectItem>
-          <SelectItem value="warning">Waarschuwing</SelectItem>
-          <SelectItem value="security">Beveiligingsbericht</SelectItem>
+          <SelectItem value="system">Systeem</SelectItem>
+          <SelectItem value="taak">Taak</SelectItem>
+          <SelectItem value="flowluta">Flowluta</SelectItem>
+          <SelectItem value="lead">Lead</SelectItem>
         </SelectContent>
       </Select>
     </div>

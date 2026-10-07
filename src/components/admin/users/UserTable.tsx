@@ -1,5 +1,4 @@
 
-import { Button } from "@/components/ui/button";
 import { 
   Table, 
   TableBody, 
@@ -9,10 +8,7 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Dialog } from "@/components/ui/dialog";
-import { ArrowRight, Edit, Trash2, CircleDollarSign, Sparkles, UserCog, Mail } from "lucide-react";
-import { UserNotes } from "./UserNotes";
+import { CircleDollarSign, Sparkles, UserCog, Mail } from "lucide-react";
 import { UserType } from "./types";
 
 interface UserTableProps {
@@ -29,14 +25,12 @@ export const UserTable = ({ users }: UserTableProps) => {
           <TableHead>Spirits</TableHead>
           <TableHead>BEL-lening (€)</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>Notities</TableHead>
-          <TableHead className="text-right">Acties</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {users.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={7} className="h-24 text-center">
+            <TableCell colSpan={5} className="h-24 text-center">
               <p className="text-muted-foreground">Geen gebruikers gevonden</p>
             </TableCell>
           </TableRow>
@@ -53,7 +47,7 @@ export const UserTable = ({ users }: UserTableProps) => {
                   <div className="flex items-center mt-1">
                     <UserCog className="mr-1 h-3 w-3 text-blue-500" />
                     <span className="text-xs font-medium bg-blue-50 px-2 py-0.5 rounded-full">
-                      Rol: {user.role === "admin" ? "Admin" : "Member"}
+                      Rol: {user.role === "admin" ? "Admin" : user.role === "member" ? "Member" : "Onbekend"}
                     </span>
                   </div>
                 </div>
@@ -80,51 +74,6 @@ export const UserTable = ({ users }: UserTableProps) => {
                 >
                   {user.status === "active" ? "Actief" : "In afwachting"}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <UserNotes userId={user.id} initialNotes={user.notes} />
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon" title="Details bekijken">
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Details bekijken</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon" title="Bewerken">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Gebruiker bewerken</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="icon" title="Verwijderen">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Gebruiker verwijderen</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
               </TableCell>
             </TableRow>
           ))

@@ -1,21 +1,26 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/components/AuthProvider";
 
 const CashflowSummary = () => {
+  const { user } = useAuth();
   const { data: totalCashflow } = useQuery({
-    queryKey: ["monthlyTotalCashflow"],
+    queryKey: ["monthlyTotalCashflow", user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("cashflows")
+      if (!user) return 0;
+      const { data, error } = await firebaseStore
+        .collection("cashflows")
         .select("cashflow_bedrag")
         .eq("maand", new Date().toISOString().slice(0, 7))
+        .eq("user_id", user.id)
         .single();
       
       if (error) throw error;
       return data?.cashflow_bedrag || 0;
     },
+    enabled: !!user,
   });
 
   return (

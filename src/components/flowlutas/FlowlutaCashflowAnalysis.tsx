@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
@@ -12,6 +12,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import type { Database } from "@/types/data-model";
+
+type FlowlutaRecord = Pick<Database["public"]["Tables"]["flowlutas"]["Row"],
+  "user_id" | "tier" | "monthly_cashflow" | "created_at" | "status">;
+type CashflowGroup = {
+  userId: string;
+  totalCashflow: number;
+  flowlutas: Array<{ tier: number; monthlyAmount: number; date: string; status: string }>;
+};
 
 interface FlowlutaCashflowAnalysisProps {
   userId?: string;
@@ -22,8 +31,8 @@ export const FlowlutaCashflowAnalysis = ({ userId, tier }: FlowlutaCashflowAnaly
   const { data: cashflowData } = useQuery({
     queryKey: ["flowlutas-cashflow", userId, tier],
     queryFn: async () => {
-      let query = supabase
-        .from("flowlutas")
+      let query = firebaseStore
+        .collection("flowlutas")
         .select("user_id, tier, monthly_cashflow, created_at, status")
         .order("created_at", { ascending: true });
 
@@ -39,7 +48,7 @@ export const FlowlutaCashflowAnalysis = ({ userId, tier }: FlowlutaCashflowAnaly
       if (error) throw error;
 
       // Group flowlutas by user_id and calculate cumulative cashflow
-      const groupedByUser = data.reduce((acc, flowluta) => {
+      const groupedByUser = (data as FlowlutaRecord[]).reduce<Record<string, CashflowGroup>>((acc, flowluta) => {
         if (!acc[flowluta.user_id]) {
           acc[flowluta.user_id] = {
             userId: flowluta.user_id,
@@ -61,7 +70,7 @@ export const FlowlutaCashflowAnalysis = ({ userId, tier }: FlowlutaCashflowAnaly
         });
         
         return acc;
-      }, {} as Record<string, any>);
+      }, {});
 
       return Object.values(groupedByUser).sort((a, b) => b.totalCashflow - a.totalCashflow);
     },

@@ -1,9 +1,8 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, Users, Info, Clock, AlertCircle, CheckCircle2, Shield } from "lucide-react";
+import { Users, Info, Clock, AlertCircle, CheckCircle2, Shield } from "lucide-react";
 
 interface Notification {
   id: string;
@@ -64,7 +63,6 @@ export const NotificationsList = ({ notifications }: NotificationsListProps) => 
           <TableHead>Verstuurd Op</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead className="text-right">Acties</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -103,11 +101,6 @@ export const NotificationsList = ({ notifications }: NotificationsListProps) => 
               >
                 {notification.status === "read" ? "Gelezen" : "Afgeleverd"}
               </Badge>
-            </TableCell>
-            <TableCell className="text-right">
-              <Button variant="ghost" size="icon" title="Bekijk details">
-                <Eye className="h-4 w-4" />
-              </Button>
             </TableCell>
           </TableRow>
         ))}

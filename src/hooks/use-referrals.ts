@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { 
   Referral,
   ReferralReward,
@@ -59,9 +59,8 @@ export function useAdminReferrals() {
   return useQuery({
     queryKey: ["adminReferrals"],
     queryFn: async (): Promise<ReferralWithDetails[]> => {
-      // Use a direct approach to get both the referrer and referred user emails
-      const { data, error } = await supabase
-        .from("referrals")
+      const { data, error } = await firebaseStore
+        .collection("referrals")
         .select(`
           id,
           referral_code,
@@ -74,58 +73,30 @@ export function useAdminReferrals() {
       
       if (error) throw error;
       
-      // Transform data to match our interface
-      const transformedData: ReferralWithDetails[] = [];
-      
-      for (const ref of data) {
-        // Get referrer email
-        let referrerEmail = 'Unknown';
-        try {
-          const { data: referrerData } = await supabase
-            .auth.admin.getUserById(ref.user_id);
-          
-          if (referrerData?.user) {
-            referrerEmail = referrerData.user.email || 'Unknown';
-          }
-        } catch (error) {
-          console.error("Error fetching referrer email:", error);
-        }
-        
-        // Get referred email if available
-        let referredEmail = null;
-        if (ref.referred_user_id) {
-          try {
-            const { data: referredData } = await supabase
-              .auth.admin.getUserById(ref.referred_user_id);
-            
-            if (referredData?.user) {
-              referredEmail = referredData.user.email || null;
-            }
-          } catch (error) {
-            console.error("Error fetching referred email:", error);
-          }
-        }
-        
-        // Count rewards - for now use a simplified approach
+      const userIds = [...new Set(data.flatMap((ref) => [ref.user_id, ref.referred_user_id].filter((id): id is string => Boolean(id))))];
+      const { data: profiles, error: profileError } = userIds.length
+        ? await firebaseStore.collection("profiles").select("id, email").in("id", userIds)
+        : { data: [], error: null };
+      if (profileError) throw profileError;
+      const emailById = new Map(profiles.map((profile) => [profile.id, profile.email]));
+
+      return data.map((ref): ReferralWithDetails => {
         const rewardsCount = ref.status === 'successful' ? 1 : 0;
         const totalRewards = ref.status === 'successful' ? 100 : 0;
-        
-        transformedData.push({
+        return {
           referral_id: ref.id,
           referral_code: ref.referral_code,
           referrer_id: ref.user_id,
-          referrer_email: referrerEmail,
+          referrer_email: emailById.get(ref.user_id) || 'Unknown',
           referred_user_id: ref.referred_user_id,
-          referred_email: referredEmail,
+          referred_email: ref.referred_user_id ? emailById.get(ref.referred_user_id) ?? null : null,
           status: ref.status as 'pending' | 'successful',
           rewards_count: rewardsCount,
           total_rewards: totalRewards,
           last_reward_at: ref.status === 'successful' ? ref.created_at : null,
           created_at: ref.created_at
-        });
-      }
-      
-      return transformedData;
+        };
+      });
     }
   });
 }

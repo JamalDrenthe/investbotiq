@@ -55,9 +55,14 @@ export const EN: Record<string, string> = {
   Instellingen: "Settings",
 
   // Auth
-  "Tijdelijke lokale login": "Temporary local login",
-  "Tijdelijke lokale login: elk geldig e-mailadres en minimaal vier tekens als wachtwoord werkt.":
-    "Temporary local login: any valid email address and a password of at least four characters works.",
+  "Lokale demo-login": "Local demo sign-in",
+  "Beveiligde Firebase-login": "Secure Firebase sign-in",
+  "Demo-login is lokaal ingeschakeld; gebruik geen echte persoonsgegevens.":
+    "Demo sign-in is enabled locally; do not use real personal information.",
+  "Log in met het e-mailadres en wachtwoord van je Investbotiq-account.":
+    "Sign in with your Investbotiq account email and password.",
+  "Firebase Authentication is nog niet geconfigureerd voor deze omgeving.":
+    "Firebase Authentication is not configured for this environment yet.",
   "E-mail": "Email",
   Wachtwoord: "Password",
   "Bezig...": "Working...",

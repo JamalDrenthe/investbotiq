@@ -190,6 +190,7 @@ export type Database = {
         Row: {
           achternaam: string | null
           created_at: string
+          email: string | null
           id: string
           telefoonnummer: string | null
           updated_at: string
@@ -198,6 +199,7 @@ export type Database = {
         Insert: {
           achternaam?: string | null
           created_at?: string
+          email?: string | null
           id: string
           telefoonnummer?: string | null
           updated_at?: string
@@ -206,6 +208,7 @@ export type Database = {
         Update: {
           achternaam?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           telefoonnummer?: string | null
           updated_at?: string

@@ -5,13 +5,14 @@ import { useAuth } from "@/components/AuthProvider";
 import { Navigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { withRoleGuard } from "@/utils/withRoleGuard";
+import { updatePassword } from "@/lib/auth";
 
 const MemberProfile = () => {
   const { user, loading } = useAuth();
@@ -26,8 +27,8 @@ const MemberProfile = () => {
     queryFn: async () => {
       if (!user) return null;
       
-      const { data, error } = await supabase
-        .from("profiles")
+      const { data, error } = await firebaseStore
+        .collection("profiles")
         .select("*")
         .eq("id", user.id)
         .maybeSingle();
@@ -69,12 +70,13 @@ const MemberProfile = () => {
     try {
       setIsUpdating(true);
       
-      const { error } = await supabase
-        .from("profiles")
+      const { data, error } = await firebaseStore
+        .collection("profiles")
         .update({ telefoonnummer: phoneNumber })
         .eq("id", user.id);
-      
+
       if (error) throw error;
+      if (data.length === 0) throw new Error("Profiel niet gevonden.");
       
       await refetch();
       toast.success("Profiel bijgewerkt");
@@ -95,11 +97,7 @@ const MemberProfile = () => {
     try {
       setIsUpdating(true);
       
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      });
-      
-      if (error) throw error;
+      await updatePassword(password);
       
       setPassword("");
       setConfirmPassword("");

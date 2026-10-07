@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { supabase } from "@/integrations/supabase/client";
+import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
 import BrandLogo from "./BrandLogo";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -41,13 +41,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      
-      if (error) {
-        console.error("Error during logout:", error);
-        throw error;
-      }
-      
+      await signOut();
       toast.success("U bent uitgelogd");
       // Navigeren naar homepage na uitloggen
       navigate("/", { replace: true });

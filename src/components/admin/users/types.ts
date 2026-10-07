@@ -6,7 +6,6 @@ export interface UserType {
   cashflow: number;
   spirits: number;
   belLening: number;
-  status: 'active' | 'pending';
-  role: 'member' | 'admin';
-  notes: string;
+  status: 'active';
+  role: 'member' | 'admin' | 'unknown';
 }

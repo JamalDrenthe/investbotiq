@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { 
   TrendingUp, 
   PiggyBank, 
@@ -30,37 +31,64 @@ import {
 } from "recharts";
 import { MemberTab } from "@/components/member/MemberPortalLayout";
 import { ThreeScene } from "@/components/three/ThreeScene";
+import { firebaseStore } from "@/integrations/firebase/client";
+import { useAuth } from "@/components/AuthProvider";
+import type { Database } from "@/types/data-model";
 
 interface Props {
   onSwitchTab: (tab: MemberTab) => void;
   userName: string;
 }
 
-const cashflowChartData = [
-  { month: "Jan", cashflow: 580, opbouw: 8500, rendement: 3.2 },
-  { month: "Feb", cashflow: 720, opbouw: 12400, rendement: 3.6 },
-  { month: "Mrt", cashflow: 880, opbouw: 16800, rendement: 3.9 },
-  { month: "Apr", cashflow: 1050, opbouw: 21600, rendement: 4.1 },
-  { month: "Mei", cashflow: 1200, opbouw: 27000, rendement: 4.3 },
-  { month: "Jun", cashflow: 1440, opbouw: 33000, rendement: 4.6 },
-  { month: "Jul", cashflow: 1620, opbouw: 39600, rendement: 4.8 },
-  { month: "Aug", cashflow: 1620, opbouw: 48500, rendement: 4.9 },
-  { month: "Sep (prognose)", cashflow: 1800, opbouw: 54000, rendement: 5.1 },
-  { month: "Okt (prognose)", cashflow: 1980, opbouw: 61800, rendement: 5.3 },
-];
+type Cashflow = Database["public"]["Tables"]["cashflows"]["Row"];
+type Flowluta = Database["public"]["Tables"]["flowlutas"]["Row"];
+type Task = Database["public"]["Tables"]["tasks"]["Row"];
 
-const flowlutasList = [
-  { id: "FL-01", name: "Flowluta Alpha", strategy: "Liquiditeit & Arbitrage", status: "Actief", yieldRate: "+4.2%", monthlyYield: "€320,00", runtime: "128 dagen", health: 99.8 },
-  { id: "FL-02", name: "Flowluta Beta", strategy: "BEL Compound Yield", status: "Actief", yieldRate: "+3.9%", monthlyYield: "€290,00", runtime: "96 dagen", health: 99.4 },
-  { id: "FL-03", name: "Flowluta Delta", strategy: "Staking Rebalance", status: "Actief", yieldRate: "+4.1%", monthlyYield: "€280,00", runtime: "64 dagen", health: 100 },
-  { id: "FL-04", name: "Flowluta Gamma", strategy: "AI Micro-Arbitrage", status: "Actief", yieldRate: "+3.8%", monthlyYield: "€260,00", runtime: "42 dagen", health: 98.9 },
-  { id: "FL-05", name: "Flowluta Epsilon", strategy: "Dynamische Liquiditeit", status: "Actief", yieldRate: "+3.7%", monthlyYield: "€240,00", runtime: "28 dagen", health: 99.6 },
-  { id: "FL-06", name: "Flowluta Zeta", strategy: "Volatiliteit Demper", status: "Actief", yieldRate: "+3.5%", monthlyYield: "€230,00", runtime: "14 dagen", health: 99.9 },
-];
+const monthKey = (date: Date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+const formatCurrency = (amount: number) => `€${amount.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}`;
 
 export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) => {
-  const [chartView, setChartView] = useState<"cashflow" | "opbouw">("cashflow");
   const [selectedPeriod, setSelectedPeriod] = useState<"6m" | "1j" | "all">("1j");
+  const { user } = useAuth();
+  const { data: memberData, isLoading, error } = useQuery({
+    queryKey: ["memberDashboard", user?.id],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      if (!user) return { cashflows: [] as Cashflow[], flowlutas: [] as Flowluta[], tasks: [] as Task[] };
+      const [cashflows, flowlutas, tasks] = await Promise.all([
+        firebaseStore.collection("cashflows").select("*").eq("user_id", user.id),
+        firebaseStore.collection("flowlutas").select("*").eq("user_id", user.id),
+        firebaseStore.collection("tasks").select("*").eq("user_id", user.id),
+      ]);
+      const queryError = cashflows.error ?? flowlutas.error ?? tasks.error;
+      if (queryError) throw queryError;
+      return {
+        cashflows: cashflows.data as Cashflow[],
+        flowlutas: flowlutas.data as Flowluta[],
+        tasks: tasks.data as Task[],
+      };
+    },
+  });
+  const cashflows = memberData?.cashflows ?? [];
+  const flowlutas = memberData?.flowlutas ?? [];
+  const activeFlowlutas = flowlutas.filter((flowluta) => flowluta.status === "active");
+  const openTasks = (memberData?.tasks ?? []).filter((task) => task.status !== "completed");
+  const currentMonth = monthKey(new Date());
+  const previousMonth = monthKey(new Date(new Date().getFullYear(), new Date().getMonth() - 1, 1));
+  const currentCashflow = cashflows.find((record) => record.maand === currentMonth);
+  const previousCashflow = cashflows.find((record) => record.maand === previousMonth);
+  const cashflowChange = currentCashflow && previousCashflow?.cashflow_bedrag
+    ? ((currentCashflow.cashflow_bedrag - previousCashflow.cashflow_bedrag) / previousCashflow.cashflow_bedrag) * 100
+    : null;
+  const chartMonths = selectedPeriod === "6m" ? 6 : 12;
+  const chartCutoff = selectedPeriod === "all" ? null : new Date(new Date().getFullYear(), new Date().getMonth() - chartMonths + 1, 1);
+  const cashflowChartData = [...cashflows]
+    .filter((record) => !chartCutoff || `${record.maand}-01` >= `${monthKey(chartCutoff)}-01`)
+    .sort((left, right) => left.maand.localeCompare(right.maand))
+    .map((record) => ({
+      month: new Date(`${record.maand}-01T00:00:00`).toLocaleDateString("nl-NL", { month: "short", year: "2-digit" }),
+      cashflow: record.cashflow_bedrag,
+    }));
 
   return (
     <div className="space-y-8 fade-in">
@@ -77,11 +105,11 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             <div className="flex flex-wrap items-center gap-2.5 mb-3">
               <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-950/60 dark:text-indigo-300 dark:border-indigo-800/60 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
-                Tier 2 Geactiveerd
+                Portefeuilleoverzicht
               </span>
               <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800/60 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                IQ Bot V3.4 Online
+                {activeFlowlutas.length} actieve Flowluta{activeFlowlutas.length === 1 ? "" : "s"}
               </span>
             </div>
 
@@ -89,7 +117,7 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
               Welkom terug, <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-indigo-600 dark:from-indigo-400 dark:to-indigo-400">{userName}</span>
             </h1>
             <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400 max-w-2xl leading-relaxed">
-              Uw portefeuille draait autonoom op volle capaciteit. Er zijn 6 actieve Flowlutas die continue maandelijkse cashflow genereren.
+              Bekijk hier de gegevens die voor uw account zijn opgeslagen.
             </p>
           </div>
 
@@ -111,13 +139,13 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             </div>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            €1.620,00
+            {isLoading ? "Laden…" : currentCashflow ? formatCurrency(currentCashflow.cashflow_bedrag) : "—"}
           </div>
           <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
             <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-              <ArrowUpRight className="w-3.5 h-3.5" /> +18.4% vs vorige mnd
+              {cashflowChange !== null ? <><ArrowUpRight className="w-3.5 h-3.5" /> {cashflowChange > 0 ? "+" : ""}{cashflowChange.toLocaleString("nl-NL", { maximumFractionDigits: 1 })}% vs vorige maand</> : "Geen vergelijkbare maanddata"}
             </span>
-            <span className="text-slate-400">28 Sep uitbetaling</span>
+            <span className="text-slate-400">{currentCashflow ? `Periode ${currentCashflow.maand}` : "Geen record deze maand"}</span>
           </div>
         </div>
 
@@ -133,13 +161,13 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             </div>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-            €48.500,00
+            —
           </div>
           <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
             <span className="text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5" /> 97% naar Mijlpaal 1
+              <ShieldCheck className="w-3.5 h-3.5" /> Niet beschikbaar
             </span>
-            <span className="text-slate-400">Doel: €50.000</span>
+            <span className="text-slate-400">Geen vermogensveld</span>
           </div>
         </div>
 
@@ -158,14 +186,14 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             </div>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-baseline gap-2">
-            6 <span className="text-sm font-bold text-slate-400">/ 8 slots</span>
+            {isLoading ? "…" : activeFlowlutas.length}
           </div>
           <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
             <span className="text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
-              <Zap className="w-3.5 h-3.5" /> 99.6% Bot efficiëntie
+              <Zap className="w-3.5 h-3.5" /> Status uit accountdata
             </span>
             <span className="text-indigo-500 hover:underline flex items-center gap-0.5">
-              Live monitor &rarr;
+              Bekijk overzicht &rarr;
             </span>
           </div>
         </div>
@@ -185,11 +213,11 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             </div>
           </div>
           <div className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-baseline gap-2">
-            2 <span className="text-sm font-bold text-amber-500">aandacht vereist</span>
+            {isLoading ? "…" : openTasks.length} <span className="text-sm font-bold text-amber-500">open taken</span>
           </div>
           <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
             <span className="text-amber-600 dark:text-amber-400 flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5" /> KYC verificatie & contract
+              <Clock className="w-3.5 h-3.5" /> Takenlijst
             </span>
             <span className="text-amber-500 hover:underline flex items-center gap-0.5">
               Afronden &rarr;
@@ -212,39 +240,27 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
                     Cashflow & Vermogensontwikkeling
                   </h3>
                   <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300">
-                    Autonoom
+                    Geregistreerde data
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Gerealiseerde uitbetalingen en toekomstige bot prognose
+                  Maandbedragen uit uw account; er worden geen prognoses getoond.
                 </p>
               </div>
 
-              {/* Toggles */}
+              {/* Period selector */}
               <div className="flex items-center gap-2">
                 <div className="inline-flex p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => setChartView("cashflow")}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                      chartView === "cashflow"
-                        ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    Cashflow (€/mnd)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setChartView("opbouw")}
-                    className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
-                      chartView === "opbouw"
-                        ? "bg-indigo-600 text-white shadow-sm"
-                        : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    Totale Opbouw (€)
-                  </button>
+                  {(["6m", "1j", "all"] as const).map((period) => (
+                    <button
+                      key={period}
+                      type="button"
+                      onClick={() => setSelectedPeriod(period)}
+                      className={`px-3 py-1.5 rounded-lg font-bold transition-all ${selectedPeriod === period ? "bg-indigo-600 text-white shadow-sm" : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"}`}
+                    >
+                      {period === "all" ? "Alles" : period}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
@@ -252,7 +268,7 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             {/* Recharts Area Chart */}
             <div className="w-full h-72 sm:h-80 pt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={cashflowChartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                {cashflowChartData.length ? <AreaChart data={cashflowChartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                   <defs>
                     <linearGradient id="indigoCashflowGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#9333ea" stopOpacity={0.4} />
@@ -274,7 +290,7 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
                     stroke="#94a3b8" 
                     fontSize={11} 
                     tickLine={false}
-                    tickFormatter={(val) => chartView === "cashflow" ? `€${val}` : `€${val/1000}k`}
+                    tickFormatter={(val) => `€${val}`}
                   />
                   <Tooltip 
                     contentStyle={{ 
@@ -285,26 +301,10 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
                       fontSize: "12px",
                       boxShadow: "0 10px 25px rgba(0,0,0,0.4)"
                     }} 
-                    formatter={(val: number) => [`€${val.toLocaleString('nl-NL')}`, chartView === "cashflow" ? "Cashflow" : "Totale Opbouw"]}
+                    formatter={(val: number) => [`€${val.toLocaleString('nl-NL')}`, "Cashflow"]}
                   />
-                  {chartView === "cashflow" ? (
-                    <Area 
-                      type="monotone" 
-                      dataKey="cashflow" 
-                      stroke="#9333ea" 
-                      strokeWidth={3} 
-                      fill="url(#indigoCashflowGrad)" 
-                    />
-                  ) : (
-                    <Area 
-                      type="monotone" 
-                      dataKey="opbouw" 
-                      stroke="#6366f1" 
-                      strokeWidth={3} 
-                      fill="url(#indigoOpbouwGrad)" 
-                    />
-                  )}
-                </AreaChart>
+                  <Area type="monotone" dataKey="cashflow" stroke="#9333ea" strokeWidth={3} fill="url(#indigoCashflowGrad)" />
+                </AreaChart> : <div className="flex h-full items-center justify-center text-sm text-slate-500">{error ? "Cashflowgegevens konden niet worden geladen." : "Nog geen historische cashflowgegevens."}</div>}
               </ResponsiveContainer>
             </div>
           </div>
@@ -312,14 +312,14 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-indigo-600" />
-              <span>Automatische maandelijkse compounding actief</span>
+              <span>{currentCashflow ? `Laatste update: ${new Date(currentCashflow.updated_at).toLocaleDateString("nl-NL")}` : "Nog geen cashflow geregistreerd"}</span>
             </div>
             <button
               type="button"
               onClick={() => onSwitchTab("voortgang")}
               className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline flex items-center gap-1"
             >
-              <span>Volledige prognoses</span>
+              <span>Cashflowgeschiedenis</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -331,46 +331,40 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
                 <Activity className="w-5 h-5 text-indigo-500" />
-                <span>Portefeuille Gezondheid</span>
-              </h3>
-              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
-                Optimaal (99.6%)
+              <span>Accountoverzicht</span>
+            </h3>
+              <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-500/10 text-slate-500 border border-slate-500/20">
+                {isLoading ? "Laden…" : error ? "Niet beschikbaar" : "Accountdata"}
               </span>
             </div>
 
             <div className="space-y-4">
-              {/* Metric 1 */}
               <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
                 <div className="flex justify-between items-center text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">
-                  <span>Tier 2 Uitbreiding</span>
-                  <span className="text-indigo-600 dark:text-indigo-400">75% Voltooid</span>
+                  <span>Actieve Flowlutas</span>
+                  <span className="text-indigo-600 dark:text-indigo-400">{activeFlowlutas.length}</span>
                 </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
-                  <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 h-full rounded-full w-[75%]" />
-                </div>
-                <p className="text-[11px] text-slate-400 mt-1.5">Nog 2 Flowlutas tot Tier 3 upgrade</p>
+                <p className="text-[11px] text-slate-400 mt-1.5">Aantal records met status actief</p>
               </div>
 
-              {/* Metric 2 */}
               <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700/60">
                 <div className="flex justify-between items-center text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                  <span>Volgende Uitbetaling</span>
-                  <span className="text-emerald-500 font-extrabold">€1.620,00</span>
+                  <span>Open taken</span>
+                  <span className="text-indigo-500 font-extrabold">{openTasks.length}</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                   <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Gepland op 28 september 2026</span>
+                  <span>Gebaseerd op uw takenlijst</span>
                 </div>
               </div>
 
-              {/* Metric 3 */}
               <div className="p-3.5 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-900/40">
                 <div className="flex items-center gap-2 text-xs font-bold text-indigo-900 dark:text-indigo-200 mb-1">
                   <Gift className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <span>Referral Cashflow Bonus</span>
+                  <span>Referralprogramma</span>
                 </div>
                 <p className="text-xs text-indigo-700 dark:text-indigo-300">
-                  Nodig een relatie uit en ontvang levenslang €100 extra maandelijkse cashflow per lid.
+                  Bekijk uw referralgegevens en deel uw persoonlijke link.
                 </p>
                 <button
                   type="button"
@@ -391,7 +385,7 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
               className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <Bot className="w-4 h-4" />
-              <span>Live AI Bot Intelligence</span>
+              <span>Intelligence-overzicht</span>
             </button>
           </div>
         </div>
@@ -405,11 +399,11 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
             <div className="flex items-center gap-2">
               <Layers className="w-5 h-5 text-indigo-600" />
               <h3 className="text-xl font-black text-slate-900 dark:text-white">
-                Actieve Flowluta Eenheden (6 Draaiend)
+                Flowluta-records ({flowlutas.length})
               </h3>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Elke Flowluta voert geautomatiseerde cashflowstrategieën uit met continue liquiditeitsrebalancering.
+              Status en bedragen zoals opgeslagen voor uw account.
             </p>
           </div>
 
@@ -423,42 +417,46 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {flowlutasList.map((bot) => (
+          {flowlutas.map((flowluta) => (
             <div 
-              key={bot.id} 
+              key={flowluta.id}
               className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/60 hover:border-indigo-400 dark:hover:border-indigo-500/50 transition-all group"
             >
               <div className="flex items-center justify-between mb-2.5">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
-                    {bot.id}
+                    {flowluta.id.slice(0, 4)}
                   </div>
                   <div>
                     <h4 className="text-sm font-extrabold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                      {bot.name}
+                      Flowluta
                     </h4>
-                    <span className="text-[10px] text-slate-400">{bot.strategy}</span>
+                    <span className="text-[10px] text-slate-400">Tier {flowluta.tier}</span>
                   </div>
                 </div>
 
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  {bot.status}
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-600 dark:text-slate-400 border border-slate-500/20">
+                  {flowluta.status}
                 </span>
               </div>
 
               <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[10px]">Maandelijkse Opbrengst</span>
-                  <span className="font-extrabold text-slate-900 dark:text-white">{bot.monthlyYield}</span>
+                  <span className="text-slate-400 block text-[10px]">Maandcashflow</span>
+                  <span className="font-extrabold text-slate-900 dark:text-white">{formatCurrency(flowluta.monthly_cashflow)}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px]">Gem. Weekrendement</span>
-                  <span className="font-extrabold text-emerald-500">{bot.yieldRate}</span>
+                  <span className="text-slate-400 block text-[10px]">Geactiveerd</span>
+                  <span className="font-extrabold text-slate-700 dark:text-slate-300">{new Date(flowluta.activated_at).toLocaleDateString("nl-NL")}</span>
                 </div>
               </div>
             </div>
           ))}
+          {!isLoading && !flowlutas.length && (
+            <p className="col-span-full rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500 dark:border-slate-700">
+              {error ? "De Flowluta-gegevens konden niet worden geladen." : "Er zijn nog geen Flowluta-records aan dit account gekoppeld."}
+            </p>
+          )}
         </div>
       </div>
 

@@ -16,14 +16,14 @@ import { IqBotBubble } from "@/components/member/IqBotBubble";
 import PreferenceToggles from "@/components/PreferenceToggles";
 import { usePreferences } from "@/lib/preferences";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { signOut } from "@/lib/auth";
 
 export type MemberTab = "dashboard" | "voortgang" | "takenlijst" | "intelligence" | "referrals" | "profile";
 
-const TABS: Array<{ id: MemberTab; label: string; icon: React.ReactNode; badge?: string }> = [
+const TABS: Array<{ id: MemberTab; label: string; icon: React.ReactNode }> = [
   { id: "dashboard", label: "Member Dashboard", icon: <TrendingUp className="h-4 w-4" /> },
   { id: "voortgang", label: "Voortgang", icon: <PiggyBank className="h-4 w-4" /> },
-  { id: "takenlijst", label: "Takenlijst", icon: <ListTodo className="h-4 w-4" />, badge: "2" },
+  { id: "takenlijst", label: "Takenlijst", icon: <ListTodo className="h-4 w-4" /> },
   { id: "intelligence", label: "Intelligence", icon: <Brain className="h-4 w-4" /> },
   { id: "referrals", label: "Mijn Referrals", icon: <Users className="h-4 w-4" /> },
   { id: "profile", label: "Profiel", icon: <User className="h-4 w-4" /> },
@@ -81,7 +81,7 @@ export default function MemberPortalLayout({ children }: { children: React.React
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      await signOut();
       toast.success(t("Succesvol uitgelogd"));
       navigate("/auth");
     } catch {
@@ -121,20 +121,11 @@ export default function MemberPortalLayout({ children }: { children: React.React
               >
                 {tab.icon}
                 <span>{t(tab.label)}</span>
-                {tab.badge && (
-                  <span className="rounded-full bg-amber px-1.5 py-0.5 text-[9px] font-black text-graphite">
-                    {tab.badge}
-                  </span>
-                )}
               </button>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2 rounded-full border border-mint/25 bg-mint/10 px-3 py-1.5 text-xs font-bold text-mint sm:flex">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-mint" />
-              <span>{t("Autonoom Live")}</span>
-            </div>
             <PreferenceToggles />
             <button
               type="button"
@@ -166,11 +157,6 @@ export default function MemberPortalLayout({ children }: { children: React.React
                   {React.cloneElement(tab.icon as React.ReactElement, { className: "h-5 w-5" })}
                   {t(tab.label)}
                 </span>
-                {tab.badge && (
-                  <span className="rounded-full bg-amber px-2 py-0.5 text-xs font-black text-graphite">
-                    {tab.badge}
-                  </span>
-                )}
               </button>
             ))}
             <div className="border-t border-canvas-hairline pt-2">

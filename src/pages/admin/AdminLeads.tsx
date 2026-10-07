@@ -1,33 +1,26 @@
 
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AdminNavBar } from "@/components/admin/AdminNavBar";
 import Header from "@/components/Header";
-import { Json } from "@/integrations/supabase/types";
+import type { Json } from "@/types/data-model";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 
-type Lead = {
-  id: string;
-  role: string;
-  general: {
-    voornaam: string;
-    achternaam: string;
-    email: string;
-    [key: string]: any;
-  };
-  status: string;
-  created_at: string;
-  answers: any;
-  updated_at: string;
+type LeadGeneral = {
+  [key: string]: Json | undefined;
+  voornaam: string;
+  achternaam: string;
+  email: string;
 };
 
-type SupabaseLead = {
+type Lead = Omit<RegistrationLead, "general"> & { general: LeadGeneral };
+
+type RegistrationLead = {
   id: string;
   role: string;
   general: Json;
@@ -37,6 +30,14 @@ type SupabaseLead = {
   updated_at: string;
 }
 
+function isLeadGeneral(value: unknown): value is LeadGeneral {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const general = value as Record<string, unknown>;
+  return typeof general.voornaam === "string" &&
+    typeof general.achternaam === "string" &&
+    typeof general.email === "string";
+}
+
 const AdminLeads = () => {
   const [roleFilter, setRoleFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,20 +45,20 @@ const AdminLeads = () => {
   const { data: leads = [], isLoading, error } = useQuery({
     queryKey: ["leads"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("registration_leads")
+      const { data, error } = await firebaseStore
+        .collection("registration_leads")
         .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
       
-      // Transform the data to match our Lead type
-      return (data as SupabaseLead[]).map(lead => ({
-        ...lead,
-        general: typeof lead.general === 'string' 
-          ? JSON.parse(lead.general) 
-          : lead.general as Lead['general']
-      })) as Lead[];
+      return (data as RegistrationLead[]).map((lead) => {
+        const general: unknown = typeof lead.general === "string"
+          ? JSON.parse(lead.general) as unknown
+          : lead.general;
+        if (!isLeadGeneral(general)) throw new Error("Lead bevat ongeldige contactgegevens.");
+        return { ...lead, general };
+      });
     },
     // Ensure error handling is done properly for React Query v5+
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -156,16 +157,6 @@ const AdminLeads = () => {
                             <p className="text-xs text-muted-foreground mb-1">Aangemeld op</p>
                             <p className="font-medium text-ink">{new Date(lead.created_at).toLocaleDateString()}</p>
                           </div>
-                        </div>
-                        <div className="mt-4 flex flex-col sm:flex-row justify-end gap-2">
-                          <Button variant="outline" size="sm" className="group-hover:border-indigo-400 group-hover:text-indigo-700 transition-all">
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="inline mr-1"><path d="M15 12H9m6 0l-3-3m3 3l-3 3" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                            Details bekijken
-                          </Button>
-                          <Button size="sm" className="bg-indigo-500 hover:bg-indigo-600 text-white shadow-md transition-all">
-                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="inline mr-1"><path d="M12 4v16m8-8H4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                            Account aanmaken
-                          </Button>
                         </div>
                       </CardContent>
                     </Card>
