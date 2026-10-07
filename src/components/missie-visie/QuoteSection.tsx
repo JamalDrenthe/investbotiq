@@ -14,7 +14,7 @@ export default function QuoteSection() {
       }} transition={{
         duration: 0.8
       }} className="text-center">
-          <blockquote className="text-3xl md:text-5xl font-bold text-indigo-600 leading-tight mb-8">"Financiële vrijheid. 
+          <blockquote className="text-3xl md:text-5xl font-bold text-indigo-600 leading-tight mb-8">"Financiële vrijheid.
 Voor iedereen. Altijd."</blockquote>
           <p className="text-lg text-gray-600">Samen coderen we de toekomst!</p>
         </motion.div>

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Copy, Users, CheckCircle2 } from "lucide-react";
 import { useAuth } from '@/components/AuthProvider';
-import { supabase } from '@/integrations/supabase/client';
+import { firebaseStore } from "@/integrations/firebase/client";
 import { createReferralLinkFromCode, copyReferralLink, getReferralSummary } from '@/utils/referral-utils';
 
 const ReferralBox = () => {
@@ -26,14 +26,14 @@ const ReferralBox = () => {
       
       try {
         // Get or create referral code
-        const { data: existingCode, error: codeError } = await supabase
-          .from("referrals")
+        const { data: existingCode, error: codeError } = await firebaseStore
+          .collection("referrals")
           .select("referral_code")
           .eq("user_id", user.id)
           .is("referred_user_id", null)
           .single();
         
-        if (codeError && codeError.code !== "PGRST116") {
+        if (codeError && codeError.code !== "not-found") {
           console.error("Error fetching referral code:", codeError);
         }
         
@@ -41,12 +41,16 @@ const ReferralBox = () => {
         if (!existingCode) {
           // Generate a new referral code if none exists
           code = `${user.id.substring(0, 8)}`;
-          await supabase
-            .from("referrals")
+          const { error } = await firebaseStore
+            .collection("referrals")
             .insert({
+              id: user.id,
               user_id: user.id,
-              referral_code: code
+              referral_code: code,
+              referred_user_id: null,
+              status: "pending",
             });
+          if (error) throw error;
         } else {
           code = existingCode.referral_code;
         }

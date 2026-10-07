@@ -1,0 +1,157 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && request.auth.token.admin == true;
+    }
+
+    function isOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
+    function validProfile(profileId) {
+      return request.resource.data.keys().hasOnly([
+          'id', 'email', 'voornaam', 'achternaam', 'telefoonnummer', 'created_at', 'updated_at'
+        ])
+        && request.resource.data.id == profileId
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 320
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    function validRegistrationLead(leadId) {
+      return request.resource.data.keys().hasOnly([
+          'id', 'role', 'general', 'answers', 'status', 'created_at', 'updated_at'
+        ])
+        && request.resource.data.id == leadId
+        && request.resource.data.role in [
+          'member', 'student', 'ouder', 'affiliated', 'freelancer', 'ondernemer', 'artiest'
+        ]
+        && request.resource.data.general is map
+        && request.resource.data.general.keys().hasOnly([
+          'voornaam', 'achternaam', 'woonplaats', 'geboortedatum', 'email', 'telefoon',
+          'hoe_hoorde_u_van_ons', 'referral', 'plus_1'
+        ])
+        && request.resource.data.general.voornaam is string
+        && request.resource.data.general.voornaam.size() <= 120
+        && request.resource.data.general.achternaam is string
+        && request.resource.data.general.achternaam.size() <= 120
+        && request.resource.data.general.email is string
+        && request.resource.data.general.email.size() <= 320
+        && request.resource.data.answers is map
+        && request.resource.data.status == 'new'
+        && request.resource.data.created_at is timestamp
+        && request.resource.data.updated_at is timestamp;
+    }
+
+    match /profiles/{profileId} {
+      allow read: if isAdmin() || (isOwner(profileId) && resource.data.id == request.auth.uid);
+      allow create: if isOwner(profileId) && validProfile(profileId);
+      allow update: if isOwner(profileId)
+        && resource.data.id == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'email', 'voornaam', 'achternaam', 'telefoonnummer', 'updated_at'
+        ])
+        && request.resource.data.id == resource.data.id;
+      allow delete: if isAdmin();
+    }
+
+    match /registration_leads/{leadId} {
+      allow create: if validRegistrationLead(leadId);
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /cashflows/{cashflowId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /cashflow_history/{historyId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create: if isAdmin()
+        && request.resource.data.changed_by == request.auth.uid
+        && request.resource.data.amount is number
+        && request.resource.data.previous_amount is number;
+      allow update, delete: if isAdmin();
+    }
+
+    match /flowlutas/{flowlutaId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isOwner(resource.data.user_id)
+        && resource.data.status == 'planned'
+        && request.resource.data.status == 'active'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'status', 'activated_at', 'updated_at'
+        ])
+      );
+    }
+
+    match /spirits/{spiritId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /bel_loans/{loanId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /referrals/{referralId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create: if isAdmin() || (
+        isOwner(request.resource.data.user_id)
+        && referralId == request.auth.uid
+        && request.resource.data.id == request.auth.uid
+        && request.resource.data.referred_user_id == null
+        && request.resource.data.status == 'pending'
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    match /tasks/{taskId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        isOwner(resource.data.user_id)
+        && request.resource.data.status == 'completed'
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updated_at'])
+      );
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isAdmin() || isOwner(resource.data.user_id);
+      allow create: if isAdmin() || isOwner(request.resource.data.user_id);
+      allow update: if isAdmin() || (
+        isOwner(resource.data.user_id)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['gelezen', 'updated_at'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /scheduled_notifications/{notificationId} {
+      allow read: if isAdmin() || isOwner(resource.data.recipient_id);
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /notification_templates/{templateId} {
+      allow read, write: if isAdmin();
+    }
+
+    match /user_roles/{roleId} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

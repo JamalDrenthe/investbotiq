@@ -1,15 +1,6 @@
-export type LocalUser = {
-  id: string;
-  email: string;
-  created_at: string;
-  app_metadata: { role: "admin" | "member" | "guest" };
-  user_metadata: Record<string, unknown>;
-};
+import type { LocalSession, LocalUser } from "@/types/auth";
 
-export type LocalSession = {
-  access_token: string;
-  user: LocalUser;
-};
+export type { LocalSession, LocalUser } from "@/types/auth";
 
 type AuthStateChange = (event: "SIGNED_IN" | "SIGNED_OUT", session: LocalSession | null) => void;
 type QueryError = Error & { code?: string };
@@ -151,7 +142,7 @@ class LocalQueryBuilder implements PromiseLike<QueryResult> {
     );
     const data = this.singleResult ? (filteredRows[0] ?? null) : filteredRows;
     return this.singleResult && !data && !this.allowEmpty
-      ? { data: null, error: Object.assign(new Error("Geen lokale gegevens gevonden"), { code: "PGRST116" }) }
+      ? { data: null, error: Object.assign(new Error("Geen lokale gegevens gevonden"), { code: "not-found" }) }
       : { data, error: null };
   }
 
@@ -170,7 +161,7 @@ class LocalQueryBuilder implements PromiseLike<QueryResult> {
   }
 }
 
-export const supabase = {
+export const demoBackend = {
   auth: {
     signInWithPassword: async ({ email, password }: { email: string; password: string }) => {
       if (!email.trim() || password.length < 4) {
@@ -212,3 +203,11 @@ export const supabase = {
     invoke: async (_name: string, _options?: unknown) => ({ data: null, error: null }),
   },
 };
+
+export function getDemoUserId(): string | null {
+  try {
+    return readSession()?.user.id ?? null;
+  } catch {
+    return null;
+  }
+}

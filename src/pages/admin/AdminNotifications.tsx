@@ -1,4 +1,4 @@
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 import { AdminNavBar } from "@/components/admin/AdminNavBar";
@@ -11,62 +11,62 @@ import {
 } from "@/components/ui/tabs";
 import { ComposeNotificationForm } from "@/components/notifications/ComposeNotificationForm";
 import { NotificationsList } from "@/components/notifications/NotificationsList";
+import { firebaseStore } from "@/integrations/firebase/client";
+import type { Database } from "@/types/data-model";
 
-// Mock sent notifications data
-const sentNotifications = [
-  {
-    id: "1",
-    title: "Nieuwe Spirit Beschikbaar",
-    messagePreview: "Er is een nieuwe spirit beschikbaar. Bekijk de details...",
-    sentTo: "Alle gebruikers",
-    recipientCount: 24,
-    sentDate: "20 Apr 2025",
-    type: "info",
-    status: "delivered"
-  },
-  {
-    id: "2",
-    title: "Taak Update: Contract Ondertekening",
-    messagePreview: "We hebben je contract voor Spirit Alpha ontvangen...",
-    sentTo: "Jan Jansen",
-    recipientCount: 1,
-    sentDate: "19 Apr 2025",
-    type: "task",
-    status: "read"
-  },
-  {
-    id: "3",
-    title: "Spirit Activatie Bevestiging",
-    messagePreview: "Je Spirit Beta is succesvol geactiveerd...",
-    sentTo: "Emma Visser",
-    recipientCount: 1,
-    sentDate: "18 Apr 2025",
-    type: "success",
-    status: "read"
-  },
-  {
-    id: "4",
-    title: "Belangrijk: Systeem Onderhoud",
-    messagePreview: "Op 30 april zal het systeem tijdelijk niet beschikbaar zijn...",
-    sentTo: "Alle gebruikers",
-    recipientCount: 24,
-    sentDate: "15 Apr 2025",
-    type: "warning",
-    status: "delivered"
-  },
-  {
-    id: "5",
-    title: "Cashflow Update April",
-    messagePreview: "Je maandelijkse cashflow is bijgewerkt naar...",
-    sentTo: "Actieve gebruikers",
-    recipientCount: 18,
-    sentDate: "10 Apr 2025",
-    type: "info",
-    status: "delivered"
-  },
-];
+type Notification = Database["public"]["Tables"]["notifications"]["Row"];
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+type NotificationListItem = {
+  id: string;
+  title: string;
+  messagePreview: string;
+  sentTo: string;
+  recipientCount: number;
+  sentDate: string;
+  type: string;
+  status: string;
+};
 
 const AdminNotifications = () => {
+  const { data: notifications = [], isLoading, error } = useQuery({
+    queryKey: ["adminNotificationHistory"],
+    queryFn: async () => {
+      const { data, error } = await firebaseStore.collection("notifications")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+
+      const records = data as Notification[];
+      const userIds = [...new Set(records.map((record) => record.user_id))];
+      const profileResults = await Promise.all(
+        Array.from({ length: Math.ceil(userIds.length / 30) }, (_, index) =>
+          firebaseStore.collection("profiles")
+            .select("id, email")
+            .in("id", userIds.slice(index * 30, index * 30 + 30)),
+        ),
+      );
+      const profileError = profileResults.find((result) => result.error)?.error;
+      if (profileError) throw profileError;
+      const profiles = profileResults.flatMap((result) => result.data ?? []) as Profile[];
+      const emailsById = new Map(profiles.map((profile) => [profile.id, profile.email ?? profile.id]));
+
+      return records.map((record): NotificationListItem => {
+        const [title, ...content] = record.bericht.split("\n\n");
+        return {
+          id: record.id,
+          title: title || "Notificatie",
+          messagePreview: content.join(" ").slice(0, 120),
+          sentTo: emailsById.get(record.user_id) ?? record.user_id,
+          recipientCount: 1,
+          sentDate: new Date(record.created_at).toLocaleString("nl-NL"),
+          type: record.type,
+          status: record.gelezen ? "read" : "delivered",
+        };
+      });
+    },
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -103,7 +103,11 @@ const AdminNotifications = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <NotificationsList notifications={sentNotifications} />
+                {isLoading ? <p role="status">Berichten laden…</p> : error ? (
+                  <p role="alert" className="text-destructive">Berichten konden niet worden geladen.</p>
+                ) : notifications.length ? (
+                  <NotificationsList notifications={notifications} />
+                ) : <p>Er zijn nog geen verzonden berichten.</p>}
               </CardContent>
             </Card>
           </TabsContent>

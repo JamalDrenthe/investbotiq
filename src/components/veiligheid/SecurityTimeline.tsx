@@ -7,9 +7,9 @@ export default function SecurityTimeline() {
       <div className="absolute top-0 bottom-0 left-6 md:left-1/2 w-0.5 bg-indigo-200 transform -translate-x-1/2"></div>
       
       <div className="space-y-12">
-        <TimelineItem icon={<Lock className="w-6 h-6 text-indigo-600" />} iconBg="bg-indigo-100" title="Login beveiligd via Supabase" description="State-of-the-art beveiligingsmechanismen voor authenticatie en sessiemanagement." delay={0} reverse={false} />
+        <TimelineItem icon={<Lock className="w-6 h-6 text-indigo-600" />} iconBg="bg-indigo-100" title="Login beveiligd via Firebase" description="Firebase Authentication beheert de beveiligde toegang en sessies." delay={0} reverse={false} />
         
-        <TimelineItem icon={<Shield className="w-6 h-6 text-blue-600" />} iconBg="bg-blue-100" title="Toegangscontrole via policies" description="Row Level Security op alle tabellen zorgt ervoor dat gebruikers alleen toegang hebben tot hun eigen data." delay={0.1} reverse={true} />
+        <TimelineItem icon={<Shield className="w-6 h-6 text-blue-600" />} iconBg="bg-blue-100" title="Toegangscontrole via Firestore-regels" description="Firestore Security Rules beperken gebruikers tot hun eigen gegevens en geven admins expliciete toegang." delay={0.1} reverse={true} />
         
         <TimelineItem icon={<FileCheck className="w-6 h-6 text-amber-600" />} iconBg="bg-amber-100" title="Trigger logging bij gevoelige acties" description="Automatische logging van alle wijzigingen in cashflow, taken en spirits voor volledige transparantie." delay={0.2} reverse={false} />
         

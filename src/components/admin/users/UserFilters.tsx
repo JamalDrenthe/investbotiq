@@ -43,7 +43,6 @@ export const UserFilters = ({
           <SelectContent>
             <SelectItem value="all">Alle statussen</SelectItem>
             <SelectItem value="active">Actief</SelectItem>
-            <SelectItem value="pending">In afwachting</SelectItem>
           </SelectContent>
         </Select>
         
@@ -58,6 +57,7 @@ export const UserFilters = ({
             <SelectItem value="all">Alle rollen</SelectItem>
             <SelectItem value="member">Members</SelectItem>
             <SelectItem value="admin">Admins</SelectItem>
+            <SelectItem value="unknown">Onbekend</SelectItem>
           </SelectContent>
         </Select>
       </div>

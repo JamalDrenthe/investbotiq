@@ -10,7 +10,7 @@ import {
   YAxis,
 } from "recharts";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 
 export const FlowlutasChart = () => {
   const [mounted, setMounted] = useState(false);
@@ -22,8 +22,8 @@ export const FlowlutasChart = () => {
   const { data: flowlutasData } = useQuery({
     queryKey: ["flowlutas-stats"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("flowlutas")
+      const { data, error } = await firebaseStore
+        .collection("flowlutas")
         .select("tier, monthly_cashflow, created_at")
         .order("created_at", { ascending: true });
 

@@ -1,11 +1,11 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { LocalSession, LocalUser, supabase } from "@/integrations/supabase/client";
+import { observeAuthState } from "@/lib/auth";
+import type { LocalUser, UserRole } from "@/types/auth";
 
 type AuthContextType = {
   user: LocalUser | null;
-  session: LocalSession | null;
-  userRole: "admin" | "member" | "guest" | null;
+  userRole: UserRole | null;
   loading: boolean;
 };
 
@@ -21,33 +21,19 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<LocalUser | null>(null);
-  const [session, setSession] = useState<LocalSession | null>(null);
-  const [userRole, setUserRole] = useState<"admin" | "member" | "guest" | null>(null);
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setUserRole(session?.user.app_metadata.role ?? null);
-        setLoading(false);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setUserRole(session?.user.app_metadata.role ?? null);
+    return observeAuthState((nextUser, nextRole) => {
+      setUser(nextUser);
+      setUserRole(nextRole);
       setLoading(false);
     });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const value: AuthContextType = {
     user,
-    session,
     userRole,
     loading,
   };

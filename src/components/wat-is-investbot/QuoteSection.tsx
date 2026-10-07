@@ -14,7 +14,7 @@ export default function QuoteSection() {
       }} transition={{
         duration: 0.8
       }} className="text-center">
-          <blockquote className="text-2xl md:text-4xl font-bold text-indigo-900 italic leading-relaxed">"Geen hoofdpijn. 
+          <blockquote className="text-2xl md:text-4xl font-bold text-indigo-900 italic leading-relaxed">"Geen hoofdpijn.
 De IQ BOT regelt het!"</blockquote>
         </motion.div>
       </div>

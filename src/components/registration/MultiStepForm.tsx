@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { RoleSelector } from "./steps/RoleSelector";
 import { GeneralInfo } from "./steps/GeneralInfo";
 import { RoleQuestions } from "./steps/RoleQuestions";
@@ -52,38 +52,16 @@ export const MultiStepForm = () => {
 
   const handleSubmit = async () => {
     try {
-      // Insert registration lead
-      const { error: registrationError } = await supabase.from("registration_leads").insert({
+      const { error: registrationError } = await firebaseStore.collection("registration_leads").insert({
         role: formData.role,
         general: formData.general,
         answers: formData.answers,
+        status: "new",
       });
 
       if (registrationError) throw registrationError;
 
-      // Send notification to admin
-      await supabase.from("notifications").insert({
-        type: "lead",
-        user_id: "system",
-        bericht: `Nieuwe aanmelding ontvangen van ${formData.general.voornaam} ${formData.general.achternaam}`,
-      });
-
-      // Send welcome email via edge function
-      const welcomeResponse = await supabase.functions.invoke('send-welcome-email', {
-        body: JSON.stringify({
-          firstName: formData.general.voornaam,
-          email: formData.general.email,
-          role: formData.role
-        })
-      });
-
-      if (welcomeResponse.error) {
-        console.error('Welcome email error:', welcomeResponse.error);
-        toast.warning('Aanmelding gelukt, maar kon geen welkomstmail verzenden');
-      } else {
-        toast.success('Aanmelding succesvol verzonden!');
-      }
-
+      toast.success('Aanmelding succesvol verzonden!');
       navigate("/register/success");
     } catch (error) {
       console.error("Error submitting form:", error);

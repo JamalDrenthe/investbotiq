@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
@@ -16,14 +16,14 @@ const ReferralInfo = () => {
       if (!user) return { code: null, count: 0, bonus: 0 };
 
       // Get referral code
-      const { data: referralCode, error: codeError } = await supabase
-        .from("referrals")
+      const { data: referralCode, error: codeError } = await firebaseStore
+        .collection("referrals")
         .select("referral_code")
         .eq("user_id", user.id)
         .is("referred_user_id", null)
         .single();
 
-      if (codeError && codeError.code !== "PGRST116") {
+      if (codeError && codeError.code !== "not-found") {
         throw codeError;
       }
 

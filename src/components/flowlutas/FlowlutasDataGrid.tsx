@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FlowlutaCard } from "./components/FlowlutaCard";
 import { FlowlutaTable } from "./components/FlowlutaTable";
@@ -23,8 +23,8 @@ export const FlowlutasDataGrid = ({ tier, status, search }: FlowlutasDataGridPro
   const { data: flowlutasData } = useQuery({
     queryKey: ["flowlutas", tier, status, search, currentPage],
     queryFn: async () => {
-      let query = supabase
-        .from("flowlutas")
+      let query = firebaseStore
+        .collection("flowlutas")
         .select("*", { count: "exact" })
         .order("created_at", { ascending: false })
         .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);

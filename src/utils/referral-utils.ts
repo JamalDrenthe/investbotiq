@@ -1,4 +1,4 @@
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { toast } from "sonner";
 
 export interface Referral {
@@ -45,8 +45,8 @@ export interface ReferralWithDetails {
 
 export async function getReferralSummary(userId: string): Promise<ReferralSummary | null> {
   try {
-    const { data, error } = await supabase
-      .from("referrals")
+    const { data, error } = await firebaseStore
+      .collection("referrals")
       .select("user_id, referred_user_id, status")
       .eq("user_id", userId);
 
@@ -55,32 +55,14 @@ export async function getReferralSummary(userId: string): Promise<ReferralSummar
       return null;
     }
 
-    // Calculate metrics from raw referral data
     const pendingReferrals = data.filter(r => r.referred_user_id && r.status === 'pending').length;
     const successfulReferrals = data.filter(r => r.referred_user_id && r.status === 'successful').length;
-    
-    // Get total rewards
-    const { data: rewardsData, error: rewardsError } = await supabase
-      .from("referrals")
-      .select(`
-        id,
-        status
-      `)
-      .eq("user_id", userId)
-      .eq("status", "successful");
-    
-    let totalBonus = 0;
-    
-    if (!rewardsError && rewardsData) {
-      // Calculate total bonuses - for now we'll use a simplified approach
-      totalBonus = successfulReferrals * 100; // Assuming €100 per successful referral
-    }
 
     return {
       referrer_id: userId,
       pending_referrals: pendingReferrals,
       successful_referrals: successfulReferrals,
-      total_bonus: totalBonus
+      total_bonus: successfulReferrals * 100
     };
   } catch (error) {
     console.error("Error in getReferralSummary:", error);
@@ -90,8 +72,8 @@ export async function getReferralSummary(userId: string): Promise<ReferralSummar
 
 export async function getUserReferrals(userId: string): Promise<Referral[]> {
   try {
-    const { data, error } = await supabase
-      .from("referrals")
+    const { data, error } = await firebaseStore
+      .collection("referrals")
       .select(`
         id,
         user_id,
@@ -105,29 +87,22 @@ export async function getUserReferrals(userId: string): Promise<Referral[]> {
 
     if (error) throw error;
 
-    const referrals = [...data as Referral[]];
-    
-    for (const referral of referrals) {
-      if (referral.referred_user_id) {
-        try {
-          // Get the auth user data directly
-          const { data: authUser } = await supabase
-            .auth.admin.getUserById(referral.referred_user_id);
-          
-          if (authUser?.user) {
-            // Add email as a new property
-            referral.referred_user_email = authUser.user.email || 'Unknown';
-          } else {
-            referral.referred_user_email = 'Unknown';
-          }
-        } catch (err) {
-          console.error("Error fetching user details:", err);
-          referral.referred_user_email = 'Error fetching email';
-        }
-      }
-    }
+    const referrals = data as Referral[];
+    const referredUserIds = [...new Set(referrals.flatMap((item) => item.referred_user_id ? [item.referred_user_id] : []))];
+    if (referredUserIds.length === 0) return referrals;
 
-    return referrals;
+    const { data: profiles, error: profileError } = await firebaseStore
+      .collection("profiles")
+      .select("id, email")
+      .in("id", referredUserIds);
+    if (profileError) throw profileError;
+    const emailById = new Map(profiles.map((profile) => [profile.id, profile.email ?? "Unknown"]));
+    return referrals.map((referral) => ({
+      ...referral,
+      referred_user_email: referral.referred_user_id
+        ? emailById.get(referral.referred_user_id) ?? "Unknown"
+        : undefined,
+    }));
   } catch (error) {
     console.error("Error fetching user referrals:", error);
     return [];
@@ -137,8 +112,8 @@ export async function getUserReferrals(userId: string): Promise<Referral[]> {
 export async function getUserReferralRewards(userId: string): Promise<ReferralReward[]> {
   try {
     // Since we don't have a dedicated function in the database, use a simpler approach
-    const { data: referralsData, error: referralsError } = await supabase
-      .from("referrals")
+    const { data: referralsData, error: referralsError } = await firebaseStore
+      .collection("referrals")
       .select(`
         id,
         status,

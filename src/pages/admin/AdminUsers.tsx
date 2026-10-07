@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 import { UserCog } from "lucide-react";
-import { useState } from "react";
 import { UserTable } from "@/components/admin/users/UserTable";
 import { UserFilters } from "@/components/admin/users/UserFilters";
 import { AdminNavBar } from "@/components/admin/AdminNavBar";
@@ -17,9 +16,10 @@ const AdminUsers = () => {
     statusFilter, 
     setStatusFilter, 
     roleFilter, 
-    setRoleFilter 
+    setRoleFilter,
+    isLoading,
+    error,
   } = useUsers();
-  const [isNewUserDialogOpen, setIsNewUserDialogOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background">
@@ -28,8 +28,7 @@ const AdminUsers = () => {
         <AdminNavBar />
         <h2 className="text-xl font-semibold mb-2">Gebruikers Overzicht</h2>
         <p className="text-muted-foreground mb-4">
-          Bekijk hier het overzicht van alle gebruikers in het ecosysteem van Investbotiq. 
-          Je ziet hun maandelijkse cashflow, spiritstatus en BEL-lening status in één oogopslag.
+          Dit overzicht gebruikt Firebase-profielen en opgeslagen gegevens. Rollen van andere accounts zijn alleen zichtbaar na aansluiting van een vertrouwde serverfunctie.
         </p>
         
         <UserFilters
@@ -49,7 +48,9 @@ const AdminUsers = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <UserTable users={users} />
+            {isLoading ? <p role="status">Gebruikers laden…</p> : error ? (
+              <p role="alert" className="text-destructive">Gebruikers konden niet worden geladen.</p>
+            ) : <UserTable users={users} />}
           </CardContent>
         </Card>
       </div>

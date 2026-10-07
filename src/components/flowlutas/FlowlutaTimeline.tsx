@@ -1,11 +1,15 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import type { Database } from "@/types/data-model";
+
+type FlowlutaRecord = Pick<Database["public"]["Tables"]["flowlutas"]["Row"],
+  "user_id" | "tier" | "status" | "activated_at" | "monthly_cashflow">;
 
 interface FlowlutaTimelineProps {
   userId?: string;
@@ -16,8 +20,8 @@ export const FlowlutaTimeline = ({ userId, tier }: FlowlutaTimelineProps) => {
   const { data: timelineData } = useQuery({
     queryKey: ["flowlutas-timeline", userId, tier],
     queryFn: async () => {
-      let query = supabase
-        .from("flowlutas")
+      let query = firebaseStore
+        .collection("flowlutas")
         .select("user_id, tier, status, activated_at, monthly_cashflow, next_activation_date")
         .order("activated_at", { ascending: false });
 
@@ -33,13 +37,13 @@ export const FlowlutaTimeline = ({ userId, tier }: FlowlutaTimelineProps) => {
       if (error) throw error;
 
       // Group flowlutas by user_id
-      const groupedByUser = data.reduce((acc, flowluta) => {
+      const groupedByUser = (data as FlowlutaRecord[]).reduce<Record<string, FlowlutaRecord[]>>((acc, flowluta) => {
         if (!acc[flowluta.user_id]) {
           acc[flowluta.user_id] = [];
         }
         acc[flowluta.user_id].push(flowluta);
         return acc;
-      }, {} as Record<string, any[]>);
+      }, {});
 
       return Object.entries(groupedByUser).map(([userId, flowlutas]) => ({
         userId,

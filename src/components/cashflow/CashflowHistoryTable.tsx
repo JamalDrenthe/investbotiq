@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import {
   Table,
   TableBody,
@@ -43,8 +43,8 @@ export function CashflowHistoryTable({ userId }: { userId: string }) {
     queryFn: async () => {
       // We need to fix the join query since there's an issue with the relation
       // Use a separate query to get the profiles data for each record
-      const { data, error } = await supabase
-        .from('cashflow_history')
+      const { data, error } = await firebaseStore
+        .collection('cashflow_history')
         .select('*')
         .eq('user_id', userId)
         .order('changed_at', { ascending: false });
@@ -60,8 +60,8 @@ export function CashflowHistoryTable({ userId }: { userId: string }) {
         
         if (changedByIds.length > 0) {
           // Fetch profiles for these IDs
-          const { data: profiles } = await supabase
-            .from('profiles')
+          const { data: profiles } = await firebaseStore
+            .collection('profiles')
             .select('id, voornaam, achternaam')
             .in('id', changedByIds);
           

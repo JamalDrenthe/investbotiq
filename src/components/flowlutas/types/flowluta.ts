@@ -1,5 +1,5 @@
 
-import { Database } from "@/integrations/supabase/types";
+import { Database } from "@/types/data-model";
 
 export type FlowlutaStatus = Database["public"]["Enums"]["flowluta_status"];
 

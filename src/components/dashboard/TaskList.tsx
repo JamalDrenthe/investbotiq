@@ -2,30 +2,36 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { firebaseStore } from "@/integrations/firebase/client";
 import { Check, Clock, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { type Task } from "@/types/task";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/components/AuthProvider";
 
 const TaskList = () => {
   const navigate = useNavigate();
+  const { user, userRole } = useAuth();
   
   const { data: recentTasks = [], isLoading } = useQuery({
-    queryKey: ["recentTasks"],
+    queryKey: ["recentTasks", user?.id, userRole],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("tasks")
+      if (!user) return [];
+      let query = firebaseStore
+        .collection("tasks")
         .select("*")
         .eq("status", "open")
         .order("created_at", { ascending: false })
         .limit(3);
+      if (userRole !== "admin") query = query.eq("user_id", user.id);
+      const { data, error } = await query;
 
       if (error) throw error;
 
       return data as Task[];
     },
+    enabled: !!user,
   });
 
   // Get status icon based on task priority or deadline
