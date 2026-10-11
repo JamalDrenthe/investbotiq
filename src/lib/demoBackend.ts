@@ -31,12 +31,15 @@ const getOrCreateUser = (email: string): LocalUser => {
   const existingUser = users.find((user) => user.email === normalizedEmail);
   if (existingUser) return existingUser;
 
+  const isSuperAdmin = normalizedEmail === "info@jamaldrenthe.com";
   const user: LocalUser = {
     id: crypto.randomUUID(),
     email: normalizedEmail,
     created_at: new Date().toISOString(),
-    app_metadata: { role: normalizedEmail.startsWith("admin") ? "admin" : "member" },
-    user_metadata: {},
+    app_metadata: { role: normalizedEmail.startsWith("admin") || isSuperAdmin ? "admin" : "member" },
+    user_metadata: {
+      displayName: isSuperAdmin ? "Jamal Drenthe" : normalizedEmail.split("@")[0],
+    },
   };
 
   localStorage.setItem(USERS_KEY, JSON.stringify([...users, user]));
@@ -176,6 +179,15 @@ export const demoBackend = {
       saveSession(session);
       listeners.forEach((listener) => listener("SIGNED_IN", session));
       return { data: { user, session }, error: null };
+    },
+    signInWithOAuth: async ({ provider }: { provider?: string } = {}) => {
+      const email = "info@jamaldrenthe.com";
+      const user = getOrCreateUser(email);
+      user.app_metadata.role = "admin";
+      const session: LocalSession = { access_token: `local-${user.id}`, user };
+      saveSession(session);
+      listeners.forEach((listener) => listener("SIGNED_IN", session));
+      return { data: { user, session, provider }, error: null };
     },
     signOut: async () => {
       saveSession(null);

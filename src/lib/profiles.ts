@@ -1,8 +1,20 @@
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "@/lib/firebase";
 
-export async function ensureUserProfile(userId: string, email: string | null): Promise<void> {
+export async function ensureUserProfile(
+  userId: string,
+  email: string | null,
+  displayName?: string | null,
+): Promise<void> {
   if (!firestoreDb) return;
+
+  let voornaam: string | null = null;
+  let achternaam: string | null = null;
+  if (displayName?.trim()) {
+    const parts = displayName.trim().split(/\s+/);
+    voornaam = parts[0] || null;
+    achternaam = parts.slice(1).join(" ") || null;
+  }
 
   const profileRef = doc(firestoreDb, "profiles", userId);
   const profile = await getDoc(profileRef);
@@ -10,8 +22,8 @@ export async function ensureUserProfile(userId: string, email: string | null): P
     await setDoc(profileRef, {
       id: userId,
       email,
-      voornaam: null,
-      achternaam: null,
+      voornaam,
+      achternaam,
       telefoonnummer: null,
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
@@ -19,7 +31,14 @@ export async function ensureUserProfile(userId: string, email: string | null): P
     return;
   }
 
-  if (profile.data().email !== email) {
-    await updateDoc(profileRef, { email, updated_at: serverTimestamp() });
+  const data = profile.data();
+  const updates: Record<string, unknown> = {};
+  if (data.email !== email) updates.email = email;
+  if (!data.voornaam && voornaam) updates.voornaam = voornaam;
+  if (!data.achternaam && achternaam) updates.achternaam = achternaam;
+
+  if (Object.keys(updates).length > 0) {
+    updates.updated_at = serverTimestamp();
+    await updateDoc(profileRef, updates);
   }
 }

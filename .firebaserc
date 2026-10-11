@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "demo-investbotiq"
+    "default": "investbotiq-dev",
+    "dev": "investbotiq-dev",
+    "prod": "investbotiq-prod"
   }
 }

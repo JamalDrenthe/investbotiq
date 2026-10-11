@@ -12,6 +12,8 @@ interface CashflowTableProps {
   isUpdating: Record<string, boolean>;
   onCashflowChange: (userId: string, value: string) => void;
   onSave: (userId: string) => void;
+  selectedUserId?: string | null;
+  onSelectUser?: (userId: string) => void;
 }
 
 export const CashflowTable = ({
@@ -20,6 +22,8 @@ export const CashflowTable = ({
   isUpdating,
   onCashflowChange,
   onSave,
+  selectedUserId,
+  onSelectUser,
 }: CashflowTableProps) => {
   if (!users.length) {
     return (
@@ -47,7 +51,13 @@ export const CashflowTable = ({
       </TableHeader>
       <TableBody>
         {users.map((user) => (
-          <TableRow key={user.id}>
+          <TableRow
+            key={user.id}
+            onClick={() => onSelectUser?.(user.id)}
+            className={`cursor-pointer transition-colors ${
+              selectedUserId === user.id ? "bg-muted/70 border-l-4 border-indigo-500" : ""
+            }`}
+          >
             <TableCell>
               <div>
                 <p className="font-medium">{user.name}</p>

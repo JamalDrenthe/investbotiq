@@ -20,6 +20,7 @@ import { getDemoUserId } from "@/lib/demoBackend";
 import { firestoreDb } from "@/lib/firebase";
 import type { Database } from "@/types/data-model";
 import { isDemoModeEnabled } from "@/lib/auth";
+import { getInitialDemoRows } from "./demoSeed";
 
 type Collections = Database["public"]["Tables"];
 type CollectionName = keyof Collections;
@@ -338,13 +339,17 @@ class FirestoreCollectionQuery<T extends CollectionName, Single extends boolean 
       const raw = localStorage.getItem(`investbotiq.demo-data.v1.${this.name}`);
       if (raw) {
         const value: unknown = JSON.parse(raw);
-        if (Array.isArray(value)) return value as Row<T>[];
+        if (Array.isArray(value) && value.length > 0) return value as Row<T>[];
       }
       if (this.name === "profiles") {
         const userId = getDemoUserId();
         const legacy = userId ? localStorage.getItem(`investbotiq.profile.${userId}`) : null;
         if (legacy) return [JSON.parse(legacy) as Row<T>];
-        if (userId) return [{ id: userId } as Row<T>];
+      }
+      const initial = getInitialDemoRows(this.name) as Row<T>[];
+      if (initial.length > 0) {
+        this.writeDemoRows(initial);
+        return initial;
       }
     } catch {
       return [];

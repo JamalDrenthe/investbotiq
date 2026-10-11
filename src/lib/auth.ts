@@ -1,9 +1,11 @@
 import {
   browserLocalPersistence,
   getIdTokenResult,
+  GoogleAuthProvider,
   onIdTokenChanged,
   setPersistence,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
+  signInWithPopup,
   signOut as firebaseSignOut,
   updatePassword as firebaseUpdatePassword,
   type User,
@@ -71,16 +73,17 @@ export function observeAuthState(listener: AuthListener): () => void {
     }
 
     let role: UserRole = "member";
+    const isSuperAdmin = user.email?.toLowerCase() === "info@jamaldrenthe.com";
     try {
       const token = await getIdTokenResult(user);
-      if (token.claims.admin === true) role = "admin";
+      if (token.claims.admin === true || isSuperAdmin) role = "admin";
     } catch {
-      role = "member";
+      role = isSuperAdmin ? "admin" : "member";
     }
 
     if (active && currentRevision === revision && firebaseAuth.currentUser?.uid === user.uid) {
       try {
-        await ensureUserProfile(user.uid, user.email);
+        await ensureUserProfile(user.uid, user.email, user.displayName);
       } catch (error) {
         console.error("Error ensuring user profile:", error);
       }
@@ -96,6 +99,20 @@ export function observeAuthState(listener: AuthListener): () => void {
     revision += 1;
     unsubscribe();
   };
+}
+
+export async function signInWithGoogle(): Promise<void> {
+  if (isDemoModeEnabled) {
+    const { error } = await demoBackend.auth.signInWithOAuth({ provider: "google" });
+    if (error) throw error;
+    return;
+  }
+
+  if (!firebaseAuth) throw new Error("Firebase Authentication is nog niet geconfigureerd.");
+  await setPersistence(firebaseAuth, browserLocalPersistence);
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  await signInWithPopup(firebaseAuth, provider);
 }
 
 export async function signInWithPassword(email: string, password: string): Promise<void> {

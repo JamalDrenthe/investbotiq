@@ -11,6 +11,8 @@ import { useAuth } from "@/components/AuthProvider";
 import { firebaseStore } from "@/integrations/firebase/client";
 import type { Database } from "@/types/data-model";
 import Header from "@/components/Header";
+import { CircleDollarSign, TrendingUp, Users, Download } from "lucide-react";
+import { toast } from "sonner";
 
 type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 type Cashflow = Database["public"]["Tables"]["cashflows"]["Row"];
@@ -23,6 +25,7 @@ const AdminCashflows = () => {
   const { user, userRole } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+
   const { data: users = [], isLoading, error } = useQuery({
     queryKey: ["adminCashflowUsers", user?.id, userRole],
     enabled: userRole === "admin",
@@ -66,10 +69,12 @@ const AdminCashflows = () => {
       });
     },
   });
+
   const filteredUsers = users.filter((account) =>
     account.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     account.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
   const { cashflowValues, isUpdating, handleCashflowChange, handleSave } = useCashflowManagement(users);
 
   useEffect(() => {
@@ -82,12 +87,88 @@ const AdminCashflows = () => {
     }
   }, [users, selectedUserId]);
 
+  const totalCurrentCashflow = users.reduce((acc, u) => acc + (cashflowValues[u.id] ?? u.currentCashflow), 0);
+  const averageCashflow = users.length > 0 ? (totalCurrentCashflow / users.length).toFixed(2) : "0,00";
+
+  const exportCashflowsCSV = () => {
+    if (!users.length) {
+      toast.error("Geen gegevens om te exporteren.");
+      return;
+    }
+    const headers = ["ID", "Naam", "Email", "Huidige Cashflow (EUR)", "Vorige Cashflow (EUR)", "Verandering (%)", "Laatst Bijgewerkt"];
+    const rows = users.map((u) => [
+      u.id,
+      `"${u.name}"`,
+      `"${u.email}"`,
+      cashflowValues[u.id] ?? u.currentCashflow,
+      u.previousCashflow,
+      `${u.changePercentage}%`,
+      `"${u.lastUpdated}"`,
+    ]);
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI(csvContent));
+    link.setAttribute("download", `investbotiq-cashflows-${new Date().toISOString().split("T")[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Cashflow overzicht geëxporteerd naar CSV");
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <div className="container mx-auto px-4 md:px-6 py-6">
         <AdminNavBar />
-        <h2 className="text-xl font-semibold mb-4">Cashflowbeheer</h2>
+
+        {/* Header & Actions */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Cashflowbeheer</h2>
+            <p className="text-muted-foreground text-sm">
+              Beheer en overschrijf maandelijkse cashflow bedragen per member account.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={exportCashflowsCSV}
+            className="inline-flex items-center gap-2 rounded-xl border border-input bg-background px-4 py-2 text-sm font-semibold hover:bg-accent transition"
+          >
+            <Download className="h-4 w-4" />
+            Exporteer CSV
+          </button>
+        </div>
+
+        {/* Summary Metrics */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <Card className="p-4">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Totale Maandcashflow</span>
+              <CircleDollarSign className="h-4 w-4 text-emerald-500" />
+            </div>
+            <p className="text-2xl font-bold font-mono text-emerald-600">
+              €{totalCurrentCashflow.toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
+            </p>
+          </Card>
+
+          <Card className="p-4">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Gemiddeld per Member</span>
+              <TrendingUp className="h-4 w-4 text-indigo-500" />
+            </div>
+            <p className="text-2xl font-bold font-mono">
+              €{Number(averageCashflow).toLocaleString("nl-NL", { minimumFractionDigits: 2 })}
+            </p>
+          </Card>
+
+          <Card className="p-4">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+              <span>Gekoppelde Accounts</span>
+              <Users className="h-4 w-4 text-blue-500" />
+            </div>
+            <p className="text-2xl font-bold">{users.length}</p>
+          </Card>
+        </div>
 
         <div className="flex justify-between items-center mb-6">
           <CashflowSearch searchTerm={searchTerm} onSearchChange={setSearchTerm} />
@@ -95,14 +176,16 @@ const AdminCashflows = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Cashflow Aanpassingen</CardTitle>
+            <CardTitle className="text-lg">Cashflow Aanpassingen</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">
-              Pas de maandelijkse cashflow aan per gebruiker. Wijzigingen en historie worden samen in Firestore opgeslagen.
+            <p className="text-muted-foreground text-sm mb-4">
+              Klik op een regel om de historie te bekijken. Voer een bedrag in en klik op opslaan om direct een auditlog vast te leggen.
             </p>
-            {isLoading ? <p role="status">Cashflows laden…</p> : error ? (
-              <p role="alert" className="text-destructive">Cashflows konden niet worden geladen.</p>
+            {isLoading ? (
+              <p role="status" className="text-center py-8 text-sm text-indigo-500 animate-pulse">Cashflows laden…</p>
+            ) : error ? (
+              <p role="alert" className="text-destructive text-sm">Cashflows konden niet worden geladen.</p>
             ) : (
               <CashflowTable
                 users={filteredUsers}
@@ -110,12 +193,20 @@ const AdminCashflows = () => {
                 isUpdating={isUpdating}
                 onCashflowChange={handleCashflowChange}
                 onSave={handleSave}
+                selectedUserId={selectedUserId}
+                onSelectUser={setSelectedUserId}
               />
             )}
 
-            <div className="mt-8">
-              <CardTitle className="mb-4">Cashflow Historie</CardTitle>
-              {selectedUserId && <CashflowHistoryTable userId={selectedUserId} />}
+            <div className="mt-8 border-t border-border pt-6">
+              <CardTitle className="mb-4 text-lg">
+                Cashflow Historie {selectedUserId ? `(Geselecteerd: ${users.find((u) => u.id === selectedUserId)?.name || selectedUserId})` : ""}
+              </CardTitle>
+              {selectedUserId ? (
+                <CashflowHistoryTable userId={selectedUserId} />
+              ) : (
+                <p className="text-sm text-muted-foreground">Selecteer een gebruiker hierboven om de historie te bekijken.</p>
+              )}
             </div>
           </CardContent>
         </Card>

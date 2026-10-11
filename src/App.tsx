@@ -74,6 +74,7 @@ const App = () => (
             <Route path="/member/profile" element={<MemberProfile />} />
             <Route path="/member/ai-running" element={<MemberAIRunning />} />
             <Route path="/member/referrals" element={<MemberReferrals />} />
+            <Route path="/ai-running" element={<Navigate to="/member/ai-running" replace />} />
 
             <Route path="/member" element={<Navigate to="/member/dashboard" replace />} />
 
