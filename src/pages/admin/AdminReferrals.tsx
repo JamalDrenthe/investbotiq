@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { firebaseStore } from "@/integrations/firebase/client";
 import { withRoleGuard } from "@/utils/withRoleGuard";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table, TableBody, TableCell, TableHead, 
@@ -121,12 +120,8 @@ const AdminReferrals = () => {
     });
   
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <div className="flex flex-col gap-6">
+    <AdminPortalLayout>
+      <div className="flex flex-col gap-6">
             <div>
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Referral Beheer</h1>
               <p className="text-muted-foreground">
@@ -316,9 +311,7 @@ const AdminReferrals = () => {
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 

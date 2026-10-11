@@ -1,21 +1,19 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { withRoleGuard } from "@/utils/withRoleGuard";
-import { AdminNavBar } from "@/components/admin/AdminNavBar";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import { Settings } from "lucide-react";
-import Header from "@/components/Header";
 
 const AdminSettings = () => {
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container mx-auto px-4 md:px-6 py-6">
-        <AdminNavBar />
-        <h2 className="text-xl font-semibold mb-2">Instellingen</h2>
-        <p className="text-muted-foreground mb-4">
-          Beheer alle systeeminstellingen voor het Investbotiq platform.
-        </p>
+    <AdminPortalLayout>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Instellingen</h2>
+          <p className="text-muted-foreground text-sm">
+            Beheer alle systeeminstellingen voor het Investbotiq platform.
+          </p>
+        </div>
         
         <Card>
           <CardHeader>
@@ -31,7 +29,7 @@ const AdminSettings = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 

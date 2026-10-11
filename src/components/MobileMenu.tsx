@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Home, BarChart, CheckSquare, User, Sparkles, LogOut, 
-  Users, Bell, CircleDollarSign, Settings, Share2 
+  Users, Bell, CircleDollarSign, Settings, Share2, UserPlus 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/AuthProvider";
@@ -58,9 +58,12 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen, onClose }) =
 
   const adminItems = [
     { label: "Admin Dashboard", href: "/admin", icon: Home },
+    { label: "Leads", href: "/admin/leads", icon: UserPlus },
     { label: "Gebruikers", href: "/admin/users", icon: Users },
     { label: "Taken Beheer", href: "/admin/tasks", icon: CheckSquare },
     { label: "Cashflow Beheer", href: "/admin/cashflows", icon: CircleDollarSign },
+    { label: "Flowlutas", href: "/admin/flowlutas", icon: Sparkles },
+    { label: "Referrals", href: "/admin/referrals", icon: Share2 },
     { label: "Notificaties", href: "/admin/notifications", icon: Bell },
     { label: "Instellingen", href: "/admin/settings", icon: Settings },
     { label: "Mijn Profiel", href: "/admin/profile", icon: User },

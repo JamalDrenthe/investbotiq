@@ -14,8 +14,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { AdminNavBar } from "@/components/admin/AdminNavBar";
-import Header from "@/components/Header";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import { toast } from "sonner";
 import {
   Users,
@@ -212,10 +211,8 @@ const AdminLeads = () => {
   const countConverted = leads.filter((l) => l.status === "converted").length;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container mx-auto px-4 md:px-6 py-6">
-        <AdminNavBar />
+    <AdminPortalLayout>
+      <div className="space-y-6">
 
         {/* Header Title & Actions */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -524,7 +521,7 @@ const AdminLeads = () => {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 

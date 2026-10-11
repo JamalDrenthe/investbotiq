@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { withRoleGuard } from "@/utils/withRoleGuard";
-import { AdminNavBar } from "@/components/admin/AdminNavBar";
-import Header from "@/components/Header";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import {
   Tabs,
   TabsContent,
@@ -68,10 +67,8 @@ const AdminNotifications = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container mx-auto px-4 md:px-6 py-6">
-        <AdminNavBar />
+    <AdminPortalLayout>
+      <div className="space-y-6">
         <h2 className="text-xl font-semibold mb-4">Notificaties</h2>
         
         <Tabs defaultValue="compose" className="w-full">
@@ -113,7 +110,7 @@ const AdminNotifications = () => {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 

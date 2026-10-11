@@ -12,7 +12,9 @@ import {
   Sparkles,
   Bell,
   CircleDollarSign,
-  Share2
+  Share2,
+  UserPlus,
+  Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,19 +32,21 @@ const Sidebar = () => {
 
   const adminLinks = [
     { to: '/admin', icon: <Home className="h-4 w-4" />, label: 'Dashboard' },
+    { to: '/admin/leads', icon: <UserPlus className="h-4 w-4" />, label: 'Leads' },
     { to: '/admin/users', icon: <Users className="h-4 w-4" />, label: 'Gebruikers' },
     { to: '/admin/tasks', icon: <CheckSquare className="h-4 w-4" />, label: 'Taken' },
     { to: '/admin/cashflows', icon: <CircleDollarSign className="h-4 w-4" />, label: 'Cashflows' },
     { to: '/admin/flowlutas', icon: <Sparkles className="h-4 w-4" />, label: 'Flowlutas' },
     { to: '/admin/referrals', icon: <Share2 className="h-4 w-4" />, label: 'Referrals' },
     { to: '/admin/notifications', icon: <Bell className="h-4 w-4" />, label: 'Notificaties' },
+    { to: '/admin/settings', icon: <Settings className="h-4 w-4" />, label: 'Instellingen' },
   ];
 
   const links = userRole === 'admin' ? adminLinks : memberLinks;
   const profileLink = userRole === 'admin' ? '/admin/profile' : '/member/profile';
 
   return (
-    <div className="relative hidden md:block">
+    <div className={cn("relative hidden md:block shrink-0", expanded ? "w-64" : "w-16")}>
       <aside
         className={cn(
           'fixed left-0 top-20 z-30 flex h-[calc(100vh-5rem)] flex-col border-r border-canvas-hairline bg-canvas-elevated text-ink transition-all duration-300 lg:static lg:z-0',

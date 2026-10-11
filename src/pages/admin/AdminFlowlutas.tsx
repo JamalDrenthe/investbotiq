@@ -1,8 +1,6 @@
-
 import React, { useState } from "react";
 import { withRoleGuard } from "@/utils/withRoleGuard";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import { FlowlutasDataGrid } from "@/components/flowlutas/FlowlutasDataGrid";
 import { FlowlutasChart } from "@/components/flowlutas/FlowlutasChart";
 import { FlowlutasFilters } from "@/components/flowlutas/FlowlutasFilters";
@@ -31,12 +29,8 @@ const AdminFlowlutas = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-4 md:p-6">
-          <div className="flex flex-col gap-6">
+    <AdminPortalLayout>
+      <div className="flex flex-col gap-6">
             <div>
               <h1 className="text-2xl font-bold">Flowlutas Beheer</h1>
               <p className="text-muted-foreground">
@@ -93,10 +87,8 @@ const AdminFlowlutas = () => {
                 <FlowlutasChart />
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
       </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 

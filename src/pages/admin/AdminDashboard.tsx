@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
+import AdminPortalLayout from "@/components/admin/AdminPortalLayout";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -126,12 +125,8 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Header />
-      <div className="flex flex-1">
-        <Sidebar />
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <div className="flex flex-col gap-6">
+    <AdminPortalLayout>
+      <div className="flex flex-col gap-6">
             <section className="card-glass relative isolate overflow-hidden px-6 py-8 md:px-10 md:py-10">
               <ThreeScene
                 kind="dot-matrix"
@@ -288,9 +283,7 @@ const AdminDashboard = () => {
               </CardFooter>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
+    </AdminPortalLayout>
   );
 };
 
