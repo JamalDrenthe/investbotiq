@@ -84,15 +84,10 @@ export function observeAuthState(listener: AuthListener): () => void {
     }
 
     if (active && currentRevision === revision && firebaseAuth.currentUser?.uid === user.uid) {
-      try {
-        await ensureUserProfile(user.uid, user.email, user.displayName);
-      } catch (error) {
-        console.error("Error ensuring user profile:", error);
-      }
-    }
-
-    if (active && currentRevision === revision && firebaseAuth.currentUser?.uid === user.uid) {
       listener(mapFirebaseUser(user, role), role);
+      void ensureUserProfile(user.uid, user.email, user.displayName).catch((error) => {
+        console.error("Error ensuring user profile:", error);
+      });
     }
   });
 
