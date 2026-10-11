@@ -38,13 +38,21 @@ const PublicHeader: React.FC = () => {
         <div className="mx-auto flex h-[72px] w-full max-w-content items-center justify-between px-6 lg:px-10">
           {Logo}
           <PublicHeaderDesktopMenu handleNav={handleNav} />
+        <div className="flex items-center gap-2 md:hidden">
+          <Link
+            to="/auth"
+            className="inline-flex h-9 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 px-3.5 text-xs font-semibold text-ink transition-colors hover:bg-white/10"
+          >
+            {t("Inloggen")}
+          </Link>
           <button
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10 md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10"
             aria-label={menuOpen ? t("Sluit menu") : t("Open menu")}
             onClick={() => setMenuOpen((v) => !v)}
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
+        </div>
         </div>
       </header>
       <PublicHeaderMobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} Logo={Logo} />

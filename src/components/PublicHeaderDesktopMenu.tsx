@@ -85,12 +85,12 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           </LumenCtaLink>
         ) : (
           <LumenCtaLink to="/auth" size="sm" variant="ghost">
-            {t("Login")}
+            {t("Inloggen")}
           </LumenCtaLink>
         )}
         {!user && (
           <LumenCtaLink to="/register" size="sm" dot>
-            {t("Aanmelden")}
+            {t("Registreren")}
           </LumenCtaLink>
         )}
       </div>

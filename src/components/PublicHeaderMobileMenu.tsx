@@ -8,10 +8,15 @@ import {
   HelpCircle,
   Mail,
   LogIn,
+  UserPlus,
   ArrowRight,
   FileText,
+  LogOut,
+  LayoutDashboard,
 } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
+import { signOut } from "@/lib/auth";
+import { toast } from "sonner";
 import { usePreferences } from "@/lib/preferences";
 import PreferenceToggles from "@/components/PreferenceToggles";
 import BrandLogo from "./BrandLogo";
@@ -45,6 +50,17 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
     navigate(to);
   };
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success(t("Succesvol uitgelogd"));
+      setMenuOpen(false);
+      navigate("/", { replace: true });
+    } catch {
+      toast.error(t("Fout bij uitloggen"));
+    }
+  };
+
   return (
     <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
       <SheetContent
@@ -56,7 +72,48 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
           {Logo ?? <BrandLogo variant="dark" size="md" showSubtitle={false} to="/" />}
         </SheetHeader>
 
-        <nav className="flex-1 overflow-y-auto px-4 py-5 space-y-1">
+        {/* Top Prominent Auth Action Card */}
+        <div className="p-4 border-b border-white/10 bg-white/[0.02]">
+          {!user ? (
+            <div className="grid grid-cols-2 gap-2.5">
+              <Button
+                onClick={() => go("/auth")}
+                variant="outline"
+                className="w-full border-white/20 bg-white/5 hover:bg-white/15 text-white rounded-xl py-5 font-semibold text-sm flex items-center justify-center gap-2 shadow-sm"
+              >
+                <LogIn className="h-4 w-4 text-cyan-400" />
+                <span>{t("Inloggen")}</span>
+              </Button>
+              <Button
+                onClick={() => go("/register")}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-5 font-semibold text-sm shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>{t("Registreren")}</span>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between rounded-xl bg-indigo-600/15 border border-indigo-500/25 p-3">
+              <div className="min-w-0 pr-2">
+                <p className="text-[10px] uppercase font-bold tracking-wider text-indigo-300">
+                  {t("Ingelogd als")}
+                </p>
+                <p className="text-sm font-semibold text-white truncate">{user.email}</p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => go(isAdmin ? "/admin" : "/member/dashboard")}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shrink-0 flex items-center gap-1.5"
+              >
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                <span>Dashboard</span>
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Scrollable Navigation List */}
+        <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
           {/* Home */}
           <button
             className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold transition-colors ${
@@ -125,8 +182,38 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
             ) : null,
           )}
 
+          {/* Direct Auth links in menu list */}
+          <div className="pt-2 my-2 border-t border-white/10 space-y-1">
+            {!user ? (
+              <>
+                <button
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-cyan-300 hover:bg-white/5 transition-colors"
+                  onClick={() => go("/auth")}
+                >
+                  <LogIn className="h-5 w-5 text-cyan-400" />
+                  <span>{t("Inloggen")}</span>
+                </button>
+                <button
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-indigo-300 hover:bg-white/5 transition-colors"
+                  onClick={() => go("/register")}
+                >
+                  <UserPlus className="h-5 w-5 text-indigo-400" />
+                  <span>{t("Registreren")}</span>
+                </button>
+              </>
+            ) : (
+              <button
+                className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-rose-300 hover:bg-white/5 transition-colors"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5 text-rose-400" />
+                <span>{t("Uitloggen")}</span>
+              </button>
+            )}
+          </div>
+
           {/* Legal links */}
-          <div className="pt-4 mt-4 border-t border-white/10 flex flex-col gap-1.5 px-3">
+          <div className="pt-2 border-t border-white/10 flex flex-col gap-1 px-3">
             <button
               onClick={() => go("/algemene-voorwaarden")}
               className="flex items-center gap-2 text-left text-xs text-zinc-400 hover:text-zinc-200 py-1 transition"
@@ -156,15 +243,15 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                 onClick={() => go("/register")}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 font-semibold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-base"
               >
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>{t("Aanmelden")}</span>
+                <UserPlus className="h-5 w-5" />
+                <span>{t("Registreren")}</span>
               </Button>
               <Button
                 onClick={() => go("/auth")}
                 variant="outline"
                 className="w-full border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl py-6 font-semibold flex items-center justify-center gap-2 text-base"
               >
-                <LogIn className="h-4 w-4" />
+                <LogIn className="h-4 w-4 text-cyan-400" />
                 <span>{t("Inloggen")}</span>
               </Button>
             </div>

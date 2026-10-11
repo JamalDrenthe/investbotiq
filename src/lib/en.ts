@@ -12,6 +12,8 @@ export const EN: Record<string, string> = {
   "Tier Plannen": "Tier Plans",
   Veiligheid: "Security",
   Aanmelden: "Sign up",
+  Registreren: "Sign up",
+  Registratie: "Registration",
   "Sluit menu": "Close menu",
   "Open menu": "Open menu",
 
