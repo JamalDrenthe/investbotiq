@@ -16,6 +16,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   const { user, userRole } = useAuth();
   const { t } = usePreferences();
   const isMember = !!user && userRole === "member";
+  const isAdmin = !!user && userRole === "admin";
   const [desktopSubmenuOpen, setDesktopSubmenuOpen] = useState(false);
   const { pathname } = useLocation();
   const submenu = PUBLIC_NAV_ITEMS[1].submenu;
@@ -74,7 +75,11 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
       )}
       <div className="ml-3 flex items-center gap-2">
         <PreferenceToggles />
-        {isMember ? (
+        {isAdmin ? (
+          <LumenCtaLink to="/admin" size="sm" variant="ghost">
+            {t("Admin Dashboard")}
+          </LumenCtaLink>
+        ) : isMember ? (
           <LumenCtaLink to="/member/dashboard" size="sm" variant="ghost">
             {t("Member Dashboard")}
           </LumenCtaLink>
@@ -83,9 +88,11 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
             {t("Login")}
           </LumenCtaLink>
         )}
-        <LumenCtaLink to="/register" size="sm" dot>
-          {t("Aanmelden")}
-        </LumenCtaLink>
+        {!user && (
+          <LumenCtaLink to="/register" size="sm" dot>
+            {t("Aanmelden")}
+          </LumenCtaLink>
+        )}
       </div>
     </nav>
   );

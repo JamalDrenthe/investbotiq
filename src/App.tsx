@@ -33,6 +33,9 @@ import Veiligheid from "@/pages/info/Veiligheid";
 import AdminSettings from "@/pages/admin/AdminSettings";
 import AdminProfile from "@/pages/admin/AdminProfile";
 import AdminLeads from "@/pages/admin/AdminLeads";
+import AlgemeneVoorwaarden from "@/pages/AlgemeneVoorwaarden";
+import Privacybeleid from "@/pages/Privacybeleid";
+import Contact from "@/pages/Contact";
 
 // Creating a new QueryClient instance with default options
 const queryClient = new QueryClient({
@@ -59,6 +62,11 @@ const App = () => (
             <Route path="/register" element={<Register />} />
             <Route path="/register/success" element={<RegisterSuccess />} />
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/algemene-voorwaarden" element={<AlgemeneVoorwaarden />} />
+            <Route path="/privacybeleid" element={<Privacybeleid />} />
+            <Route path="/terms" element={<Navigate to="/algemene-voorwaarden" replace />} />
+            <Route path="/privacy" element={<Navigate to="/privacybeleid" replace />} />
 
             {/* Info pages */}
             <Route path="/alles-over-investbot/wat-is-het" element={<WatIsInvestBotIQ />} />

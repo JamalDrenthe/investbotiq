@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Plus, ArrowRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FadeIn } from "./FadeInAnimation";
 
@@ -55,6 +56,20 @@ export default function FAQSection() {
               );
             })}
           </div>
+          <FadeIn delay={0.3} className="mt-8 flex flex-wrap items-center justify-between gap-4">
+            <Link
+              to="/faq"
+              className="inline-flex items-center gap-2 text-base font-semibold text-indigo hover:underline"
+            >
+              Bekijk alle 12+ veelgestelde vragen <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-graphite-muted hover:text-graphite hover:underline"
+            >
+              Heb je een andere vraag? Neem contact op →
+            </Link>
+          </FadeIn>
         </div>
       </div>
     </div>

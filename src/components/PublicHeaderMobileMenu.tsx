@@ -19,6 +19,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
   const { user, userRole } = useAuth();
   const { t } = usePreferences();
   const isMember = !!user && userRole === "member";
+  const isAdmin = !!user && userRole === "admin";
   const navigate = useNavigate();
   const submenu = PUBLIC_NAV_ITEMS[1].submenu;
 
@@ -115,6 +116,11 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                     {t("Login")}
                   </LumenCtaButton>
                 </>
+              )}
+              {isAdmin && (
+                <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/admin")}>
+                  {t("Admin Dashboard")}
+                </LumenCtaButton>
               )}
               {isMember && (
                 <LumenCtaButton variant="ghost" className="w-full" onClick={() => go("/member/dashboard")}>

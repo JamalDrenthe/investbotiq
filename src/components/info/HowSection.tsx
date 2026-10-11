@@ -1,8 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { FadeIn } from "./FadeInAnimation";
 import { ThreeScene } from "@/components/three/ThreeScene";
 
-const STEPS = ["Aanmelden", "Activeer de Bot", "Groei elke maand automatisch"];
+const STEPS = [
+  { title: "Aanmelden", to: "/register" },
+  { title: "Activeer de Bot", to: "/alles-over-investbot/hoe-werkt-het" },
+  { title: "Groei elke maand automatisch", to: "/tier-plannen" },
+];
 
 export default function HowSection() {
   return (
@@ -17,16 +23,29 @@ export default function HowSection() {
           </FadeIn>
           <ol className="mt-12 flex flex-col">
             {STEPS.map((step, i) => (
-              <FadeIn key={step} delay={0.12 + i * 0.08}>
-                <li className="group flex items-start gap-5 border-t border-canvas-hairline py-6 last:border-b">
-                  <span className="tnum font-display text-sm font-semibold text-cyan">0{i + 1}</span>
-                  <span className="font-display text-2xl font-medium tracking-[-0.02em] text-ink transition-colors group-hover:text-gradient-light">
-                    {step}
-                  </span>
+              <FadeIn key={step.title} delay={0.12 + i * 0.08}>
+                <li>
+                  <Link
+                    to={step.to}
+                    className="group flex items-start gap-5 border-t border-canvas-hairline py-6 transition-colors hover:bg-white/5 last:border-b"
+                  >
+                    <span className="tnum font-display text-sm font-semibold text-cyan">0{i + 1}</span>
+                    <span className="font-display text-2xl font-medium tracking-[-0.02em] text-ink transition-colors group-hover:text-gradient-light">
+                      {step.title}
+                    </span>
+                  </Link>
                 </li>
               </FadeIn>
             ))}
           </ol>
+          <FadeIn delay={0.36} className="mt-8">
+            <Link
+              to="/alles-over-investbot/hoe-werkt-het"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-cyan hover:underline"
+            >
+              Uitgebreide toelichting van de 3 stappen <ArrowRight className="h-4 w-4" />
+            </Link>
+          </FadeIn>
         </div>
         <FadeIn delay={0.2} className="lg:col-span-7">
           <div className="card-glass card-glass--floating relative h-[320px] overflow-hidden sm:h-[400px] lg:h-[460px]">

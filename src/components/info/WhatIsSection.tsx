@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 import { FadeIn } from "./FadeInAnimation";
 
 export default function WhatIsSection() {
@@ -15,6 +17,20 @@ export default function WhatIsSection() {
           Investbotiq is een platform dat automatisch cashflow voor jou genereert met behulp van de IQ Bot. Geen lastige
           investeringskeuzes, geen technische kennis vereist!
         </p>
+        <div className="mt-8 flex flex-wrap items-center gap-5">
+          <Link
+            to="/alles-over-investbot/wat-is-het"
+            className="inline-flex items-center gap-2 text-base font-semibold text-indigo hover:underline"
+          >
+            Lees meer over de IQ Bot <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/tier-plannen"
+            className="inline-flex items-center gap-1.5 text-base font-medium text-graphite-muted hover:text-graphite hover:underline"
+          >
+            Bekijk Tier Plannen →
+          </Link>
+        </div>
       </FadeIn>
     </div>
   );

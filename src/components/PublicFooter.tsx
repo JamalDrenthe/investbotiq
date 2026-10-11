@@ -41,19 +41,19 @@ const PublicFooter: React.FC = () => {
           <div className="eyebrow mb-5">{t("Juridisch")}</div>
           <ul className="flex flex-col gap-3 text-sm">
             <li>
-              <a href="#" className="text-ink-muted transition-colors hover:text-ink">
+              <Link to="/algemene-voorwaarden" className="text-ink-muted transition-colors hover:text-ink">
                 {t("Algemene Voorwaarden")}
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-ink-muted transition-colors hover:text-ink">
+              <Link to="/privacybeleid" className="text-ink-muted transition-colors hover:text-ink">
                 {t("Privacybeleid")}
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="#" className="text-ink-muted transition-colors hover:text-ink">
-                Contact
-              </a>
+              <Link to="/contact" className="text-ink-muted transition-colors hover:text-ink">
+                {t("Contact")}
+              </Link>
             </li>
           </ul>
         </div>

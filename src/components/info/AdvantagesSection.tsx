@@ -1,5 +1,6 @@
 import React from "react";
-import { Check } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Check, ArrowRight } from "lucide-react";
 import { FadeIn } from "./FadeInAnimation";
 
 const ADVANTAGES = [
@@ -16,7 +17,24 @@ export default function AdvantagesSection() {
       <div className="grid gap-10 lg:grid-cols-12">
         <FadeIn delay={0.05} className="lg:col-span-4">
           <div className="eyebrow eyebrow--paper mb-6">Voordelen</div>
-          <h3 className="font-display text-display-md font-semibold tracking-[-0.03em] text-graphite">Voordelen:</h3>
+          <h3 className="font-display text-display-md font-semibold tracking-[-0.03em] text-graphite">Voordelen</h3>
+          <p className="mt-4 text-base leading-relaxed text-graphite-muted">
+            Investbotiq bouwt stap voor stap aan stabiele, voorspelbare cashflow binnen een afgeschermd ecosysteem.
+          </p>
+          <div className="mt-6 flex flex-col gap-2.5">
+            <Link
+              to="/tier-plannen"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-indigo hover:underline"
+            >
+              Bekijk hoe de Tiers werken <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              to="/veiligheid"
+              className="inline-flex items-center gap-2 text-sm font-medium text-graphite-muted hover:text-graphite hover:underline"
+            >
+              Lees meer over veiligheid →
+            </Link>
+          </div>
         </FadeIn>
         <div className="lg:col-span-8">
           <ul className="grid gap-3 sm:grid-cols-2">

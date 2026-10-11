@@ -54,17 +54,20 @@ const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
           <motion.p {...fadeUp(0.22)} className="mt-7 max-w-[34rem] text-lg leading-8 text-ink-muted">
             {t("Geen kennis vereist, geen zorgen. Gewoon laten groeien.")}
           </motion.p>
-          <motion.div {...fadeUp(0.32)} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <LumenCtaLink to="/auth" dot>
+          <motion.div {...fadeUp(0.32)} className="mt-10 flex flex-wrap items-center gap-3">
+            <LumenCtaLink to="/register" dot>
+              {t("Aanmelden")}
+            </LumenCtaLink>
+            <LumenCtaLink to="/auth" variant="ghost">
               {t("Inloggen")}
             </LumenCtaLink>
-            <LumenCtaButton variant="ghost" onClick={onScrollToInfo}>
-              <ArrowDown className="h-4 w-4" />
-              {t("Bekijk hoe het werkt")}
-            </LumenCtaButton>
             <LumenCtaButton variant="ghost" onClick={() => setShowDemoModal(true)}>
               <Play className="h-4 w-4" />
               {t("Bekijk demo")}
+            </LumenCtaButton>
+            <LumenCtaButton variant="ghost" onClick={onScrollToInfo}>
+              <ArrowDown className="h-4 w-4" />
+              {t("Hoe het werkt")}
             </LumenCtaButton>
           </motion.div>
         </div>
@@ -94,21 +97,34 @@ const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
       </div>
 
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
-        <DialogContent className="w-[92vw] max-w-4xl border-canvas-hairline bg-canvas-elevated text-ink">
+        <DialogContent className="w-[94vw] max-w-4xl border-canvas-hairline bg-canvas-elevated p-6 text-ink">
           <DialogHeader>
-            <DialogTitle className="font-display">{t("Bekijk hoe InvestbotIQ werkt")}</DialogTitle>
+            <DialogTitle className="font-display text-xl text-ink">
+              {t("IQ Bot Intelligence in actie")}
+            </DialogTitle>
           </DialogHeader>
-          <div className="aspect-video w-full overflow-hidden rounded-ds-lg border border-canvas-hairline bg-canvas">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/1uMoBy76oQs"
-              title="InvestbotIQ Demo Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              style={{ width: "100%", height: "100%" }}
+          <div className="relative aspect-video w-full overflow-hidden rounded-ds-lg border border-canvas-hairline bg-black">
+            <video
+              src="/videos/iq.mp4"
+              controls
+              autoPlay
+              loop
+              playsInline
+              className="h-full w-full object-cover"
             />
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-canvas-hairline pt-4">
+            <p className="text-xs text-ink-muted">
+              Bekijk hoe de IQ Bot autonoom data analyseert en cashflow structureert.
+            </p>
+            <div className="flex gap-2">
+              <LumenCtaLink to="/register" size="sm" dot onClick={() => setShowDemoModal(false)}>
+                {t("Nu aanmelden")}
+              </LumenCtaLink>
+              <LumenCtaLink to="/alles-over-investbot/hoe-werkt-het" size="sm" variant="ghost" onClick={() => setShowDemoModal(false)}>
+                {t("Meer info")}
+              </LumenCtaLink>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

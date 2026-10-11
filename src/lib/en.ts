@@ -33,6 +33,8 @@ export const EN: Record<string, string> = {
   Juridisch: "Legal",
   "Algemene Voorwaarden": "Terms & Conditions",
   Privacybeleid: "Privacy Policy",
+  Contact: "Contact",
+  "Hoe het werkt": "How it works",
 
   // Preference toggles
   "Thema wisselen": "Toggle theme",

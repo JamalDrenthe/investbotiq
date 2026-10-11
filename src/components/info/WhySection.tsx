@@ -1,5 +1,6 @@
 import React from "react";
-import { Bot, Brain, Eye, Layers, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Bot, Brain, Eye, Layers, TrendingUp, ArrowRight } from "lucide-react";
 import { FadeIn } from "./FadeInAnimation";
 import { ThreeScene } from "@/components/three/ThreeScene";
 
@@ -51,6 +52,20 @@ export default function WhySection() {
             </FadeIn>
           ))}
         </div>
+        <FadeIn delay={0.4} className="mt-12 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            to="/alles-over-investbot/mission-vision"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-white/10"
+          >
+            Lees onze Missie & Visie <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            to="/tier-plannen"
+            className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-cyan/10 px-6 py-3 text-sm font-semibold text-cyan transition-colors hover:bg-cyan/20"
+          >
+            Bekijk de Tier Plannen →
+          </Link>
+        </FadeIn>
       </div>
     </div>
   );
