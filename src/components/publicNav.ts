@@ -11,5 +11,6 @@ export const PUBLIC_NAV_ITEMS = [
   { title: "Tier Plannen", to: "/tier-plannen" },
   { title: "Veiligheid", to: "/veiligheid" },
   { title: "FAQ", to: "/faq" },
+  { title: "Contact", to: "/contact" },
 ] as const;
 
