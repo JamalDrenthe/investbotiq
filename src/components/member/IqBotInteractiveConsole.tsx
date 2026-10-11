@@ -166,8 +166,6 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
     }
   };
 
-  const [playbackProgress, setPlaybackProgress] = useState<number>(0);
-
   const handleOpenChange = (open: boolean) => {
     setIsModalOpen(open);
     if (!open && videoRef.current) {
@@ -177,7 +175,6 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
 
   const handleSelectAction = (action: BotActionConfig) => {
     setSelectedAction(action);
-    setPlaybackProgress(0);
     setIsModalOpen(true);
     triggerActionWebhook(action);
 
@@ -345,12 +342,12 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
           hideCloseButton={true}
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
-          className="max-w-xl sm:max-w-2xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]"
+          className="w-[94vw] sm:w-[90vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]"
         >
-          <DialogHeader className="p-4 sm:p-5 pb-3 border-b border-white/10 flex flex-row items-center justify-between space-y-0">
+          <DialogHeader className="p-3.5 sm:p-4.5 pb-2.5 sm:pb-3 border-b border-white/10 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
               <div
-                className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 ${
+                className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 ${
                   selectedAction?.color ?? "text-white"
                 }`}
               >
@@ -374,8 +371,8 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
             </div>
           </DialogHeader>
 
-          {/* Video Container - No player controls, pointer-events protected, auto-close on end */}
-          <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden select-none">
+          {/* Video Container - 1:1 Aspect ratio, full visibility, no progress bar, no player controls */}
+          <div className="relative aspect-square w-full max-h-[70vh] sm:max-h-[640px] bg-black flex items-center justify-center overflow-hidden select-none">
             {selectedAction && (
               <video
                 ref={videoRef}
@@ -387,19 +384,12 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 disablePictureInPicture
                 disableRemotePlayback
                 onLoadedData={handleLoadedData}
-                onTimeUpdate={() => {
-                  if (videoRef.current && videoRef.current.duration) {
-                    setPlaybackProgress(
-                      (videoRef.current.currentTime / videoRef.current.duration) * 100
-                    );
-                  }
-                }}
                 onEnded={handleVideoEnded}
                 onError={() => {
                   toast.error("Protocol video kon niet worden geladen");
                   setTimeout(() => setIsModalOpen(false), 2000);
                 }}
-                className="w-full h-full object-cover pointer-events-none select-none"
+                className="w-full h-full object-contain pointer-events-none select-none"
               />
             )}
 
@@ -410,26 +400,18 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
               onClick={(e) => e.stopPropagation()}
               onTouchStart={(e) => e.stopPropagation()}
             />
-
-            {/* Glowing autonomous progress line */}
-            <div className="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-30 pointer-events-none">
-              <div
-                className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-mint transition-all duration-150"
-                style={{ width: `${playbackProgress}%` }}
-              />
-            </div>
           </div>
 
-          {/* Autonomous Status Footer - Completely read-only, no close or control buttons */}
-          <div className="p-3.5 sm:p-4 border-t border-white/10 bg-[#05070f] flex items-center justify-between text-xs text-zinc-400">
+          {/* Autonomous Status Footer - Completely read-only, no progress bar, no buttons */}
+          <div className="px-4 py-2.5 sm:py-3 border-t border-white/10 bg-[#05070f] flex items-center justify-between text-xs text-zinc-400">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span className="font-mono text-zinc-300">
+              <span className="font-mono text-zinc-300 text-xs">
                 Autonoom Protocol in uitvoering
               </span>
             </div>
             <span className="font-mono text-[11px] text-zinc-500">
-              Sluit automatisch na voltooiing
+              Sluit automatisch na afloop
             </span>
           </div>
         </DialogContent>
