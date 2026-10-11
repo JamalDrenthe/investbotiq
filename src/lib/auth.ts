@@ -39,7 +39,6 @@ function mapFirebaseUser(user: User, role: UserRole): LocalUser {
 
 export const ADMIN_EMAILS = [
   "info@jamaldrenthe.com",
-  "js.drenthe@gmail.com",
 ];
 
 export function isEmailSuperAdmin(email?: string | null): boolean {
