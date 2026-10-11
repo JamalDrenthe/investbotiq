@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Sparkles,
   Search,
@@ -166,15 +166,21 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
     }
   };
 
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const handleOpenChange = (open: boolean) => {
     setIsModalOpen(open);
     if (!open && videoRef.current) {
       videoRef.current.pause();
+      setIsPlaying(false);
     }
   };
 
   const handleSelectAction = (action: BotActionConfig) => {
     setSelectedAction(action);
+    setIsLoading(true);
+    setIsPlaying(false);
     setIsModalOpen(true);
     triggerActionWebhook(action);
 
@@ -185,17 +191,31 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
     toast.info(`IQ Bot protocol gestart: ${action.label}`);
   };
 
+  // Immediate playback trigger if video is paused (e.g. iPhone Low Power Mode blocks unprompted autoplay)
+  const handleStartPlay = () => {
+    if (videoRef.current && videoRef.current.paused) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(console.error);
+    }
+  };
+
   // Ensure playback starts immediately on load without user intervention or controls
   const handleLoadedData = () => {
+    setIsLoading(false);
     if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
       const playPromise = videoRef.current.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            videoRef.current.play().catch(console.error);
-          }
-        });
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(() => {
+            setIsPlaying(false);
+          });
       }
     }
   };
@@ -203,10 +223,34 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
   // Automatically close video modal when video playback completes
   const handleVideoEnded = () => {
     setIsModalOpen(false);
+    setIsPlaying(false);
     if (selectedAction) {
       toast.success(`${selectedAction.label} protocol succesvol voltooid`);
     }
   };
+
+  // Synchronize and auto-start video playback when modal opens
+  useEffect(() => {
+    if (isModalOpen && selectedAction && videoRef.current) {
+      setIsLoading(true);
+      const vid = videoRef.current;
+      vid.defaultMuted = true;
+      vid.muted = true;
+      vid.currentTime = 0;
+      vid.load();
+      const playPromise = vid.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsLoading(false);
+            setIsPlaying(true);
+          })
+          .catch(() => {
+            setIsPlaying(false);
+          });
+      }
+    }
+  }, [isModalOpen, selectedAction]);
 
   return (
     <div
@@ -380,26 +424,63 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 src={selectedAction.videoSrc}
                 autoPlay
                 playsInline
+                muted
                 loop={false}
+                preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
+                onLoadStart={() => setIsLoading(true)}
                 onLoadedData={handleLoadedData}
+                onCanPlay={() => setIsLoading(false)}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => {
+                  if (videoRef.current && !videoRef.current.ended) {
+                    setIsPlaying(false);
+                  }
+                }}
                 onEnded={handleVideoEnded}
                 onError={() => {
+                  setIsLoading(false);
                   toast.error("Protocol video kon niet worden geladen");
                   setTimeout(() => setIsModalOpen(false), 2000);
                 }}
                 className="w-full h-full object-contain pointer-events-none select-none"
-              />
+              >
+                <source src={selectedAction.videoSrc} type="video/mp4" />
+              </video>
             )}
 
-            {/* Gesture-block overlay to prevent native pause, rewind, or timeline scrubbing */}
+            {/* Tap-to-play overlay: handles autoplay blocks (e.g. iPhone Low Power Mode). Once playing, tapping does NOT pause! */}
             <div
-              className="absolute inset-0 z-20 bg-transparent select-none pointer-events-auto"
+              className="absolute inset-0 z-20 bg-transparent select-none pointer-events-auto cursor-pointer flex items-center justify-center"
               onContextMenu={(e) => e.preventDefault()}
-              onClick={(e) => e.stopPropagation()}
-              onTouchStart={(e) => e.stopPropagation()}
-            />
+              onClick={handleStartPlay}
+            >
+              {/* Fallback prompt shown only if browser blocks unprompted autoplay (e.g. Low Power Mode) */}
+              {!isPlaying && !isLoading && (
+                <div className="flex flex-col items-center justify-center gap-2.5 p-5 rounded-2xl bg-black/75 backdrop-blur-md border border-cyan-400/30 shadow-2xl pointer-events-none">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-400 border border-cyan-400/40 shadow-[0_0_20px_rgba(34,211,238,0.5)]">
+                    <Play className="h-6 w-6 ml-0.5 fill-current" />
+                  </div>
+                  <span className="text-xs font-mono font-medium text-white">
+                    Tik om protocol te starten
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* High-tech Loading State while video buffers */}
+            {isLoading && (
+              <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-[#070a14]/90 backdrop-blur-sm pointer-events-none">
+                <div className="relative flex items-center justify-center">
+                  <div className="h-12 w-12 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
+                  <div className="absolute h-6 w-6 rounded-full bg-cyan-400/20 animate-pulse" />
+                </div>
+                <p className="mt-3 text-xs font-mono text-zinc-300">
+                  {selectedAction?.label} Protocol inladen...
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Autonomous Status Footer - Completely read-only, no progress bar, no buttons */}
