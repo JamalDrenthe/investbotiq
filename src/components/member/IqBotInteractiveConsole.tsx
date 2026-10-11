@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import {
   Sparkles,
   Search,
@@ -6,15 +6,22 @@ import {
   Network,
   Crown,
   Brain,
-  Play,
-  Pause,
-  RotateCcw,
-  Maximize2,
-  CheckCircle2,
-  Activity,
   Bot,
+  Activity,
+  X,
+  Play,
+  RotateCcw,
 } from "lucide-react";
 import { toast } from "sonner";
+import { ThreeScene } from "@/components/three/ThreeScene";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export type BotActionId =
   | "onboarding"
@@ -128,133 +135,78 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
   onActionTriggered,
   className = "",
 }) => {
-  // Default active action is 'iq' (the main bot neural loop)
-  const [activeActionId, setActiveActionId] = useState<BotActionId>("iq");
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [loopDuration, setLoopDuration] = useState<number>(6); // seconds for active action loop
-  const [remainingTime, setRemainingTime] = useState<number>(0);
-  const [isActionActive, setIsActionActive] = useState<boolean>(false);
-
+  const [selectedAction, setSelectedAction] = useState<BotActionConfig | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const videoContainerRef = useRef<HTMLDivElement>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const currentAction =
-    BOT_ACTIONS.find((a) => a.id === activeActionId) || BOT_ACTIONS[5];
+  // Webhook integration hook for future external webhook dispatch
+  const triggerActionWebhook = async (action: BotActionConfig) => {
+    console.log(`[IQ Bot Webhook] Triggering action for webhook: ${action.id}`, {
+      timestamp: new Date().toISOString(),
+      action: action.id,
+      label: action.label,
+    });
 
-  // Handler for action button click
-  const handleSelectAction = (action: BotActionConfig) => {
-    setActiveActionId(action.id);
-    setIsActionActive(true);
-    setRemainingTime(loopDuration);
-
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-
-    // Play action video
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
+    // Voorbereid voor live webhook verbinding
+    const webhookUrl = (import.meta as any).env?.VITE_IQ_BOT_WEBHOOK_URL;
+    if (webhookUrl) {
+      try {
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            event: "iq_bot_action_triggered",
+            actionId: action.id,
+            actionLabel: action.label,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (err) {
+        console.warn("[IQ Bot Webhook] Webhook request error:", err);
+      }
     }
+  };
 
-    // Notify toast & telemetry callback
-    toast.info(`IQ Bot actie geactiveerd: ${action.label}`);
+  const handleOpenChange = (open: boolean) => {
+    setIsModalOpen(open);
+    if (!open && videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  const handleSelectAction = (action: BotActionConfig) => {
+    setSelectedAction(action);
+    setIsModalOpen(true);
+    triggerActionWebhook(action);
+
     if (onActionTriggered) {
       onActionTriggered(action);
     }
 
-    // Countdown interval
-    let countdown = loopDuration;
-    intervalRef.current = setInterval(() => {
-      countdown -= 1;
-      setRemainingTime(Math.max(0, countdown));
-    }, 1000);
-
-    // After loop duration, settle back to idle or stay in loop mode
-    timerRef.current = setTimeout(() => {
-      setIsActionActive(false);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      // Automatically return to 'iq' core loop if it was a specialized sub-action
-      if (action.id !== "iq") {
-        setActiveActionId("iq");
-        toast.success(`IQ Bot keert terug naar IQ Core ruststand`);
-      }
-    }, loopDuration * 1000);
+    toast.info(`IQ Bot actie: ${action.label}`);
   };
 
-  // Clean up timers on unmount
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
-
-  // Update video src when activeAction changes
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-      videoRef.current.play().catch(() => {});
+  // Automatically close video modal when video playback completes
+  const handleVideoEnded = () => {
+    setIsModalOpen(false);
+    if (selectedAction) {
+      toast.success(`${selectedAction.label} protocol succesvol voltooid`);
     }
-  }, [activeActionId]);
-
-  const togglePlay = () => {
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    } else {
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
-    }
-  };
-
-  const toggleFullscreen = () => {
-    if (!videoContainerRef.current) return;
-    if (!document.fullscreenElement) {
-      videoContainerRef.current.requestFullscreen().catch(() => {});
-    } else {
-      document.exitFullscreen().catch(() => {});
-    }
-  };
-
-  const resetToIdle = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    setIsActionActive(false);
-    setRemainingTime(0);
-    setActiveActionId("iq");
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-      setIsPlaying(true);
-    }
-    toast.info("IQ Bot gereset naar IQ Core stand");
   };
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl border border-canvas-hairline bg-canvas-elevated p-6 sm:p-8 shadow-level-2 backdrop-blur-xl transition-all duration-500 ${className}`}
-      style={{
-        boxShadow: `0 0 50px -10px ${currentAction.glowColor}`,
-      }}
+      className={`relative overflow-hidden rounded-3xl border border-canvas-hairline bg-canvas-elevated p-6 sm:p-8 shadow-level-2 backdrop-blur-xl ${className}`}
     >
-      {/* Background ambient radial gradients */}
-      <div
-        className="absolute -top-24 -right-24 h-96 w-96 rounded-full blur-3xl opacity-30 pointer-events-none transition-colors duration-700"
-        style={{ backgroundColor: currentAction.glowColor }}
-      />
-      <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+      {/* Ambient background glow */}
+      <div className="absolute -top-24 -right-24 h-96 w-96 rounded-full bg-indigo-500/15 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none" />
 
       {/* Header bar */}
       <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-canvas-hairline">
         <div className="flex items-center gap-3.5">
-          <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl border transition-colors duration-300 ${currentAction.borderColor} ${currentAction.accentBg}`}
-          >
-            <Bot className={`h-6 w-6 ${currentAction.color}`} />
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-indigo-500/40 bg-indigo-500/15 text-indigo-400">
+            <Bot className="h-6 w-6" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -267,151 +219,89 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
               </span>
             </div>
             <p className="text-xs sm:text-sm text-ink-on-canvas-muted mt-0.5">
-              Klik op een actieknop om de bijbehorende neurale animatie en telemetrie te activeren.
+              Standaard actieknoppen van de IQ Bot. Klik op een actie om het bijbehorende protocol af te spelen.
             </p>
           </div>
         </div>
 
-        {/* Global Controls & Status */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          {isActionActive && (
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan/40 bg-cyan/10 px-3 py-1 text-xs font-mono font-medium text-cyan animate-pulse">
-              <Activity className="h-3.5 w-3.5" />
-              <span>Actie actief: {remainingTime}s</span>
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={resetToIdle}
-            title="Reset naar IQ Core"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-canvas-hairline bg-white/5 text-ink-on-canvas-muted transition hover:bg-white/10 hover:text-white"
-          >
-            <RotateCcw className="h-4 w-4" />
-          </button>
-
-          <button
-            type="button"
-            onClick={toggleFullscreen}
-            title="Volledig scherm"
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-canvas-hairline bg-white/5 text-ink-on-canvas-muted transition hover:bg-white/10 hover:text-white"
-          >
-            <Maximize2 className="h-4 w-4" />
-          </button>
+          <div className="inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/10 px-3.5 py-1 text-xs font-mono font-medium text-mint">
+            <Activity className="h-3.5 w-3.5" />
+            <span>3D Neuraal Model Actief</span>
+          </div>
         </div>
       </div>
 
-      {/* Main Console Layout: Video Stage & Action Control Deck */}
+      {/* Main Console Layout: Standard 3D Bot Stage & 6 Action Buttons */}
       <div className="relative z-10 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        {/* Video Player Display (7 cols on large screen) */}
-        <div
-          ref={videoContainerRef}
-          className="relative lg:col-span-7 overflow-hidden rounded-2xl border border-canvas-hairline bg-black/60 shadow-inner group aspect-video flex items-center justify-center"
-        >
-          <video
-            ref={videoRef}
-            src={currentAction.videoSrc}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="h-full w-full object-cover rounded-2xl transition-all duration-300"
-          />
+        {/* Standard Coded 3D Animation Stage (7 cols on large screen) */}
+        <div className="relative lg:col-span-7 h-[360px] sm:h-[420px] w-full overflow-hidden rounded-3xl border border-canvas-hairline bg-canvas-panel/50 shadow-inner flex items-center justify-center group">
+          {/* Default Interactive 3D IQ Bot */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <ThreeScene kind="iq-bot" scale={0.9} />
+          </div>
 
-          {/* Holographic scanning overlay lines */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-cyan/5 to-transparent opacity-40 mix-blend-screen" />
-          <div className="pointer-events-none absolute inset-0 rounded-2xl border border-white/10 shadow-[inset_0_0_30px_rgba(0,0,0,0.6)]" />
+          {/* Vignette & Holographic overlays */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/10 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]" />
 
-          {/* Top-left action badge over video */}
-          <div className="absolute top-3 left-3 flex items-center gap-2 rounded-xl bg-black/60 px-3 py-1.5 backdrop-blur-md border border-white/10 text-xs">
-            <currentAction.icon className={`h-3.5 w-3.5 ${currentAction.color}`} />
-            <span className="font-semibold text-white">{currentAction.label}</span>
-            <span className="text-[10px] text-ink-on-canvas-muted font-mono">
-              ({currentAction.badge})
+          {/* Status overlay badge */}
+          <div className="absolute top-4 left-4 flex items-center gap-2 rounded-xl bg-black/60 px-3.5 py-1.5 backdrop-blur-md border border-white/10 text-xs">
+            <Bot className="h-4 w-4 text-cyan-400" />
+            <span className="font-semibold text-white">IQ Bot Core</span>
+            <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Autonoom Live
             </span>
           </div>
 
-          {/* Bottom-right playback state */}
-          <div className="absolute bottom-3 right-3 flex items-center gap-2">
-            <button
-              type="button"
-              onClick={togglePlay}
-              className="flex h-8 w-8 items-center justify-center rounded-lg bg-black/60 text-white backdrop-blur-md border border-white/10 transition hover:bg-black/80"
-              title={isPlaying ? "Pauzeren" : "Afspelen"}
-            >
-              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-            </button>
+          {/* Interactive instruction pill */}
+          <div className="absolute bottom-3 inset-x-0 text-center pointer-events-none px-4">
+            <span className="inline-block text-[11px] text-zinc-300 bg-black/70 px-3.5 py-1 rounded-full backdrop-blur-md border border-white/10">
+              Interactieve 3D animatie · Beweeg uw cursor om de bot te besturen
+            </span>
           </div>
-
-          {/* Active progress bar if countdown is running */}
-          {isActionActive && (
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
-              <div
-                className="h-full bg-cyan transition-all duration-1000 ease-linear"
-                style={{
-                  width: `${(remainingTime / loopDuration) * 100}%`,
-                }}
-              />
-            </div>
-          )}
         </div>
 
-        {/* Action Buttons Deck (5 cols on large screen) */}
+        {/* 6 Standard Action Buttons Deck (5 cols on large screen) */}
         <div className="lg:col-span-5 space-y-3">
           <div className="flex items-center justify-between pb-1">
             <span className="text-xs font-semibold uppercase tracking-wider text-ink-on-canvas-faint font-mono">
-              Selecteer Bot Modus & Actie
+              IQ Bot Actieknoppen
             </span>
             <span className="text-xs text-ink-on-canvas-muted">
-              Loop duur: <span className="text-cyan font-mono font-semibold">{loopDuration}s</span>
+              6 Standaard Knoppen
             </span>
           </div>
 
           <div className="grid grid-cols-2 gap-2.5">
             {BOT_ACTIONS.map((action) => {
-              const isSelected = activeActionId === action.id;
               const Icon = action.icon;
               return (
                 <button
                   key={action.id}
                   type="button"
                   onClick={() => handleSelectAction(action)}
-                  style={isSelected ? { boxShadow: `0 0 20px ${action.glowColor}` } : undefined}
-                  className={`group relative flex flex-col justify-between p-3.5 rounded-2xl border text-left transition-all duration-300 ${
-                    isSelected
-                      ? `${action.borderColor} ${action.accentBg} scale-[1.02]`
-                      : "border-canvas-hairline bg-canvas-panel/50 hover:bg-canvas-panel hover:border-white/20"
-                  }`}
+                  className={`group relative flex flex-col justify-between p-3.5 rounded-2xl border text-left transition-all duration-300 border-canvas-hairline bg-canvas-panel/50 hover:bg-canvas-panel hover:border-white/20 hover:scale-[1.02] active:scale-[0.98]`}
                 >
                   <div className="flex items-center justify-between w-full">
                     <div
-                      className={`flex h-8 w-8 items-center justify-center rounded-xl transition ${
-                        isSelected
-                          ? `${action.accentBg} ${action.color}`
-                          : "bg-white/5 text-ink-on-canvas-muted group-hover:text-white"
-                      }`}
+                      className={`flex h-9 w-9 items-center justify-center rounded-xl bg-white/5 ${action.color} group-hover:scale-110 transition-transform`}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-4.5 w-4.5" />
                     </div>
-                    {isSelected ? (
-                      <CheckCircle2 className={`h-4 w-4 ${action.color}`} />
-                    ) : (
-                      <span className="text-[10px] font-mono text-ink-on-canvas-faint uppercase">
-                        {action.badge}
-                      </span>
-                    )}
+                    <span className="text-[10px] font-mono text-ink-on-canvas-faint uppercase px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
+                      {action.badge}
+                    </span>
                   </div>
 
-                  <div className="mt-2.5">
-                    <p
-                      className={`text-sm font-bold tracking-tight transition ${
-                        isSelected ? "text-white" : "text-ink-on-canvas-muted group-hover:text-white"
-                      }`}
-                    >
-                      {action.label}
+                  <div className="mt-3">
+                    <p className="text-sm font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors flex items-center justify-between">
+                      <span>{action.label}</span>
+                      <Play className="h-3 w-3 opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                     </p>
                     <p className="text-[11px] text-ink-on-canvas-faint line-clamp-1 mt-0.5">
-                      {action.badge}
+                      {action.description}
                     </p>
                   </div>
                 </button>
@@ -419,18 +309,76 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
             })}
           </div>
 
-          {/* Active Action Details Card */}
+          {/* Read-only protocol info footer */}
           <div className="mt-3 rounded-2xl border border-canvas-hairline/80 bg-canvas-panel/60 p-3.5">
             <div className="flex items-center gap-2 text-xs font-semibold text-white">
-              <span className={`inline-block h-2 w-2 rounded-full ${currentAction.color}`} />
-              <span>{currentAction.label} Protocol</span>
+              <span className="inline-block h-2 w-2 rounded-full bg-cyan-400" />
+              <span>Autonoom Systeem</span>
             </div>
             <p className="mt-1 text-xs text-ink-on-canvas-muted leading-relaxed">
-              {currentAction.description}
+              Elke actieknop activeert het bijbehorende protocol in een venster en sluit automatisch na afloop.
             </p>
           </div>
         </div>
       </div>
+
+      {/* Small Window (Modal Dialog) for Video Playback - Autoclose on End */}
+      <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
+        <DialogContent className="max-w-xl sm:max-w-2xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]">
+          <DialogHeader className="p-4 sm:p-5 pb-3 border-b border-white/10 flex flex-row items-center justify-between space-y-0">
+            <div className="flex items-center gap-3">
+              <div
+                className={`flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 ${
+                  selectedAction?.color ?? "text-white"
+                }`}
+              >
+                {selectedAction && <selectedAction.icon className="h-5 w-5" />}
+              </div>
+              <div>
+                <DialogTitle className="text-base sm:text-lg font-bold font-display text-white">
+                  {selectedAction?.label} Protocol
+                </DialogTitle>
+                <DialogDescription className="text-xs text-zinc-400 mt-0.5 line-clamp-1">
+                  {selectedAction?.description}
+                </DialogDescription>
+              </div>
+            </div>
+          </DialogHeader>
+
+          {/* Video Container - loop={false}, autoplay with sound, auto-close on end */}
+          <div className="relative aspect-video w-full bg-black flex items-center justify-center">
+            {selectedAction && (
+              <video
+                ref={videoRef}
+                key={selectedAction.videoSrc}
+                src={selectedAction.videoSrc}
+                autoPlay
+                controls
+                playsInline
+                loop={false}
+                onEnded={handleVideoEnded}
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
+
+          {/* Modal Footer with Status & Close button */}
+          <div className="p-3 sm:p-4 border-t border-white/10 bg-[#05070f] flex items-center justify-between text-xs text-zinc-400">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
+              <span>Video speelt af · venster sluit automatisch na afloop</span>
+            </div>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setIsModalOpen(false)}
+              className="text-xs text-zinc-300 hover:text-white"
+            >
+              Sluiten
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

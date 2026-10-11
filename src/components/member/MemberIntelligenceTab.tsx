@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import {
   Bot,
-  Sparkles,
-  Cpu,
   ShieldCheck,
   Activity,
   Zap,
-  Sliders,
   RefreshCw,
-  CheckCircle2,
   ArrowUpRight,
   TrendingUp,
   Terminal,
   Radio,
-  Clock,
   Layers,
-  ChevronRight,
+  Cpu,
+  Lock,
+  Network,
+  CheckCircle2,
 } from "lucide-react";
 import {
   AreaChart,
@@ -28,8 +26,6 @@ import {
 import { toast } from "sonner";
 import { usePreferences } from "@/lib/preferences";
 import { IqBotInteractiveConsole, type BotActionConfig } from "@/components/member/IqBotInteractiveConsole";
-
-type StrategyMode = "conservative" | "balanced" | "dynamic";
 
 interface TelemetryLog {
   id: string;
@@ -51,10 +47,6 @@ const mockChartData = [
 
 export const MemberIntelligenceTab: React.FC = () => {
   const { t } = usePreferences();
-  const [strategyMode, setStrategyMode] = useState<StrategyMode>("balanced");
-  const [autoReinvest, setAutoReinvest] = useState(true);
-  const [volatilityShield, setVolatilityShield] = useState(true);
-  const [liveDigest, setLiveDigest] = useState(true);
   const [logs, setLogs] = useState<TelemetryLog[]>([
     {
       id: "log-1",
@@ -90,8 +82,6 @@ export const MemberIntelligenceTab: React.FC = () => {
     },
   ]);
 
-  const [simulatedInflow, setSimulatedInflow] = useState(2500);
-
   // Periodic heartbeat animation/log append
   useEffect(() => {
     const interval = setInterval(() => {
@@ -107,21 +97,6 @@ export const MemberIntelligenceTab: React.FC = () => {
     }, 15000);
     return () => clearInterval(interval);
   }, []);
-
-  const handleStrategyChange = (mode: StrategyMode) => {
-    setStrategyMode(mode);
-    const labels = {
-      conservative: "Conservatief (Focus op kapitaalbehoud)",
-      balanced: "Gebalanceerd (Optimale cashflow & groei)",
-      dynamic: "Dynamisch (Maximaliseer compounding)",
-    };
-    toast.success(`Strategie ingesteld op: ${labels[mode]}`);
-  };
-
-  const getMonthlyProjection = () => {
-    const rate = strategyMode === "conservative" ? 0.05 : strategyMode === "balanced" ? 0.085 : 0.13;
-    return (simulatedInflow * rate).toFixed(2);
-  };
 
   const handleBotActionTriggered = (action: BotActionConfig) => {
     const newLog: TelemetryLog = {
@@ -241,98 +216,79 @@ export const MemberIntelligenceTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Interactive IQ Bot Video Console */}
+      {/* Interactive IQ Bot Console (3D Coded Bot Default & 6 Action Buttons for Video Dialogs) */}
       <IqBotInteractiveConsole onActionTriggered={handleBotActionTriggered} />
 
-      {/* Main Grid: Strategy Controls & Live Telemetry Chart */}
+      {/* Autonomous System Architecture & Telemetry Grid (Read-Only Autonomous Indicators) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left 2 Cols: Strategy Allocations & Yield Graph */}
+        {/* Left 2 Cols: Autonomous Protocol Profile & Yield Curve */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Strategy Selection Card */}
+          {/* Autonomous Protocol Profile Card */}
           <div className="rounded-3xl border border-canvas-hairline bg-canvas-elevated p-6 shadow-level-2">
             <div className="flex items-center justify-between pb-4 border-b border-canvas-hairline">
               <div className="flex items-center gap-2.5">
-                <Sliders className="h-5 w-5 text-indigo" />
-                <h2 className="text-lg font-semibold text-white font-display">Algoritmisch Risicoprofiel</h2>
+                <Cpu className="h-5 w-5 text-indigo" />
+                <div>
+                  <h2 className="text-lg font-semibold text-white font-display">
+                    Autonoom Systeem Protocol
+                  </h2>
+                  <p className="text-xs text-ink-on-canvas-muted">
+                    Zelflerende neural routing · Geen handmatige interventie vereist
+                  </p>
+                </div>
               </div>
-              <span className="text-xs font-medium text-ink-on-canvas-muted">Direct instelbaar</span>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-mint/40 bg-mint/10 px-3 py-1 text-xs font-semibold text-mint">
+                <Lock className="h-3 w-3" />
+                100% Autonoom
+              </span>
             </div>
 
+            {/* Read-Only Status Indicators */}
             <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* Conservative */}
-              <button
-                type="button"
-                onClick={() => handleStrategyChange("conservative")}
-                className={`relative rounded-2xl p-4 text-left transition-all border ${
-                  strategyMode === "conservative"
-                    ? "border-mint bg-mint/10 shadow-[0_0_20px_rgba(52,211,153,0.15)]"
-                    : "border-canvas-hairline bg-canvas-panel/40 hover:border-white/20"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-mint">Laag Risico</span>
-                  {strategyMode === "conservative" && <CheckCircle2 className="h-4 w-4 text-mint" />}
+              <div className="rounded-2xl border border-canvas-hairline bg-canvas-panel/40 p-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-mint">
+                  <span>RISICOMODEL</span>
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                 </div>
-                <p className="mt-2 text-base font-bold text-white">Conservatief</p>
+                <p className="mt-2 text-sm font-bold text-white">Dynamisch Afgeschermd</p>
                 <p className="mt-1 text-xs text-ink-on-canvas-muted">
-                  Focus op stabiele liquiditeit en maximale bufferreserves.
+                  Continue risico-evaluatie met automatische drawdown-demping.
                 </p>
-                <p className="mt-3 text-sm font-mono font-semibold text-mint">3% - 5% / mnd</p>
-              </button>
+              </div>
 
-              {/* Balanced */}
-              <button
-                type="button"
-                onClick={() => handleStrategyChange("balanced")}
-                className={`relative rounded-2xl p-4 text-left transition-all border ${
-                  strategyMode === "balanced"
-                    ? "border-indigo bg-indigo/15 shadow-[0_0_20px_rgba(99,91,255,0.25)]"
-                    : "border-canvas-hairline bg-canvas-panel/40 hover:border-white/20"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-cyan">Aanbevolen</span>
-                  {strategyMode === "balanced" && <CheckCircle2 className="h-4 w-4 text-cyan" />}
+              <div className="rounded-2xl border border-canvas-hairline bg-canvas-panel/40 p-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-cyan">
+                  <span>ROUTING MODEL</span>
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                 </div>
-                <p className="mt-2 text-base font-bold text-white">Gebalanceerd</p>
+                <p className="mt-2 text-sm font-bold text-white">Multi-Protocol Yield</p>
                 <p className="mt-1 text-xs text-ink-on-canvas-muted">
-                  Optimale balans tussen maandelijkse cashflow en gestage compound.
+                  Liquiditeit wordt dynamisch verspreid over gedecentraliseerde pools.
                 </p>
-                <p className="mt-3 text-sm font-mono font-semibold text-cyan">6% - 10% / mnd</p>
-              </button>
+              </div>
 
-              {/* Dynamic */}
-              <button
-                type="button"
-                onClick={() => handleStrategyChange("dynamic")}
-                className={`relative rounded-2xl p-4 text-left transition-all border ${
-                  strategyMode === "dynamic"
-                    ? "border-cyan bg-cyan/15 shadow-[0_0_20px_rgba(34,211,238,0.2)]"
-                    : "border-canvas-hairline bg-canvas-panel/40 hover:border-white/20"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-cyan">Groeifocus</span>
-                  {strategyMode === "dynamic" && <CheckCircle2 className="h-4 w-4 text-cyan" />}
+              <div className="rounded-2xl border border-canvas-hairline bg-canvas-panel/40 p-4">
+                <div className="flex items-center justify-between text-xs font-semibold text-indigo-400">
+                  <span>COMPOUND CYCLUS</span>
+                  <CheckCircle2 className="h-3.5 w-3.5" />
                 </div>
-                <p className="mt-2 text-base font-bold text-white">Dynamisch</p>
+                <p className="mt-2 text-sm font-bold text-white">Continu Per Blok</p>
                 <p className="mt-1 text-xs text-ink-on-canvas-muted">
-                  Maximale yield aggregatie via meerdere router routes.
+                  Winsten worden direct herbelegd voor maximale exponentiële groei.
                 </p>
-                <p className="mt-3 text-sm font-mono font-semibold text-cyan">11% - 15% / mnd</p>
-              </button>
+              </div>
             </div>
 
-            {/* Strategy Allocation Bars */}
+            {/* Strategy Allocation Bars (Read-Only) */}
             <div className="mt-6 space-y-3 pt-5 border-t border-canvas-hairline">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-on-canvas-faint">
-                Actieve Kapitaalverdeling
+                Actieve Kapitaalverdeling (Autonoom Beheerd)
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div>
                   <div className="flex justify-between text-xs font-medium text-ink-on-canvas-muted mb-1">
                     <span>Liquidity Routing & Arbitrage</span>
-                    <span className="font-mono text-white">38%</span>
+                    <span className="font-mono text-white font-semibold">38%</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
                     <div className="h-full rounded-full bg-indigo transition-all duration-500" style={{ width: "38%" }} />
@@ -342,7 +298,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                 <div>
                   <div className="flex justify-between text-xs font-medium text-ink-on-canvas-muted mb-1">
                     <span>Dynamic Staking Compound</span>
-                    <span className="font-mono text-white">32%</span>
+                    <span className="font-mono text-white font-semibold">32%</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
                     <div className="h-full rounded-full bg-cyan transition-all duration-500" style={{ width: "32%" }} />
@@ -352,7 +308,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                 <div>
                   <div className="flex justify-between text-xs font-medium text-ink-on-canvas-muted mb-1">
                     <span>Cashflow Harvesting Reserve</span>
-                    <span className="font-mono text-white">20%</span>
+                    <span className="font-mono text-white font-semibold">20%</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
                     <div className="h-full rounded-full bg-mint transition-all duration-500" style={{ width: "20%" }} />
@@ -362,7 +318,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                 <div>
                   <div className="flex justify-between text-xs font-medium text-ink-on-canvas-muted mb-1">
                     <span>Volatility Shield Buffer</span>
-                    <span className="font-mono text-white">10%</span>
+                    <span className="font-mono text-white font-semibold">10%</span>
                   </div>
                   <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden">
                     <div className="h-full rounded-full bg-amber transition-all duration-500" style={{ width: "10%" }} />
@@ -380,7 +336,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                 <h2 className="text-lg font-semibold text-white font-display">24-Uurs Yield Telemetrie</h2>
               </div>
               <span className="inline-flex items-center gap-1.5 text-xs font-mono text-mint">
-                <span className="h-2 w-2 rounded-full bg-mint" />
+                <span className="h-2 w-2 rounded-full bg-mint animate-pulse" />
                 Live Feed
               </span>
             </div>
@@ -412,7 +368,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                     stroke="#22d3ee"
                     strokeWidth={2.5}
                     fillOpacity={1}
-                    fill="url"
+                    fill="url(#iqYieldGradient)"
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -420,105 +376,70 @@ export const MemberIntelligenceTab: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Col: Autonomous Controls & Telemetry Feed */}
+        {/* Right Col: Autonomous System Safeguards & Telemetry Stream */}
         <div className="space-y-6">
-          {/* Autonomous Toggles Card */}
-          <div className="rounded-3xl border border-canvas-hairline bg-canvas-elevated p-6 shadow-level-2 space-y-5">
+          {/* Autonomous Safeguards Card (Read-Only Statuses) */}
+          <div className="rounded-3xl border border-canvas-hairline bg-canvas-elevated p-6 shadow-level-2 space-y-4">
             <div className="flex items-center gap-2.5 pb-4 border-b border-canvas-hairline">
-              <Cpu className="h-5 w-5 text-cyan" />
-              <h2 className="text-lg font-semibold text-white font-display">Autonome Instellingen</h2>
+              <ShieldCheck className="h-5 w-5 text-cyan" />
+              <h2 className="text-lg font-semibold text-white font-display">Protocol Parameters</h2>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-canvas-panel/50 border border-canvas-hairline">
                 <div>
                   <p className="text-sm font-semibold text-white">Auto-Reinvestment</p>
-                  <p className="text-xs text-ink-on-canvas-muted">Automatisch herbeleggen in Flowlutas</p>
+                  <p className="text-xs text-ink-on-canvas-muted">Automatische compound routing</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAutoReinvest(!autoReinvest);
-                    toast.info(`Auto-Reinvestment ${!autoReinvest ? "ingeschakeld" : "uitgeschakeld"}`);
-                  }}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    autoReinvest ? "bg-indigo" : "bg-white/10"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      autoReinvest ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </button>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 text-[11px] font-mono text-emerald-400">
+                  <CheckCircle2 className="h-3 w-3" />
+                  Actief
+                </span>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-canvas-panel/50 border border-canvas-hairline">
                 <div>
                   <p className="text-sm font-semibold text-white">Volatility Shield</p>
-                  <p className="text-xs text-ink-on-canvas-muted">Automatische bescherming bij pieken</p>
+                  <p className="text-xs text-ink-on-canvas-muted">Max. 0.05% stop-buffer</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setVolatilityShield(!volatilityShield);
-                    toast.info(`Volatility Shield ${!volatilityShield ? "geactiveerd" : "gedeactiveerd"}`);
-                  }}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    volatilityShield ? "bg-mint" : "bg-white/10"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      volatilityShield ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </button>
+                <span className="inline-flex items-center gap-1 rounded-full bg-mint/15 border border-mint/30 px-2.5 py-1 text-[11px] font-mono text-mint">
+                  <CheckCircle2 className="h-3 w-3" />
+                  100% Actief
+                </span>
               </div>
 
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-canvas-panel/50 border border-canvas-hairline">
                 <div>
-                  <p className="text-sm font-semibold text-white">Smart Telemetrie Notificaties</p>
-                  <p className="text-xs text-ink-on-canvas-muted">Meldingen bij cashflow-activatie</p>
+                  <p className="text-sm font-semibold text-white">Multi-Chain Routing</p>
+                  <p className="text-xs text-ink-on-canvas-muted">4 protocollen gesynchroniseerd</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLiveDigest(!liveDigest);
-                    toast.info(`Telemetrie Notificaties ${!liveDigest ? "aan" : "uit"}`);
-                  }}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                    liveDigest ? "bg-cyan" : "bg-white/10"
-                  }`}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      liveDigest ? "translate-x-6" : "translate-x-1"
-                    }`}
-                  />
-                </button>
+                <span className="inline-flex items-center gap-1 rounded-full bg-cyan-500/15 border border-cyan-500/30 px-2.5 py-1 text-[11px] font-mono text-cyan-400">
+                  <Network className="h-3 w-3" />
+                  Gekoppeld
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between p-3 rounded-2xl bg-canvas-panel/50 border border-canvas-hairline">
+                <div>
+                  <p className="text-sm font-semibold text-white">Webhook Interface</p>
+                  <p className="text-xs text-ink-on-canvas-muted">Gereed voor webhook triggers</p>
+                </div>
+                <span className="inline-flex items-center gap-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 text-[11px] font-mono text-indigo-400">
+                  <Zap className="h-3 w-3" />
+                  Stand-by
+                </span>
               </div>
             </div>
 
-            {/* Interactive Projected Return Box */}
-            <div className="mt-5 rounded-2xl border border-indigo/25 bg-canvas-panel/80 p-4">
-              <div className="flex items-center justify-between text-xs text-ink-on-canvas-faint">
-                <span>Inleg Simulatie</span>
-                <span className="font-mono text-white font-semibold">€{simulatedInflow}</span>
+            {/* Autonomous Guarantee Notice */}
+            <div className="mt-4 rounded-2xl border border-indigo-500/20 bg-indigo-500/10 p-4">
+              <div className="flex items-center gap-2 text-xs font-semibold text-indigo-300">
+                <Lock className="h-3.5 w-3.5" />
+                <span>Autonoom Protocol Borging</span>
               </div>
-              <input
-                type="range"
-                min="500"
-                max="10000"
-                step="250"
-                value={simulatedInflow}
-                onChange={(e) => setSimulatedInflow(Number(e.target.value))}
-                className="mt-2 w-full accent-cyan cursor-pointer"
-              />
-              <div className="mt-3 flex items-center justify-between border-t border-canvas-hairline/60 pt-2">
-                <span className="text-xs text-ink-on-canvas-muted">Verwachte Maand Cashflow:</span>
-                <span className="text-base font-bold font-mono text-cyan">€{getMonthlyProjection()}</span>
-              </div>
+              <p className="mt-1 text-xs text-ink-on-canvas-muted leading-relaxed">
+                De IQ Bot opereert 100% autonoom. Parameters worden niet handmatig aangepast door members om gegarandeerde risico- en liquiditeitsmarges te bewaken.
+              </p>
             </div>
           </div>
 
