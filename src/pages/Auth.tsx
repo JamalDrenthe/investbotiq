@@ -9,7 +9,7 @@ import { LumenCtaButton } from "@/components/three/LumenCta";
 import BrandLogo from "@/components/BrandLogo";
 import PreferenceToggles from "@/components/PreferenceToggles";
 import { usePreferences } from "@/lib/preferences";
-import { isAuthAvailable, isDemoModeEnabled, signInWithPassword, signInWithGoogle } from "@/lib/auth";
+import { isAuthAvailable, isDemoModeEnabled, signInWithPassword, signInWithGoogle, checkRedirectResult } from "@/lib/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +18,10 @@ const Auth = () => {
   const navigate = useNavigate();
   const { user, userRole } = useAuth();
   const { t } = usePreferences();
+
+  useEffect(() => {
+    void checkRedirectResult();
+  }, []);
 
   const handleGoogleLogin = async () => {
     setLoading(true);

@@ -1,11 +1,13 @@
 import {
   browserLocalPersistence,
   getIdTokenResult,
+  getRedirectResult,
   GoogleAuthProvider,
   onIdTokenChanged,
   setPersistence,
   signInWithEmailAndPassword as firebaseSignInWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   signOut as firebaseSignOut,
   updatePassword as firebaseUpdatePassword,
   type User,
@@ -101,6 +103,18 @@ export function observeAuthState(listener: AuthListener): () => void {
   };
 }
 
+export async function checkRedirectResult(): Promise<void> {
+  if (isDemoModeEnabled || !firebaseAuth) return;
+  try {
+    const result = await getRedirectResult(firebaseAuth);
+    if (result?.user) {
+      await ensureUserProfile(result.user.uid, result.user.email, result.user.displayName);
+    }
+  } catch (error) {
+    console.error("Redirect auth error:", error);
+  }
+}
+
 export async function signInWithGoogle(): Promise<void> {
   if (isDemoModeEnabled) {
     const { error } = await demoBackend.auth.signInWithOAuth({ provider: "google" });
@@ -109,10 +123,34 @@ export async function signInWithGoogle(): Promise<void> {
   }
 
   if (!firebaseAuth) throw new Error("Firebase Authentication is nog niet geconfigureerd.");
-  await setPersistence(firebaseAuth, browserLocalPersistence);
+
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
-  await signInWithPopup(firebaseAuth, provider);
+
+  const isMobile =
+    typeof navigator !== "undefined" &&
+    /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    // Mobile browsers (Safari/Chrome on iOS & Android) block popups by default
+    await signInWithRedirect(firebaseAuth, provider);
+    return;
+  }
+
+  try {
+    await signInWithPopup(firebaseAuth, provider);
+  } catch (error: unknown) {
+    const err = error as { code?: string };
+    if (
+      err?.code === "auth/popup-blocked" ||
+      err?.code === "auth/cancelled-popup-request"
+    ) {
+      // Fallback seamlessly to redirect if popup is blocked
+      await signInWithRedirect(firebaseAuth, provider);
+      return;
+    }
+    throw error;
+  }
 }
 
 export async function signInWithPassword(email: string, password: string): Promise<void> {
