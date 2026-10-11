@@ -1,11 +1,30 @@
 {
+  "headers": [
+    {
+      "source": "/videos/(.*)",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "video/mp4"
+        },
+        {
+          "key": "Accept-Ranges",
+          "value": "bytes"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/__/auth/:match*",
       "destination": "https://investbotiq-dev.firebaseapp.com/__/auth/:match*"
     },
     {
-      "source": "/(.*)",
+      "source": "/((?!videos/|assets/|favicon\\.ico|.*\\..*).*)",
       "destination": "/index.html"
     }
   ]

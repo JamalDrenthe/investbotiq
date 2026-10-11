@@ -233,6 +233,7 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
   useEffect(() => {
     if (isModalOpen && selectedAction && videoRef.current) {
       setIsLoading(true);
+      setIsPlaying(false);
       const vid = videoRef.current;
       vid.defaultMuted = true;
       vid.muted = true;
@@ -242,11 +243,11 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       if (playPromise !== undefined) {
         playPromise
           .then(() => {
-            setIsLoading(false);
             setIsPlaying(true);
           })
           .catch(() => {
             setIsPlaying(false);
+            setIsLoading(false);
           });
       }
     }
@@ -430,19 +431,29 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 disablePictureInPicture
                 disableRemotePlayback
                 onLoadStart={() => setIsLoading(true)}
+                onWaiting={() => setIsLoading(true)}
                 onLoadedData={handleLoadedData}
-                onCanPlay={() => setIsLoading(false)}
-                onPlay={() => setIsPlaying(true)}
+                onPlaying={() => {
+                  setIsLoading(false);
+                  setIsPlaying(true);
+                }}
+                onTimeUpdate={() => {
+                  if (videoRef.current && videoRef.current.currentTime > 0) {
+                    setIsLoading(false);
+                    setIsPlaying(true);
+                  }
+                }}
                 onPause={() => {
                   if (videoRef.current && !videoRef.current.ended) {
                     setIsPlaying(false);
                   }
                 }}
                 onEnded={handleVideoEnded}
-                onError={() => {
+                onError={(e) => {
                   setIsLoading(false);
-                  toast.error("Protocol video kon niet worden geladen");
-                  setTimeout(() => setIsModalOpen(false), 2000);
+                  console.error("Video load error for:", selectedAction.videoSrc, e);
+                  toast.error(`Protocol video ${selectedAction.label} kon niet worden geladen`);
+                  setTimeout(() => setIsModalOpen(false), 2500);
                 }}
                 className="w-full h-full object-contain pointer-events-none select-none"
               >
