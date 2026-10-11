@@ -21,7 +21,6 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 
 export type BotActionId =
   | "onboarding"
@@ -167,6 +166,8 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
     }
   };
 
+  const [playbackProgress, setPlaybackProgress] = useState<number>(0);
+
   const handleOpenChange = (open: boolean) => {
     setIsModalOpen(open);
     if (!open && videoRef.current) {
@@ -176,6 +177,7 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
 
   const handleSelectAction = (action: BotActionConfig) => {
     setSelectedAction(action);
+    setPlaybackProgress(0);
     setIsModalOpen(true);
     triggerActionWebhook(action);
 
@@ -183,7 +185,22 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       onActionTriggered(action);
     }
 
-    toast.info(`IQ Bot actie: ${action.label}`);
+    toast.info(`IQ Bot protocol gestart: ${action.label}`);
+  };
+
+  // Ensure playback starts immediately on load without user intervention or controls
+  const handleLoadedData = () => {
+    if (videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            videoRef.current.play().catch(console.error);
+          }
+        });
+      }
+    }
   };
 
   // Automatically close video modal when video playback completes
@@ -322,9 +339,14 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
         </div>
       </div>
 
-      {/* Small Window (Modal Dialog) for Video Playback - Autoclose on End */}
+      {/* Small Window (Modal Dialog) for Video Playback - Autoclose on End, No Manual Controls */}
       <Dialog open={isModalOpen} onOpenChange={handleOpenChange}>
-        <DialogContent className="max-w-xl sm:max-w-2xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]">
+        <DialogContent
+          hideCloseButton={true}
+          onPointerDownOutside={(e) => e.preventDefault()}
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          className="max-w-xl sm:max-w-2xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]"
+        >
           <DialogHeader className="p-4 sm:p-5 pb-3 border-b border-white/10 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
               <div
@@ -343,39 +365,72 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 </DialogDescription>
               </div>
             </div>
+
+            <div className="flex items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-mint/40 bg-mint/10 px-2.5 py-1 text-[10px] font-mono font-medium text-mint">
+                <span className="h-1.5 w-1.5 rounded-full bg-mint animate-pulse" />
+                Autonoom
+              </span>
+            </div>
           </DialogHeader>
 
-          {/* Video Container - loop={false}, autoplay with sound, auto-close on end */}
-          <div className="relative aspect-video w-full bg-black flex items-center justify-center">
+          {/* Video Container - No player controls, pointer-events protected, auto-close on end */}
+          <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden select-none">
             {selectedAction && (
               <video
                 ref={videoRef}
                 key={selectedAction.videoSrc}
                 src={selectedAction.videoSrc}
                 autoPlay
-                controls
                 playsInline
                 loop={false}
+                disablePictureInPicture
+                disableRemotePlayback
+                onLoadedData={handleLoadedData}
+                onTimeUpdate={() => {
+                  if (videoRef.current && videoRef.current.duration) {
+                    setPlaybackProgress(
+                      (videoRef.current.currentTime / videoRef.current.duration) * 100
+                    );
+                  }
+                }}
                 onEnded={handleVideoEnded}
-                className="w-full h-full object-cover"
+                onError={() => {
+                  toast.error("Protocol video kon niet worden geladen");
+                  setTimeout(() => setIsModalOpen(false), 2000);
+                }}
+                className="w-full h-full object-cover pointer-events-none select-none"
               />
             )}
+
+            {/* Gesture-block overlay to prevent native pause, rewind, or timeline scrubbing */}
+            <div
+              className="absolute inset-0 z-20 bg-transparent select-none pointer-events-auto"
+              onContextMenu={(e) => e.preventDefault()}
+              onClick={(e) => e.stopPropagation()}
+              onTouchStart={(e) => e.stopPropagation()}
+            />
+
+            {/* Glowing autonomous progress line */}
+            <div className="absolute bottom-0 inset-x-0 h-1 bg-white/10 z-30 pointer-events-none">
+              <div
+                className="h-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-mint transition-all duration-150"
+                style={{ width: `${playbackProgress}%` }}
+              />
+            </div>
           </div>
 
-          {/* Modal Footer with Status & Close button */}
-          <div className="p-3 sm:p-4 border-t border-white/10 bg-[#05070f] flex items-center justify-between text-xs text-zinc-400">
+          {/* Autonomous Status Footer - Completely read-only, no close or control buttons */}
+          <div className="p-3.5 sm:p-4 border-t border-white/10 bg-[#05070f] flex items-center justify-between text-xs text-zinc-400">
             <div className="flex items-center gap-2">
               <span className="h-2 w-2 rounded-full bg-cyan-400 animate-pulse" />
-              <span>Video speelt af · venster sluit automatisch na afloop</span>
+              <span className="font-mono text-zinc-300">
+                Autonoom Protocol in uitvoering
+              </span>
             </div>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setIsModalOpen(false)}
-              className="text-xs text-zinc-300 hover:text-white"
-            >
-              Sluiten
-            </Button>
+            <span className="font-mono text-[11px] text-zinc-500">
+              Sluit automatisch na voltooiing
+            </span>
           </div>
         </DialogContent>
       </Dialog>
