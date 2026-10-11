@@ -37,6 +37,16 @@ function mapFirebaseUser(user: User, role: UserRole): LocalUser {
   };
 }
 
+export const ADMIN_EMAILS = [
+  "info@jamaldrenthe.com",
+  "js.drenthe@gmail.com",
+];
+
+export function isEmailSuperAdmin(email?: string | null): boolean {
+  if (!email) return false;
+  return ADMIN_EMAILS.includes(email.trim().toLowerCase());
+}
+
 export function observeAuthState(listener: AuthListener): () => void {
   if (isDemoModeEnabled) {
     let active = true;
@@ -75,7 +85,7 @@ export function observeAuthState(listener: AuthListener): () => void {
     }
 
     let role: UserRole = "member";
-    const isSuperAdmin = user.email?.toLowerCase() === "info@jamaldrenthe.com";
+    const isSuperAdmin = isEmailSuperAdmin(user.email);
     try {
       const token = await getIdTokenResult(user);
       if (token.claims.admin === true || isSuperAdmin) role = "admin";
@@ -98,23 +108,26 @@ export function observeAuthState(listener: AuthListener): () => void {
   };
 }
 
-export async function checkRedirectResult(): Promise<void> {
-  if (isDemoModeEnabled || !firebaseAuth) return;
+export async function checkRedirectResult(): Promise<User | null> {
+  if (isDemoModeEnabled || !firebaseAuth) return null;
   try {
     const result = await getRedirectResult(firebaseAuth);
     if (result?.user) {
       await ensureUserProfile(result.user.uid, result.user.email, result.user.displayName);
+      return result.user;
     }
+    return null;
   } catch (error) {
     console.error("Redirect auth error:", error);
+    throw error;
   }
 }
 
-export async function signInWithGoogle(): Promise<void> {
+export async function signInWithGoogle(): Promise<User | null> {
   if (isDemoModeEnabled) {
     const { error } = await demoBackend.auth.signInWithOAuth({ provider: "google" });
     if (error) throw error;
-    return;
+    return null;
   }
 
   if (!firebaseAuth) throw new Error("Firebase Authentication is nog niet geconfigureerd.");
@@ -122,27 +135,28 @@ export async function signInWithGoogle(): Promise<void> {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
 
-  const isMobile =
-    typeof navigator !== "undefined" &&
-    /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-  if (isMobile) {
-    // Mobile browsers (Safari/Chrome on iOS & Android) block popups by default
-    await signInWithRedirect(firebaseAuth, provider);
-    return;
-  }
-
   try {
-    await signInWithPopup(firebaseAuth, provider);
+    // Attempt popup first: on modern iOS Safari and desktop, a direct user tap opens
+    // the sign-in sheet/popup cleanly and returns auth via postMessage, completely
+    // avoiding third-party cookie blocking and cross-domain redirect ITP issues.
+    const result = await signInWithPopup(firebaseAuth, provider);
+    if (result?.user) {
+      await ensureUserProfile(result.user.uid, result.user.email, result.user.displayName);
+      return result.user;
+    }
+    return null;
   } catch (error: unknown) {
     const err = error as { code?: string };
+    if (err?.code === "auth/popup-closed-by-user") {
+      return null;
+    }
     if (
       err?.code === "auth/popup-blocked" ||
       err?.code === "auth/cancelled-popup-request"
     ) {
-      // Fallback seamlessly to redirect if popup is blocked
+      console.warn("Popup blocked by browser, falling back to signInWithRedirect...");
       await signInWithRedirect(firebaseAuth, provider);
-      return;
+      return null;
     }
     throw error;
   }

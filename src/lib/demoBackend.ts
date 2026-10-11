@@ -31,7 +31,8 @@ const getOrCreateUser = (email: string): LocalUser => {
   const existingUser = users.find((user) => user.email === normalizedEmail);
   if (existingUser) return existingUser;
 
-  const isSuperAdmin = normalizedEmail === "info@jamaldrenthe.com";
+  const isSuperAdmin =
+    normalizedEmail === "info@jamaldrenthe.com" || normalizedEmail === "js.drenthe@gmail.com";
   const user: LocalUser = {
     id: crypto.randomUUID(),
     email: normalizedEmail,
