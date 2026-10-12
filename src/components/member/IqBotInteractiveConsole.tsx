@@ -238,7 +238,6 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       vid.defaultMuted = true;
       vid.muted = true;
       vid.currentTime = 0;
-      vid.load();
       const playPromise = vid.play();
       if (playPromise !== undefined) {
         playPromise
@@ -456,9 +455,7 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                   setTimeout(() => setIsModalOpen(false), 2500);
                 }}
                 className="w-full h-full object-contain pointer-events-none select-none"
-              >
-                <source src={selectedAction.videoSrc} type="video/mp4" />
-              </video>
+              />
             )}
 
             {/* Tap-to-play overlay: handles autoplay blocks (e.g. iPhone Low Power Mode). Once playing, tapping does NOT pause! */}
