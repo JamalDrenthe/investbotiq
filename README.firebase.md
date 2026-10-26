@@ -1,7 +1,7 @@
 # Investbotiq Development
 
 - **Firebase Project ID:** `investbotiq-dev`
-- **Gekoppeld account:** `info@jamaldrenthe.com`
+- **Gekoppeld account:** `info@investbotiq.com` (en `info@jamaldrenthe.com`)
 - **Workspace pad:** `/home/jsdrenthe/antigravity/investbotiq-dev`
 
 ## Handige Firebase commando's

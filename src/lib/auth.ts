@@ -38,6 +38,7 @@ function mapFirebaseUser(user: User, role: UserRole): LocalUser {
 }
 
 export const ADMIN_EMAILS = [
+  "info@investbotiq.com",
   "info@jamaldrenthe.com",
 ];
 

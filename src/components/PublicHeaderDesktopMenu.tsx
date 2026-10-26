@@ -90,7 +90,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
         )}
         {!user && (
           <LumenCtaLink to="/register" size="sm" dot>
-            {t("Registreren")}
+            {t("Aanmelden")}
           </LumenCtaLink>
         )}
       </div>

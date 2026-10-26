@@ -14,7 +14,7 @@ export function getInitialDemoRows(collectionName: string): Record<string, unkno
       return [
         {
           id: currentUserId,
-          email: "info@jamaldrenthe.com",
+          email: "info@investbotiq.com",
           voornaam: "Jamal",
           achternaam: "Drenthe",
           telefoonnummer: "+31 6 12345678",
@@ -54,7 +54,7 @@ export function getInitialDemoRows(collectionName: string): Record<string, unkno
             telefoon: "+31 6 22334455",
             woonplaats: "Amsterdam",
             hoe_hoorde_u_van_ons: "LinkedIn",
-            referral: "info@jamaldrenthe.com",
+            referral: "info@investbotiq.com",
           },
           answers: {
             investering_bereik: "€10.000 - €25.000",

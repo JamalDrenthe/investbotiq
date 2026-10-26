@@ -51,33 +51,34 @@ export const MemberIntelligenceTab: React.FC = () => {
     {
       id: "log-1",
       timestamp: "Zojuist",
-      event: "Autonome liquidity rebalance voltooid op Tier 2 router",
+      event: "VVC Cashflow Agent: maandelijkse liquiditeitsdistributie geactiveerd",
       category: "rebalance",
-      gain: "+€14,80",
+      gain: "+€400,00",
     },
     {
       id: "log-2",
       timestamp: "4m geleden",
-      event: "Volatiliteitscontrole uitgevoerd: markt binnen veilige marges (0.02% drawdown)",
+      event: "Quantum Initium: high-frequency time-gap correlatie gescand (0.02% drawdown)",
       category: "shield",
     },
     {
       id: "log-3",
       timestamp: "18m geleden",
-      event: "Cashflow harvest geactiveerd voor geaggregeerde liquidity pool",
+      event: "Immigratiepunt IQ Agent: geautomatiseerde expat dossierverwerking gesynchroniseerd",
       category: "execution",
       gain: "+€32,50",
     },
     {
       id: "log-4",
       timestamp: "42m geleden",
-      event: "Auto-compound cyclus uitgevoerd: extra tokens gealloceerd naar Tier 1",
+      event: "WoningVry: vastgoed huurstroomallocatie Tier 1-6 actief",
       category: "compound",
+      gain: "+€120,00",
     },
     {
       id: "log-5",
       timestamp: "1u geleden",
-      event: "IQ Bot Neural Core parameters gesynchroniseerd met Investbotiq Cluster",
+      event: "IQ Bot & IQ Agent parameters gesynchroniseerd over alle 12 ecosysteem-bedrijven",
       category: "execution",
     },
   ]);
@@ -85,11 +86,13 @@ export const MemberIntelligenceTab: React.FC = () => {
   // Periodic heartbeat animation/log append
   useEffect(() => {
     const interval = setInterval(() => {
-      const newGain = (Math.random() * 8 + 2).toFixed(2).replace(".", ",");
+      const companies = ["Boostplug", "Spontiva", "CRMos", "Logs Rent", "Djobba", "Xabi World", "Trusting Work", "Zheavenzy"];
+      const randomCompany = companies[Math.floor(Math.random() * companies.length)];
+      const newGain = (Math.random() * 25 + 5).toFixed(2).replace(".", ",");
       const newLog: TelemetryLog = {
         id: `log-${Date.now()}`,
         timestamp: "Zojuist",
-        event: "Micro-arbitrage yield distributie bevestigd",
+        event: `${randomCompany} IQ Agent: autonome telemetrie en liquiditeitsrouting gesynchroniseerd`,
         category: "execution",
         gain: `+€${newGain}`,
       };
@@ -104,12 +107,23 @@ export const MemberIntelligenceTab: React.FC = () => {
       timestamp: "Zojuist",
       event: action.telemetryMsg,
       category:
-        action.id === "analyse" || action.id === "research"
+        action.id === "quantum-initium" || action.id === "boostplug" || action.id === "crmos"
           ? "execution"
-          : action.id === "tgc" || action.id === "onboarding"
+          : action.id === "vvc" || action.id === "woningvry" || action.id === "logs-rent"
           ? "compound"
-          : "shield",
-      gain: action.id === "analyse" ? "+€28,40" : action.id === "tgc" ? "+€45,00" : undefined,
+          : action.id === "trusting-work" || action.id === "immigratiepunt"
+          ? "shield"
+          : "rebalance",
+      gain:
+        action.id === "vvc"
+          ? "+€400,00"
+          : action.id === "quantum-initium"
+          ? "+€28,40"
+          : action.id === "boostplug"
+          ? "+€45,00"
+          : action.id === "woningvry"
+          ? "+€120,00"
+          : "+€35,00",
     };
     setLogs((prev) => [newLog, ...prev.slice(0, 5)]);
   };
@@ -135,16 +149,16 @@ export const MemberIntelligenceTab: React.FC = () => {
                 Autonoom Actief
               </span>
               <span className="rounded-full border border-canvas-hairline bg-white/5 px-3 py-1 text-xs font-medium text-ink-on-canvas-muted font-mono">
-                Investbotiq Neural Core v3.8
+                12 Ecosysteem Partners Gekoppeld
               </span>
             </div>
 
             <div>
               <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white font-display">
-                Intelligence & IQ Bot Telemetrie
+                IQ Bot & IQ Agent
               </h1>
               <p className="mt-1 text-sm text-ink-on-canvas-muted max-w-2xl">
-                Realtime inzicht in de autonome cashflow-algoritmes, liquidity aggregatie en dynamische beschermingsmechanismen van Investbotiq.
+                Realtime overzicht van de autonome IQ Bot, IQ Agents en de 12 aangesloten ecosysteem-bedrijven van Investbotiq.
               </p>
             </div>
           </div>

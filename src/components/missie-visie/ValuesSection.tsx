@@ -1,74 +1,65 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Heart, Shield, Bot } from "lucide-react";
+import { Heart, ShieldCheck, Cpu } from "lucide-react";
 
-// Animation variants
-const containerVariants = {
-  hidden: {
-    opacity: 0
+const VALUES = [
+  {
+    icon: Heart,
+    title: "Toegankelijke Vermogensgroei",
+    description: "Wij verlagen de traditionele drempels tot gestructureerde cashflow. Geen vereiste van decennia aan beleggingservaring of onevenredig hoge instapbedragen.",
+    colorClass: "text-indigo",
   },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.3
-    }
-  }
-};
-const itemVariants = {
-  hidden: {
-    opacity: 0,
-    y: 20
+  {
+    icon: ShieldCheck,
+    title: "Absolute Transparantie",
+    description: "Ieder lid heeft via het persoonlijke dashboard direct inzicht in de kwartaalcycli, opbrengsten, historische cashflowmutaties en protocolparameters.",
+    colorClass: "text-mint",
   },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5
-    }
-  }
-};
+  {
+    icon: Cpu,
+    title: "Wiskundige Autonomie",
+    description: "Wij benutten geavanceerde algoritmiek om menselijke bias en emotionele paniek uit te sluiten, waardoor kapitaal beschermd en voorspelbaar groeit.",
+    colorClass: "text-cyan",
+  },
+];
+
 export default function ValuesSection() {
-  return <section className="py-16 px-4 bg-indigo-50">
-      <div className="container mx-auto max-w-6xl">
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
-          Onze waarden
-        </h2>
-        
-        <motion.div variants={containerVariants} initial="hidden" whileInView="show" viewport={{
-        once: true
-      }} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Value 1 */}
-          <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <Heart className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">Toegankelijkheid</h3>
-            <p className="text-gray-700">
-              We maken vermogensgroei beschikbaar voor iedereen, ongeacht startkapitaal of kennis.
-            </p>
-          </motion.div>
-          
-          {/* Value 2 */}
-          <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-              <Shield className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">Transparantie</h3>
-            <p className="text-gray-700">
-              Volledige zichtbaarheid in ons proces. Je weet precies waar je staat en waar je naartoe gaat.
-            </p>
-          </motion.div>
-          
-          {/* Value 3 */}
-          <motion.div variants={itemVariants} className="bg-white rounded-xl p-6 shadow-md">
-            <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-              <Bot className="w-6 h-6 text-purple-600" />
-            </div>
-            <h3 className="text-xl font-bold mb-3">Innovatie</h3>
-            <p className="text-gray-700">We zetten AI in om innovatieve barrières te doorbreken en nieuwe mogelijkheden te creëren.</p>
-          </motion.div>
-        </motion.div>
+  return (
+    <section className="py-16 md:py-24 px-6 lg:px-10 border-t border-paper-hairline">
+      <div className="mx-auto max-w-content">
+        <div className="max-w-2xl mb-14">
+          <div className="eyebrow eyebrow--paper mb-4">Waarden</div>
+          <h2 className="font-display text-display-sm sm:text-display-md font-semibold tracking-[-0.03em] text-graphite">
+            Onze Kernwaarden
+          </h2>
+          <p className="mt-4 text-base leading-7 text-graphite-muted">
+            De leidende principes achter het platform en onze filosofie over vermogensbeheer.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {VALUES.map((val, i) => (
+            <motion.div
+              key={val.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="card-paper p-8 shadow-level-1 hover:shadow-level-2 transition-all duration-300"
+            >
+              <div className="icon-tile icon-tile--paper mb-6">
+                <val.icon className={`h-5 w-5 ${val.colorClass}`} />
+              </div>
+              <h3 className="font-display text-xl font-semibold tracking-tight text-graphite mb-2.5">
+                {val.title}
+              </h3>
+              <p className="text-base leading-7 text-graphite-muted">
+                {val.description}
+              </p>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </section>;
+    </section>
+  );
 }

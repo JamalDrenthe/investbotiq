@@ -190,7 +190,7 @@ export default function AlgemeneVoorwaarden() {
               </p>
               <div className="mt-4 rounded-xl border border-paper-hairline bg-paper p-5 text-sm text-graphite">
                 <p className="font-medium text-graphite">Investbotiq Support & Juridische Zaken</p>
-                <p className="mt-1 text-graphite-muted">E-mail: <a href="mailto:info@jamaldrenthe.com" className="text-indigo underline">info@jamaldrenthe.com</a></p>
+                <p className="mt-1 text-graphite-muted">E-mail: <a href="mailto:info@investbotiq.com" className="text-indigo underline">info@investbotiq.com</a></p>
                 <p className="text-graphite-muted">Website: <a href="https://investbotiq.com" className="text-indigo underline">https://investbotiq.com</a></p>
               </div>
             </div>

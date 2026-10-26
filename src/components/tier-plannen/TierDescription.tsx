@@ -1,14 +1,17 @@
 
+import React from "react";
 import { FadeIn } from "../info/FadeInAnimation";
 
 export default function TierDescription() {
   return (
-    <>
-      <FadeIn delay={0.2}>
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
-          TIER OVERZICHT
-        </h2>
-      </FadeIn>
-    </>
+    <FadeIn delay={0.2} className="text-center mb-10">
+      <div className="eyebrow eyebrow--paper mb-3">Cycli & Rendement</div>
+      <h2 className="font-display text-display-md font-semibold tracking-[-0.03em] text-graphite">
+        Allocatieoverzicht per Tier
+      </h2>
+      <p className="mt-3 text-base text-graphite-muted max-w-xl mx-auto">
+        Bekijk per Tier de specifieke cyclusduur, actieve Flowlutas en de opgebouwde maandelijkse kasstroom.
+      </p>
+    </FadeIn>
   );
 }

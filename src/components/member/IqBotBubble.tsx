@@ -12,8 +12,8 @@ export const IqBotBubble = () => {
   return (
     <motion.button
       type="button"
-      aria-label="Open Intelligence"
-      title="IQ Bot — open Intelligence"
+      aria-label="Open IQ Bot & IQ Agent"
+      title="IQ Bot & IQ Agent — open overzicht"
       onClick={() => navigate("/member/ai-running")}
       className="fixed bottom-6 right-6 z-50 group"
       initial={{ opacity: 0, scale: 0.6, y: 24 }}

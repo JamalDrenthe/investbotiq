@@ -385,7 +385,7 @@ export const MemberDashboardTab: React.FC<Props> = ({ onSwitchTab, userName }) =
               className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-indigo-600/20 active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <Bot className="w-4 h-4" />
-              <span>Intelligence-overzicht</span>
+              <span>IQ Bot & IQ Agent</span>
             </button>
           </div>
         </div>

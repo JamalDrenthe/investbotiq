@@ -1,53 +1,77 @@
+import React from "react";
 import { FadeIn } from "../info/FadeInAnimation";
+
 export default function TierTable() {
-  return <FadeIn delay={0.5} className="hidden md:block overflow-hidden rounded-lg shadow-md mb-10">
-      <table className="w-full bg-white">
+  return (
+    <FadeIn delay={0.5} className="hidden md:block overflow-hidden card-paper shadow-level-1 mb-10">
+      <table className="w-full text-left">
         <thead>
-          <tr className="bg-indigo-50 border-b border-indigo-100">
-            <th className="py-4 px-6 text-left">Tier</th>
-            <th className="py-4 px-6 text-left">Periode</th>
-            <th className="py-4 px-6 text-left">Flowlutas Actief</th>
-            <th className="py-4 px-6 text-left">Maandelijkse Cashflow</th>
-            <th className="py-4 px-6 text-left">Status</th>
+          <tr className="border-b border-paper-hairline bg-paper/60 text-xs uppercase tracking-[0.12em] text-graphite-muted">
+            <th className="py-4 px-6 font-semibold">Tier</th>
+            <th className="py-4 px-6 font-semibold">Cyclusperiode</th>
+            <th className="py-4 px-6 font-semibold">Actieve Flowlutas</th>
+            <th className="py-4 px-6 font-semibold">Maandelijkse Cashflow</th>
+            <th className="py-4 px-6 font-semibold">Fasestatus</th>
           </tr>
         </thead>
-        <tbody>
-          <tr className="border-b border-gray-100 hover:bg-indigo-50/30 transition-colors">
-            <td className="py-4 px-6 font-medium">Tier 2</td>
-            <td className="py-4 px-6">0 – 3 maanden</td>
-            <td className="py-4 px-6">1</td>
-            <td className="py-4 px-6 font-semibold">€40</td>
-            <td className="py-4 px-6"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Actief</span></td>
+        <tbody className="divide-y divide-paper-hairline text-sm text-graphite">
+          <tr className="transition-colors hover:bg-paper/40">
+            <td className="py-4 px-6 font-display font-semibold text-graphite">Tier 2</td>
+            <td className="py-4 px-6 text-graphite-muted">Maand 1 – 3</td>
+            <td className="py-4 px-6 font-mono font-medium">1</td>
+            <td className="py-4 px-6 font-mono font-semibold text-graphite">€400</td>
+            <td className="py-4 px-6">
+              <span className="inline-flex items-center rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint">
+                Actief
+              </span>
+            </td>
           </tr>
-          <tr className="border-b border-gray-100 hover:bg-indigo-50/30 transition-colors">
-            <td className="py-4 px-6 font-medium">Tier 3</td>
-            <td className="py-4 px-6">3 – 6 maanden</td>
-            <td className="py-4 px-6">2</td>
-            <td className="py-4 px-6 font-semibold">€80</td>
-            <td className="py-4 px-6"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Actief</span></td>
+          <tr className="transition-colors hover:bg-paper/40">
+            <td className="py-4 px-6 font-display font-semibold text-graphite">Tier 3</td>
+            <td className="py-4 px-6 text-graphite-muted">Maand 4 – 6</td>
+            <td className="py-4 px-6 font-mono font-medium">2</td>
+            <td className="py-4 px-6 font-mono font-semibold text-graphite">€800</td>
+            <td className="py-4 px-6">
+              <span className="inline-flex items-center rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint">
+                Actief
+              </span>
+            </td>
           </tr>
-          <tr className="border-b border-gray-100 hover:bg-indigo-50/30 transition-colors">
-            <td className="py-4 px-6 font-medium">Tier 4</td>
-            <td className="py-4 px-6">6 – 9 maanden</td>
-            <td className="py-4 px-6">3</td>
-            <td className="py-4 px-6 font-semibold">€120</td>
-            <td className="py-4 px-6"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Actief</span></td>
+          <tr className="transition-colors hover:bg-paper/40">
+            <td className="py-4 px-6 font-display font-semibold text-graphite">Tier 4</td>
+            <td className="py-4 px-6 text-graphite-muted">Maand 7 – 9</td>
+            <td className="py-4 px-6 font-mono font-medium">3</td>
+            <td className="py-4 px-6 font-mono font-semibold text-graphite">€1.200</td>
+            <td className="py-4 px-6">
+              <span className="inline-flex items-center rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint">
+                Actief
+              </span>
+            </td>
           </tr>
-          <tr className="border-b border-gray-100 hover:bg-indigo-50/30 transition-colors">
-            <td className="py-4 px-6 font-medium">Tier 5</td>
-            <td className="py-4 px-6">9 – 12 maanden</td>
-            <td className="py-4 px-6">5</td>
-            <td className="py-4 px-6 font-semibold">€200</td>
-            <td className="py-4 px-6"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Actief</span></td>
+          <tr className="transition-colors hover:bg-paper/40">
+            <td className="py-4 px-6 font-display font-semibold text-graphite">Tier 5</td>
+            <td className="py-4 px-6 text-graphite-muted">Maand 10 – 12</td>
+            <td className="py-4 px-6 font-mono font-medium">5</td>
+            <td className="py-4 px-6 font-mono font-semibold text-graphite">€2.000</td>
+            <td className="py-4 px-6">
+              <span className="inline-flex items-center rounded-full bg-mint/15 px-2.5 py-0.5 text-xs font-medium text-mint">
+                Actief
+              </span>
+            </td>
           </tr>
-          <tr className="hover:bg-indigo-50/30 transition-colors">
-            <td className="py-4 px-6 font-medium">Tier 6</td>
-            <td className="py-4 px-6">12 – 15 maanden</td>
-            <td className="py-4 px-6">5</td>
-            <td className="py-4 px-6 font-semibold">€200</td>
-            <td className="py-4 px-6"><span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">Finishing Tier Plan</span></td>
+          <tr className="transition-colors hover:bg-paper/40">
+            <td className="py-4 px-6 font-display font-semibold text-graphite">Tier 6</td>
+            <td className="py-4 px-6 text-graphite-muted">Maand 13 – 15</td>
+            <td className="py-4 px-6 font-mono font-medium">5</td>
+            <td className="py-4 px-6 font-mono font-semibold text-graphite">€2.000</td>
+            <td className="py-4 px-6">
+              <span className="inline-flex items-center rounded-full bg-indigo/15 px-2.5 py-0.5 text-xs font-medium text-indigo">
+                Eindcyclus · Schuldvrij
+              </span>
+            </td>
           </tr>
         </tbody>
       </table>
-    </FadeIn>;
+    </FadeIn>
+  );
 }

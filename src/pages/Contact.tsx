@@ -87,10 +87,10 @@ export default function Contact() {
                   <div>
                     <h3 className="font-display font-semibold text-graphite">Directe E-mail</h3>
                     <a
-                      href="mailto:info@jamaldrenthe.com"
+                      href="mailto:info@investbotiq.com"
                       className="text-sm font-medium text-indigo hover:underline"
                     >
-                      info@jamaldrenthe.com
+                      info@investbotiq.com
                     </a>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ export default function Contact() {
                   </h4>
                   <p className="mt-2 text-sm text-graphite-muted">
                     We hebben je bericht ontvangen en nemen binnen 24 uur contact met je op via{" "}
-                    <strong>info@jamaldrenthe.com</strong>.
+                    <strong>info@investbotiq.com</strong>.
                   </p>
                   <button
                     type="button"

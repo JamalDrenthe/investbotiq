@@ -5,6 +5,7 @@ import {
   PiggyBank,
   ListTodo,
   Brain,
+  Bot,
   Users,
   Menu,
   X,
@@ -24,7 +25,7 @@ const TABS: Array<{ id: MemberTab; label: string; icon: React.ReactNode }> = [
   { id: "dashboard", label: "Member Dashboard", icon: <TrendingUp className="h-4 w-4" /> },
   { id: "voortgang", label: "Voortgang", icon: <PiggyBank className="h-4 w-4" /> },
   { id: "takenlijst", label: "Takenlijst", icon: <ListTodo className="h-4 w-4" /> },
-  { id: "intelligence", label: "Intelligence", icon: <Brain className="h-4 w-4" /> },
+  { id: "intelligence", label: "IQ Bot & IQ Agent", icon: <Bot className="h-4 w-4" /> },
   { id: "referrals", label: "Mijn Referrals", icon: <Users className="h-4 w-4" /> },
   { id: "profile", label: "Profiel", icon: <User className="h-4 w-4" /> },
 ];

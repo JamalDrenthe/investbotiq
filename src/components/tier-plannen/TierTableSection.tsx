@@ -10,8 +10,8 @@ export default function TierTableSection() {
   const [selectedTier, setSelectedTier] = useState<string>("inbotiq2");
 
   return (
-    <section className="py-16 px-4 bg-white/80">
-      <div className="container mx-auto max-w-6xl">
+    <section className="py-20 px-6 lg:px-10">
+      <div className="mx-auto max-w-content">
         <TierDescription />
         <TierSelector 
           selectedTier={selectedTier} 
@@ -27,13 +27,13 @@ export default function TierTableSection() {
 
         {selectedTier === "inbotiq1" && (
           <FadeIn delay={0.1}>
-            <div className="text-center p-8 bg-gray-50 rounded-lg border border-gray-200">
-              <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                InBotIQ1 Tier 1 - Binnenkort Beschikbaar
+            <div className="card-paper p-8 text-center shadow-level-1 max-w-xl mx-auto">
+              <h3 className="font-display text-lg font-semibold text-graphite mb-2">
+                InBotIQ1 Tier 1 – In Ontwikkeling
               </h3>
-              <p className="text-gray-600">
-                We werken hard aan de ontwikkeling van InBotIQ1. 
-                Blijf op de hoogte voor updates over de lancering!
+              <p className="text-sm leading-relaxed text-graphite-muted">
+                We leggen momenteel de laatste hand aan het InBotIQ1 entry-level protocol.
+                Zodra de auditcyclus is afgerond, wordt deze Tier automatisch ontgrendeld in het Member Dashboard.
               </p>
             </div>
           </FadeIn>

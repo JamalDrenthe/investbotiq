@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="ibq-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0E1326" />
+      <stop offset="50%" stop-color="#080C1A" />
+      <stop offset="100%" stop-color="#03050A" />
+    </linearGradient>
+
+    <!-- Border Glow Gradient -->
+    <linearGradient id="ibq-border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#635BFF" />
+      <stop offset="50%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#10B981" />
+    </linearGradient>
+
+    <!-- Inner Core Gradient -->
+    <linearGradient id="ibq-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#182038" />
+      <stop offset="100%" stop-color="#0C1020" />
+    </linearGradient>
+
+    <!-- Cyan Neon Accent -->
+    <linearGradient id="ibq-cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="50%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <!-- Indigo Purple Accent -->
+    <linearGradient id="ibq-indigo" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+
+    <!-- Radial Glow Behind Head -->
+    <radialGradient id="ibq-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#22D3EE" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#635BFF" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#080C1A" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filters -->
+    <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#22D3EE" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <!-- Base Squircle Container -->
+  <rect width="512" height="512" rx="112" fill="url(#ibq-bg)" />
+  <rect x="6" y="6" width="500" height="500" rx="106" fill="none" stroke="url(#ibq-border)" stroke-width="4" opacity="0.8" />
+  <circle cx="256" cy="265" r="180" fill="url(#ibq-glow)" />
+
+  <!-- Antenna Structure -->
+  <path d="M256 128V165" stroke="url(#ibq-border)" stroke-width="8" stroke-linecap="round" />
+  <circle cx="256" cy="112" r="14" fill="url(#ibq-cyan)" filter="url(#neon-glow)" />
+
+  <!-- Head Base Squircle -->
+  <rect x="136" y="165" width="240" height="200" rx="48" fill="url(#ibq-core)" stroke="url(#ibq-border)" stroke-width="6" />
+
+  <!-- Left & Right Ear Conduits -->
+  <rect x="108" y="235" width="24" height="60" rx="10" fill="url(#ibq-indigo)" />
+  <rect x="380" y="235" width="24" height="60" rx="10" fill="url(#ibq-indigo)" />
+
+  <!-- Visor Screen -->
+  <rect x="168" y="210" width="176" height="88" rx="28" fill="#05070E" stroke="url(#ibq-cyan)" stroke-width="3.5" />
+
+  <!-- Dual Cyan Digital Eyes -->
+  <g filter="url(#neon-glow)">
+    <circle cx="216" cy="254" r="15" fill="#22D3EE" />
+    <circle cx="296" cy="254" r="15" fill="#22D3EE" />
+    <!-- Pupils / Reflection Highlights -->
+    <circle cx="212" cy="250" r="4.5" fill="#FFFFFF" />
+    <circle cx="292" cy="250" r="4.5" fill="#FFFFFF" />
+  </g>
+
+  <!-- Neural Mouth / Quantum Circuit Bar -->
+  <path d="M208 325H304" stroke="url(#ibq-border)" stroke-width="5" stroke-linecap="round" opacity="0.9" />
+  <circle cx="208" cy="325" r="3" fill="#22D3EE" />
+  <circle cx="256" cy="325" r="3.5" fill="#635BFF" />
+  <circle cx="304" cy="325" r="3" fill="#10B981" />
+
+  <!-- Bottom Data Link Chevrons -->
+  <path d="M236 385L256 405L276 385" stroke="url(#ibq-cyan)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85" />
+  <path d="M242 415L256 428L270 415" stroke="url(#ibq-cyan)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.5" />
+</svg>

@@ -5,9 +5,18 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FadeIn } from "./FadeInAnimation";
 
 const FAQ = [
-  { question: "Moet ik investeren?", answer: "Nee, alles gebeurt automatisch." },
-  { question: "Kan ik zelf investeringen kiezen?", answer: "Nee, de IQ Bot doet dit volgens plan." },
-  { question: "Hoe zie ik mijn cashflow groeien?", answer: "Via je persoonlijke Member Dashboard." },
+  {
+    question: "Moet ik zelf handelen of actief beslissingen nemen?",
+    answer: "Nee. Het protocol opereert 100% autonoom. Zodra je een Tier activeert, wijst de IQ Bot het kapitaal toe volgens strikte liquiditeits- en risicomodellen, zonder dat je zelf marktbewegingen hoeft te analyseren of orders hoeft in te voeren.",
+  },
+  {
+    question: "Kan ik zelf het risicoprofiel en de instellingen bepalen?",
+    answer: "Ja. Binnen het Member Dashboard kun je kiezen uit drie gevalideerde risicoprofielen (conservatief, gebalanceerd of dynamisch) en functies zoals automatische herinvestering (auto-compound) en het Volatility Shield beheren.",
+  },
+  {
+    question: "Hoe en wanneer wordt de cashflow inzichtelijk gemaakt?",
+    answer: "De cashflow wordt maandelijks bijgewerkt en transparant getoond in je persoonlijke Member Dashboard. Hier zie je realtime grafieken, actieve Flowlutas, historische rapportages en auditlogs van elke transactie.",
+  },
 ];
 
 export default function FAQSection() {
@@ -16,11 +25,14 @@ export default function FAQSection() {
     <div className="mx-auto w-full max-w-content px-6 pb-28 pt-4 md:pb-36 lg:px-10" id="faq">
       <div className="grid gap-10 lg:grid-cols-12">
         <FadeIn delay={0.05} className="lg:col-span-4">
-          <div className="eyebrow eyebrow--paper mb-6">Vragen</div>
+          <div className="eyebrow eyebrow--paper mb-6">Veelgestelde Vragen</div>
           <h3 className="font-display text-display-md font-semibold tracking-[-0.03em] text-graphite">FAQ</h3>
+          <p className="mt-4 text-base leading-relaxed text-graphite-muted">
+            Beknopte antwoorden op de meest gestelde vragen over het functioneren van de IQ Bot.
+          </p>
         </FadeIn>
         <div className="lg:col-span-8">
-          <div className="card-paper divide-y divide-paper-hairline overflow-hidden">
+          <div className="card-paper divide-y divide-paper-hairline overflow-hidden shadow-level-1">
             {FAQ.map((f, i) => {
               const isOpen = open === i;
               return (
@@ -61,7 +73,7 @@ export default function FAQSection() {
               to="/faq"
               className="inline-flex items-center gap-2 text-base font-semibold text-indigo hover:underline"
             >
-              Bekijk alle 12+ veelgestelde vragen <ArrowRight className="h-4 w-4" />
+              Bekijk alle veelgestelde vragen <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/contact"

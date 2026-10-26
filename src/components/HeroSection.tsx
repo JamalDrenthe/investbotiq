@@ -55,13 +55,7 @@ const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
             {t("Geen kennis vereist, geen zorgen. Gewoon laten groeien.")}
           </motion.p>
           <motion.div {...fadeUp(0.32)} className="mt-10 flex flex-wrap items-center gap-3">
-            <LumenCtaLink to="/register" dot>
-              {t("Aanmelden")}
-            </LumenCtaLink>
-            <LumenCtaLink to="/auth" variant="ghost">
-              {t("Inloggen")}
-            </LumenCtaLink>
-            <LumenCtaButton variant="ghost" onClick={() => setShowDemoModal(true)}>
+            <LumenCtaButton variant="gradient" dot onClick={() => setShowDemoModal(true)}>
               <Play className="h-4 w-4" />
               {t("Bekijk demo")}
             </LumenCtaButton>

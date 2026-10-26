@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import PublicHeaderDesktopMenu from "./PublicHeaderDesktopMenu";
 import PublicHeaderMobileMenu from "./PublicHeaderMobileMenu";
@@ -39,12 +39,6 @@ const PublicHeader: React.FC = () => {
           {Logo}
           <PublicHeaderDesktopMenu handleNav={handleNav} />
         <div className="flex items-center gap-2 md:hidden">
-          <Link
-            to="/auth"
-            className="inline-flex h-9 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 px-3.5 text-xs font-semibold text-ink transition-colors hover:bg-white/10"
-          >
-            {t("Inloggen")}
-          </Link>
           <button
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10"
             aria-label={menuOpen ? t("Sluit menu") : t("Open menu")}

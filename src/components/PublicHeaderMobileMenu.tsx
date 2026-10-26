@@ -11,6 +11,7 @@ import {
   UserPlus,
   ArrowRight,
   FileText,
+  Briefcase,
   LogOut,
   LayoutDashboard,
 } from "lucide-react";
@@ -77,19 +78,19 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
           {!user ? (
             <div className="grid grid-cols-2 gap-2.5">
               <Button
+                onClick={() => go("/register")}
+                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-5 font-semibold text-sm shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2"
+              >
+                <UserPlus className="h-4 w-4" />
+                <span>{t("Aanmelden")}</span>
+              </Button>
+              <Button
                 onClick={() => go("/auth")}
                 variant="outline"
                 className="w-full border-white/20 bg-white/5 hover:bg-white/15 text-white rounded-xl py-5 font-semibold text-sm flex items-center justify-center gap-2 shadow-sm"
               >
                 <LogIn className="h-4 w-4 text-cyan-400" />
                 <span>{t("Inloggen")}</span>
-              </Button>
-              <Button
-                onClick={() => go("/register")}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-5 font-semibold text-sm shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2"
-              >
-                <UserPlus className="h-4 w-4" />
-                <span>{t("Registreren")}</span>
               </Button>
             </div>
           ) : (
@@ -175,6 +176,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
               >
                 {item.to.includes("tier") && <Layers className="h-5 w-5 text-cyan-400" />}
                 {item.to.includes("veiligheid") && <Shield className="h-5 w-5 text-emerald-400" />}
+                {item.to.includes("vacatures") && <Briefcase className="h-5 w-5 text-indigo-400" />}
                 {item.to.includes("faq") && <HelpCircle className="h-5 w-5 text-amber-400" />}
                 {item.to.includes("contact") && <Mail className="h-5 w-5 text-rose-400" />}
                 <span>{t(item.title)}</span>
@@ -187,18 +189,18 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
             {!user ? (
               <>
                 <button
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-indigo-300 hover:bg-white/5 transition-colors"
+                  onClick={() => go("/register")}
+                >
+                  <UserPlus className="h-5 w-5 text-indigo-400" />
+                  <span>{t("Aanmelden")}</span>
+                </button>
+                <button
                   className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-cyan-300 hover:bg-white/5 transition-colors"
                   onClick={() => go("/auth")}
                 >
                   <LogIn className="h-5 w-5 text-cyan-400" />
                   <span>{t("Inloggen")}</span>
-                </button>
-                <button
-                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-indigo-300 hover:bg-white/5 transition-colors"
-                  onClick={() => go("/register")}
-                >
-                  <UserPlus className="h-5 w-5 text-indigo-400" />
-                  <span>{t("Registreren")}</span>
                 </button>
               </>
             ) : (
@@ -244,7 +246,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 font-semibold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-base"
               >
                 <UserPlus className="h-5 w-5" />
-                <span>{t("Registreren")}</span>
+                <span>{t("Aanmelden")}</span>
               </Button>
               <Button
                 onClick={() => go("/auth")}

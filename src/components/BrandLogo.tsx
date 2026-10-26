@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -63,44 +62,40 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       className={cn("flex items-center group select-none transition-all", sizeConfig.gap, className)}
       aria-label="INVESTBOTIQ"
     >
+      {/* Authentic InvestBotIQ Vector Brand Emblem */}
       <div
         className={cn(
-          "bg-gradient-to-tr from-indigo-700 via-indigo-500 to-purple-500 shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300 shrink-0",
+          "relative overflow-hidden rounded-xl bg-white/5 border border-white/10 shadow-lg shadow-indigo-500/20 group-hover:scale-105 group-hover:border-cyan-400/40 transition-all duration-300 shrink-0 p-0.5",
           sizeConfig.box
         )}
       >
-        <div
-          className={cn(
-            "w-full h-full bg-slate-900 flex items-center justify-center transition-colors group-hover:bg-slate-950",
-            sizeConfig.inner
-          )}
-        >
-          <Bot
-            className={cn(
-              "text-indigo-100 group-hover:rotate-12 transition-transform duration-300",
-              sizeConfig.icon
-            )}
-          />
-        </div>
+        <img
+          src="/favicon.svg"
+          alt="INVESTBOTIQ Emblem"
+          className="w-full h-full object-contain filter drop-shadow"
+          loading="eager"
+        />
       </div>
 
       {!collapsed && (
         <div className="flex flex-col justify-center text-left">
           <span
             className={cn(
-              "leading-none transition-colors",
+              "leading-none transition-colors font-display tracking-tight font-extrabold",
               sizeConfig.title,
-              isDark ? "text-ink group-hover:text-indigo-300" : "text-slate-900 dark:text-white group-hover:text-indigo-900 dark:group-hover:text-indigo-200"
+              isDark
+                ? "text-white group-hover:text-cyan-200"
+                : "text-slate-900 dark:text-white group-hover:text-cyan-500 dark:group-hover:text-cyan-300"
             )}
           >
-            INVESTBOTIQ
+            INVESTBOT<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-mint">IQ</span>
           </span>
           {showSubtitle && (
             <span
               className={cn(
-                "uppercase transition-colors",
+                "uppercase transition-colors tracking-wider font-mono",
                 sizeConfig.subtitle,
-                isDark ? "text-ink-muted" : "text-indigo-600 dark:text-indigo-300"
+                isDark ? "text-zinc-400 group-hover:text-zinc-300" : "text-indigo-600 dark:text-zinc-400"
               )}
             >
               {subtitle}

@@ -36,6 +36,7 @@ import AdminLeads from "@/pages/admin/AdminLeads";
 import AlgemeneVoorwaarden from "@/pages/AlgemeneVoorwaarden";
 import Privacybeleid from "@/pages/Privacybeleid";
 import Contact from "@/pages/Contact";
+import Careers from "@/pages/Careers";
 
 // Creating a new QueryClient instance with default options
 const queryClient = new QueryClient({
@@ -63,6 +64,9 @@ const App = () => (
             <Route path="/register/success" element={<RegisterSuccess />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/careers" element={<Careers />} />
+            <Route path="/vacatures" element={<Careers />} />
+            <Route path="/carriere" element={<Navigate to="/vacatures" replace />} />
             <Route path="/algemene-voorwaarden" element={<AlgemeneVoorwaarden />} />
             <Route path="/privacybeleid" element={<Privacybeleid />} />
             <Route path="/terms" element={<Navigate to="/algemene-voorwaarden" replace />} />

@@ -11,6 +11,7 @@ export const EN: Record<string, string> = {
   "Missie & Visie": "Mission & Vision",
   "Tier Plannen": "Tier Plans",
   Veiligheid: "Security",
+  Vacatures: "Careers",
   Aanmelden: "Sign up",
   Registreren: "Sign up",
   Registratie: "Registration",
@@ -75,7 +76,8 @@ export const EN: Record<string, string> = {
   "Succesvol ingelogd": "Signed in",
   "Fout bij inloggen": "Sign-in failed",
 
-  // Intelligence tab
+  // IQ Bot & IQ Agent tab
+  "IQ Bot & IQ Agent": "IQ Bot & IQ Agent",
   "Live Actief": "Live Active",
   Gepauzeerd: "Paused",
   "Bot monitoring gepauzeerd": "Bot monitoring paused",

@@ -153,7 +153,7 @@ export default function Privacybeleid() {
               </p>
               <div className="mt-4 rounded-xl border border-paper-hairline bg-paper p-5 text-sm text-graphite">
                 <p className="font-medium text-graphite">Investbotiq Privacy & Compliance</p>
-                <p className="mt-1 text-graphite-muted">E-mailadres: <a href="mailto:info@jamaldrenthe.com" className="text-indigo underline">info@jamaldrenthe.com</a></p>
+                <p className="mt-1 text-graphite-muted">E-mailadres: <a href="mailto:info@investbotiq.com" className="text-indigo underline">info@investbotiq.com</a></p>
                 <p className="text-graphite-muted">Functionaris: Jamal Drenthe</p>
               </div>
             </div>

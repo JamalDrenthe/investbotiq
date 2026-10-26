@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="tw-teal" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14B8A6" />
+      <stop offset="50%" stop-color="#0D9488" />
+      <stop offset="100%" stop-color="#0F766E" />
+    </linearGradient>
+    <linearGradient id="tw-shield" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0D9488" stop-opacity="0.05" />
+    </linearGradient>
+    <radialGradient id="tw-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#14B8A6" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#14B8A6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="tw-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0D9488" flood-opacity="0.4" />
+    </filter>
+  </defs>
+
+  <!-- Dark container background matching ecosystem badge aesthetic -->
+  <rect width="128" height="128" rx="28" fill="#061A19" stroke="#134E4A" stroke-width="1.5"/>
+  <circle cx="64" cy="64" r="48" fill="url(#tw-glow)"/>
+
+  <!-- Trust Shield Outline -->
+  <path d="M64 22L94 34V60C94 78 81 94 64 104C47 94 34 78 34 60V34L64 22Z" fill="url(#tw-shield)" stroke="url(#tw-teal)" stroke-width="3" stroke-linejoin="round"/>
+
+  <!-- Interlocking T & W Modern Geometric Monogram with Verification Check -->
+  <g filter="url(#tw-shadow)">
+    <!-- T horizontal crossbar -->
+    <path d="M46 44H82" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    <!-- T vertical stem merging into W -->
+    <path d="M64 44V72" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+    
+    <!-- Stylized W & Trust Checkmark Accent in Teal -->
+    <path d="M45 56L54 80L64 66L74 80L83 56" stroke="url(#tw-teal)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <!-- Verified Security Dot -->
+    <circle cx="64" cy="33" r="3.5" fill="#2DD4BF"/>
+  </g>
+</svg>
