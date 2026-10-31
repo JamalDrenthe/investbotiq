@@ -16,7 +16,7 @@ interface InfoPageLayoutProps {
 export default function InfoPageLayout({ children, title, subtitle, eyebrow }: InfoPageLayoutProps) {
   const { t } = usePreferences();
   return (
-    <div className="band-canvas min-h-screen w-full overflow-x-hidden">
+    <div className="band-canvas min-h-screen w-full overflow-x-hidden transition-colors">
       <PublicHeader />
 
       <section className="relative isolate overflow-hidden pb-20 pt-36 md:pb-28 md:pt-44">
@@ -33,7 +33,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
           hue={-20}
         />
         <div aria-hidden="true" className="scene-veil scene-veil--info" />
-        <div className="relative mx-auto w-full max-w-content px-6 lg:px-10">
+        <div className="relative mx-auto w-full max-w-content px-4 sm:px-6 lg:px-10">
           {eyebrow && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -65,7 +65,7 @@ export default function InfoPageLayout({ children, title, subtitle, eyebrow }: I
         </div>
       </section>
 
-      <div className="band-paper info-body">{children}</div>
+      <div className="band-paper info-body transition-colors">{children}</div>
 
       <PublicFooter />
     </div>

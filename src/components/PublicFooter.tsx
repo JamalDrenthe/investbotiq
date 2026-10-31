@@ -11,7 +11,7 @@ const PublicFooter: React.FC = () => {
     <footer className="band-canvas hairline-top">
       <div className="mx-auto grid w-full max-w-content gap-10 px-6 py-16 md:grid-cols-[1.4fr_1fr_1fr] lg:px-10">
         <div className="flex flex-col gap-5">
-          <BrandLogo variant="dark" size="md" to="/" />
+          <BrandLogo variant="auto" size="md" to="/" />
           <p className="max-w-sm text-sm leading-relaxed text-ink-muted">Automated Cashflow Platform</p>
           <div className="chip chip--cyan w-fit">{t("IQ Bot actief")}</div>
         </div>

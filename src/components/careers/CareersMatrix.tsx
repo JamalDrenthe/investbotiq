@@ -43,31 +43,31 @@ export const CareersMatrix: React.FC<Props> = ({
   }, [searchQuery, activeCategory]);
 
   return (
-    <section id="vacatures-matrix" className="py-12 md:py-16 border-b border-white/10">
-      <div className="mx-auto max-w-content px-6 lg:px-10">
+    <section id="vacatures-matrix" className="py-12 md:py-16 border-b border-canvas-hairline transition-colors">
+      <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/10 px-3.5 py-1 text-xs font-mono text-cyan-300 border border-cyan-500/20 mb-3">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-cyan/10 px-3.5 py-1 text-xs font-mono text-cyan border border-cyan/25 mb-3">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan animate-pulse" />
               Systeemmatrix
             </div>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-ink tracking-tight">
               Overzichtsmatrix Vacatures
             </h2>
-            <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+            <p className="text-sm text-ink-muted mt-1 max-w-xl">
               13 openstaande sleutelrollen binnen onze holding, AI-infrastructuren en ecosysteem ventures.
             </p>
           </div>
 
           {/* Search bar */}
           <div className="relative w-full md:w-72">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400 pointer-events-none" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-ink-muted pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Zoek op rol, domein of ID..."
-              className="w-full rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 py-2 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-cyan-400/50 transition-colors"
+              className="w-full rounded-xl bg-canvas-panel border border-canvas-hairline pl-10 pr-4 py-2 text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-cyan/50 transition-colors shadow-sm"
             />
           </div>
         </div>
@@ -80,8 +80,8 @@ export const CareersMatrix: React.FC<Props> = ({
               onClick={() => setActiveCategory(cat.id)}
               className={`rounded-full px-3.5 py-1.5 text-xs font-mono transition-all ${
                 activeCategory === cat.id
-                  ? "bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm"
-                  : "bg-white/5 text-zinc-400 border border-white/10 hover:text-white hover:bg-white/10"
+                  ? "bg-cyan/20 text-cyan border border-cyan/40 shadow-sm"
+                  : "bg-canvas-panel text-ink-muted border border-canvas-hairline hover:text-ink hover:bg-canvas-elevated"
               }`}
             >
               {cat.label}
@@ -90,9 +90,9 @@ export const CareersMatrix: React.FC<Props> = ({
         </div>
 
         {/* Matrix Table */}
-        <div className="overflow-x-auto rounded-2xl border border-white/10 bg-white/[0.02]">
-          <table className="w-full text-left text-sm text-zinc-300">
-            <thead className="border-b border-white/10 bg-white/[0.04] text-[11px] uppercase font-mono text-zinc-400">
+        <div className="overflow-x-auto rounded-2xl border border-canvas-hairline bg-canvas-panel/50 shadow-sm">
+          <table className="w-full text-left text-sm text-ink-muted">
+            <thead className="border-b border-canvas-hairline bg-canvas-elevated text-[11px] uppercase font-mono text-ink-muted">
               <tr>
                 <th scope="col" className="px-4 py-3.5 w-16">ID</th>
                 <th scope="col" className="px-4 py-3.5">Functie</th>
@@ -101,10 +101,10 @@ export const CareersMatrix: React.FC<Props> = ({
                 <th scope="col" className="px-4 py-3.5 text-right w-44">Acties</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 font-sans">
+            <tbody className="divide-y divide-canvas-hairline font-sans">
               {filteredVacancies.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-zinc-400 font-mono">
+                  <td colSpan={5} className="px-6 py-10 text-center text-sm text-ink-muted font-mono">
                     Geen functies gevonden voor "{searchQuery}".
                   </td>
                 </tr>
@@ -116,24 +116,24 @@ export const CareersMatrix: React.FC<Props> = ({
                       key={vacancy.id}
                       className={`group transition-colors cursor-pointer ${
                         isSelected
-                          ? "bg-cyan-500/10 hover:bg-cyan-500/15"
-                          : "hover:bg-white/[0.04]"
+                          ? "bg-cyan/15 hover:bg-cyan/20"
+                          : "hover:bg-canvas-panel"
                       }`}
                       onClick={() => onSelectVacancy(vacancy)}
                     >
-                      <td className="px-4 py-4 font-mono font-bold text-cyan-400 text-xs">
+                      <td className="px-4 py-4 font-mono font-bold text-cyan text-xs">
                         [{vacancy.id}]
                       </td>
                       <td className="px-4 py-4">
-                        <div className="font-semibold text-white group-hover:text-cyan-300 transition-colors">
+                        <div className="font-semibold text-ink group-hover:text-cyan transition-colors">
                           {vacancy.title}
                         </div>
-                        <div className="sm:hidden text-xs text-zinc-400 mt-0.5">
+                        <div className="sm:hidden text-xs text-ink-muted mt-0.5">
                           {vacancy.domain}
                         </div>
                       </td>
-                      <td className="px-4 py-4 hidden sm:table-cell text-zinc-300">
-                        <span className="inline-block rounded-md bg-white/5 border border-white/10 px-2 py-0.5 text-xs font-mono text-zinc-300">
+                      <td className="px-4 py-4 hidden sm:table-cell text-ink-muted">
+                        <span className="inline-block rounded-md bg-canvas-elevated border border-canvas-hairline px-2 py-0.5 text-xs font-mono text-ink-muted">
                           {vacancy.domain}
                         </span>
                       </td>
@@ -145,7 +145,7 @@ export const CareersMatrix: React.FC<Props> = ({
                           <button
                             type="button"
                             onClick={() => onSelectVacancy(vacancy)}
-                            className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2.5 py-1.5 text-xs text-zinc-300 hover:text-white hover:bg-white/10 transition"
+                            className="inline-flex items-center gap-1 rounded-lg border border-canvas-hairline bg-canvas-elevated px-2.5 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-canvas-panel transition shadow-sm"
                             title="Bekijk functieprofiel"
                           >
                             <Eye className="h-3.5 w-3.5" />
@@ -154,7 +154,7 @@ export const CareersMatrix: React.FC<Props> = ({
                           <button
                             type="button"
                             onClick={() => onApplyVacancy(vacancy)}
-                            className="inline-flex items-center gap-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 px-3 py-1.5 text-xs font-medium text-cyan-300 hover:bg-cyan-500/30 transition shadow-sm"
+                            className="inline-flex items-center gap-1 rounded-lg bg-cyan/20 border border-cyan/40 px-3 py-1.5 text-xs font-medium text-cyan hover:bg-cyan/30 transition shadow-sm"
                           >
                             <Send className="h-3 w-3" />
                             <span>Solliciteer</span>

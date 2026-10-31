@@ -18,14 +18,14 @@ const PreferenceToggles: React.FC = () => {
         onClick={() => setTheme(nextTheme)}
         aria-label={t("Thema wisselen")}
         title={t("Thema wisselen")}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink-muted transition-colors hover:bg-white/10 hover:text-ink"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-canvas-hairline bg-canvas-elevated text-ink-muted transition-colors hover:bg-canvas-panel hover:text-ink shadow-sm"
       >
         {effectiveTheme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
       </button>
       <div
         role="group"
         aria-label={t("Taal wisselen")}
-        className="flex h-9 items-center rounded-full border border-canvas-hairline bg-white/5 p-0.5 text-[11px] font-black tracking-wider"
+        className="flex h-9 items-center rounded-full border border-canvas-hairline bg-canvas-elevated p-0.5 text-[11px] font-black tracking-wider shadow-sm"
       >
         {(["nl", "en"] as const).map((code) => (
           <button

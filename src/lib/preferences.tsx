@@ -69,10 +69,17 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     const root = document.documentElement;
+    root.classList.add("theme-transitioning");
     root.classList.toggle("dark", effectiveTheme === "dark");
     root.classList.toggle("light", effectiveTheme === "light");
     root.style.colorScheme = effectiveTheme;
     root.lang = lang;
+
+    const timer = window.setTimeout(() => {
+      root.classList.remove("theme-transitioning");
+    }, 350);
+
+    return () => window.clearTimeout(timer);
   }, [effectiveTheme, lang]);
 
   const value = useMemo<PreferencesContextValue>(

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/components/AuthProvider";
 
 interface BrandLogoProps {
-  variant?: "light" | "dark";
+  variant?: "light" | "dark" | "auto";
   size?: "sm" | "md" | "lg";
   showSubtitle?: boolean;
   subtitle?: string;
@@ -15,7 +15,7 @@ interface BrandLogoProps {
 
 /** Logo port from investbotiq-hub: gradient tile with bot glyph + INVESTBOTIQ wordmark. */
 export const BrandLogo: React.FC<BrandLogoProps> = ({
-  variant = "dark",
+  variant = "auto",
   size = "md",
   showSubtitle = true,
   subtitle = "IQ Bot Automated",
@@ -54,7 +54,17 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
     },
   }[size];
 
-  const isDark = variant === "dark";
+  const getTitleColor = () => {
+    if (variant === "dark") return "text-white group-hover:text-cyan-200";
+    if (variant === "light") return "text-slate-900 group-hover:text-cyan-600";
+    return "text-ink group-hover:text-cyan-500 dark:group-hover:text-cyan-300";
+  };
+
+  const getSubtitleColor = () => {
+    if (variant === "dark") return "text-zinc-400 group-hover:text-zinc-300";
+    if (variant === "light") return "text-slate-500 group-hover:text-slate-700";
+    return "text-ink-muted group-hover:text-ink";
+  };
 
   return (
     <Link
@@ -65,7 +75,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
       {/* Authentic InvestBotIQ Vector Brand Emblem */}
       <div
         className={cn(
-          "relative overflow-hidden rounded-xl bg-white/5 border border-white/10 shadow-lg shadow-indigo-500/20 group-hover:scale-105 group-hover:border-cyan-400/40 transition-all duration-300 shrink-0 p-0.5",
+          "relative overflow-hidden rounded-xl bg-canvas-elevated border border-canvas-hairline shadow-md group-hover:scale-105 group-hover:border-cyan-400/40 transition-all duration-300 shrink-0 p-0.5",
           sizeConfig.box
         )}
       >
@@ -83,9 +93,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
             className={cn(
               "leading-none transition-colors font-display tracking-tight font-extrabold",
               sizeConfig.title,
-              isDark
-                ? "text-white group-hover:text-cyan-200"
-                : "text-slate-900 dark:text-white group-hover:text-cyan-500 dark:group-hover:text-cyan-300"
+              getTitleColor()
             )}
           >
             INVESTBOT<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-mint">IQ</span>
@@ -95,7 +103,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({
               className={cn(
                 "uppercase transition-colors tracking-wider font-mono",
                 sizeConfig.subtitle,
-                isDark ? "text-zinc-400 group-hover:text-zinc-300" : "text-indigo-600 dark:text-zinc-400"
+                getSubtitleColor()
               )}
             >
               {subtitle}

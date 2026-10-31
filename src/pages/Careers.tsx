@@ -60,22 +60,22 @@ export default function Careers() {
         />
 
         {/* All 13 Detailed Job Cards Section */}
-        <section className="py-12 md:py-16 border-b border-white/10">
-          <div className="mx-auto max-w-content px-6 lg:px-10">
+        <section className="py-12 md:py-16 border-b border-canvas-hairline transition-colors">
+          <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-10">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/10 px-3.5 py-1 text-xs font-mono text-cyan-300 border border-cyan-500/20 mb-3">
+                <div className="inline-flex items-center gap-2 rounded-full bg-cyan/10 px-3.5 py-1 text-xs font-mono text-cyan border border-cyan/25 mb-3">
                   Volledige Functieprofielen
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+                <h2 className="text-2xl sm:text-3xl font-display font-bold text-ink tracking-tight">
                   13 Gedetailleerde Vacatures
                 </h2>
-                <p className="text-sm text-zinc-400 mt-1 max-w-xl">
+                <p className="text-sm text-ink-muted mt-1 max-w-xl">
                   Lees het complete profiel, de taken, vereisten en specifieke beloningsstructuur per rol.
                 </p>
               </div>
 
-              <div className="text-xs font-mono text-zinc-400">
+              <div className="text-xs font-mono text-ink-muted">
                 13 van 13 profielen geladen
               </div>
             </div>
@@ -97,16 +97,16 @@ export default function Careers() {
 
         {/* Bottom Call-to-action Banner */}
         <section className="py-14 md:py-20">
-          <div className="mx-auto max-w-content px-6 lg:px-10">
-            <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12 border border-white/15 bg-gradient-to-r from-indigo-950/40 via-cyan-950/30 to-black text-center shadow-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-cyan-500/15 border border-cyan-500/30 px-3.5 py-1 text-xs font-mono text-cyan-300 mb-4">
+          <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-10">
+            <div className="relative rounded-3xl overflow-hidden p-8 sm:p-12 border border-canvas-hairline bg-gradient-to-r from-indigo-500/15 via-cyan-500/10 to-canvas-elevated text-center shadow-xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-cyan/15 border border-cyan/30 px-3.5 py-1 text-xs font-mono text-cyan mb-4">
                 <Sparkles className="h-3.5 w-3.5" />
                 Klaar voor de volgende stap?
               </div>
-              <h2 className="text-2xl sm:text-4xl font-display font-bold text-white max-w-2xl mx-auto tracking-tight">
+              <h2 className="text-2xl sm:text-4xl font-display font-bold text-ink max-w-2xl mx-auto tracking-tight">
                 Stap in als sleutelfiguur binnen ons internationale AI- & technologie-ecosysteem.
               </h2>
-              <p className="text-sm sm:text-base text-zinc-300 max-w-xl mx-auto mt-4 font-light">
+              <p className="text-sm sm:text-base text-ink-muted max-w-xl mx-auto mt-4 font-light">
                 100% remote vrijheid, riante succesfees en directe betrokkenheid bij pre-IPO trajecten en kapitaalmarkttransacties.
               </p>
 
@@ -116,9 +116,9 @@ export default function Careers() {
                 </LumenCtaButton>
                 <a
                   href="mailto:info@investbotiq.com?subject=Carri%C3%A8re%20Aanvraag%20Internationale%20Techgroep"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm font-medium text-white hover:bg-white/10 transition"
+                  className="inline-flex items-center gap-2 rounded-full border border-canvas-hairline bg-canvas-elevated px-6 py-3 text-sm font-medium text-ink hover:bg-canvas-panel transition shadow-sm"
                 >
-                  <Mail className="h-4 w-4 text-cyan-400" />
+                  <Mail className="h-4 w-4 text-cyan" />
                   <span>Mail je CV naar info@investbotiq.com</span>
                 </a>
               </div>

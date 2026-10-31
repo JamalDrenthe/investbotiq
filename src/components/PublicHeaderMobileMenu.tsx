@@ -66,20 +66,20 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
     <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
       <SheetContent
         side="right"
-        className="flex h-full w-[88%] max-w-sm flex-col p-0 border-l border-white/10 bg-[#070a14] text-white shadow-2xl z-[100]"
+        className="flex h-full w-[88%] max-w-sm flex-col p-0 border-l border-canvas-hairline bg-canvas-elevated text-ink shadow-2xl z-[100] backdrop-blur-2xl"
       >
-        <SheetHeader className="flex h-[72px] flex-row items-center justify-between border-b border-white/10 px-6 space-y-0">
+        <SheetHeader className="flex h-[72px] flex-row items-center justify-between border-b border-canvas-hairline px-6 space-y-0">
           <SheetTitle className="sr-only">{t("Navigatiemenu")}</SheetTitle>
-          {Logo ?? <BrandLogo variant="dark" size="md" showSubtitle={false} to="/" />}
+          {Logo ?? <BrandLogo variant="auto" size="md" showSubtitle={false} to="/" />}
         </SheetHeader>
 
         {/* Top Prominent Auth Action Card */}
-        <div className="p-4 border-b border-white/10 bg-white/[0.02]">
+        <div className="p-4 border-b border-canvas-hairline bg-canvas-panel/40">
           {!user ? (
             <div className="grid grid-cols-2 gap-2.5">
               <Button
                 onClick={() => go("/register")}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-5 font-semibold text-sm shadow-md shadow-indigo-600/30 flex items-center justify-center gap-2"
+                className="w-full bg-indigo hover:bg-indigo/90 text-white rounded-xl py-5 font-semibold text-sm shadow-md flex items-center justify-center gap-2"
               >
                 <UserPlus className="h-4 w-4" />
                 <span>{t("Aanmelden")}</span>
@@ -87,24 +87,24 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
               <Button
                 onClick={() => go("/auth")}
                 variant="outline"
-                className="w-full border-white/20 bg-white/5 hover:bg-white/15 text-white rounded-xl py-5 font-semibold text-sm flex items-center justify-center gap-2 shadow-sm"
+                className="w-full border-canvas-hairline bg-canvas-panel hover:bg-canvas-elevated text-ink rounded-xl py-5 font-semibold text-sm flex items-center justify-center gap-2 shadow-sm"
               >
-                <LogIn className="h-4 w-4 text-cyan-400" />
+                <LogIn className="h-4 w-4 text-cyan" />
                 <span>{t("Inloggen")}</span>
               </Button>
             </div>
           ) : (
-            <div className="flex items-center justify-between rounded-xl bg-indigo-600/15 border border-indigo-500/25 p-3">
+            <div className="flex items-center justify-between rounded-xl bg-indigo/10 border border-indigo/20 p-3">
               <div className="min-w-0 pr-2">
-                <p className="text-[10px] uppercase font-bold tracking-wider text-indigo-300">
+                <p className="text-[10px] uppercase font-bold tracking-wider text-indigo-400">
                   {t("Ingelogd als")}
                 </p>
-                <p className="text-sm font-semibold text-white truncate">{user.email}</p>
+                <p className="text-sm font-semibold text-ink truncate">{user.email}</p>
               </div>
               <Button
                 size="sm"
                 onClick={() => go(isAdmin ? "/admin" : "/member/dashboard")}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shrink-0 flex items-center gap-1.5"
+                className="bg-indigo hover:bg-indigo/90 text-white text-xs font-semibold rounded-lg shrink-0 flex items-center gap-1.5"
               >
                 <LayoutDashboard className="h-3.5 w-3.5" />
                 <span>Dashboard</span>
@@ -119,19 +119,19 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
           <button
             className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold transition-colors ${
               location.pathname === "/"
-                ? "bg-indigo-600/20 text-indigo-300 shadow-[inset_3px_0_0_#635bff]"
-                : "text-zinc-200 hover:bg-white/5 hover:text-white"
+                ? "bg-indigo/15 text-indigo shadow-[inset_3px_0_0_#635bff]"
+                : "text-ink-muted hover:bg-canvas-panel hover:text-ink"
             }`}
             onClick={() => go("/")}
           >
-            <Home className="h-5 w-5 text-indigo-400" />
+            <Home className="h-5 w-5 text-indigo" />
             <span>{t("Home")}</span>
           </button>
 
           {/* Alles over Investbot Submenu */}
-          <div className="rounded-2xl bg-white/[0.04] border border-white/10 p-2 my-1.5">
+          <div className="rounded-2xl bg-canvas-panel/50 border border-canvas-hairline p-2 my-1.5">
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-indigo-300"
+              className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-indigo"
               onClick={() => setSubmenuOpen((o) => !o)}
             >
               <span>{t(PUBLIC_NAV_ITEMS[1].title)}</span>
@@ -149,8 +149,8 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                     key={item.label}
                     className={`w-full rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors flex items-center justify-between ${
                       location.pathname === item.to
-                        ? "bg-indigo-600/30 text-white font-semibold"
-                        : "text-zinc-300 hover:bg-white/5 hover:text-white"
+                        ? "bg-indigo/20 text-ink font-semibold"
+                        : "text-ink-muted hover:bg-canvas-panel hover:text-ink"
                     }`}
                     onClick={() => go(item.to)}
                   >
@@ -169,63 +169,63 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                 key={item.title}
                 className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold transition-colors ${
                   location.pathname === item.to
-                    ? "bg-indigo-600/20 text-indigo-300 shadow-[inset_3px_0_0_#635bff]"
-                    : "text-zinc-200 hover:bg-white/5 hover:text-white"
+                    ? "bg-indigo/15 text-indigo shadow-[inset_3px_0_0_#635bff]"
+                    : "text-ink-muted hover:bg-canvas-panel hover:text-ink"
                 }`}
                 onClick={() => go(item.to)}
               >
-                {item.to.includes("tier") && <Layers className="h-5 w-5 text-cyan-400" />}
-                {item.to.includes("veiligheid") && <Shield className="h-5 w-5 text-emerald-400" />}
-                {item.to.includes("vacatures") && <Briefcase className="h-5 w-5 text-indigo-400" />}
-                {item.to.includes("faq") && <HelpCircle className="h-5 w-5 text-amber-400" />}
-                {item.to.includes("contact") && <Mail className="h-5 w-5 text-rose-400" />}
+                {item.to.includes("tier") && <Layers className="h-5 w-5 text-cyan" />}
+                {item.to.includes("veiligheid") && <Shield className="h-5 w-5 text-mint" />}
+                {item.to.includes("vacatures") && <Briefcase className="h-5 w-5 text-indigo" />}
+                {item.to.includes("faq") && <HelpCircle className="h-5 w-5 text-amber" />}
+                {item.to.includes("contact") && <Mail className="h-5 w-5 text-rose" />}
                 <span>{t(item.title)}</span>
               </button>
             ) : null,
           )}
 
           {/* Direct Auth links in menu list */}
-          <div className="pt-2 my-2 border-t border-white/10 space-y-1">
+          <div className="pt-2 my-2 border-t border-canvas-hairline space-y-1">
             {!user ? (
               <>
                 <button
-                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-indigo-300 hover:bg-white/5 transition-colors"
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-indigo hover:bg-canvas-panel transition-colors"
                   onClick={() => go("/register")}
                 >
-                  <UserPlus className="h-5 w-5 text-indigo-400" />
+                  <UserPlus className="h-5 w-5 text-indigo" />
                   <span>{t("Aanmelden")}</span>
                 </button>
                 <button
-                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-cyan-300 hover:bg-white/5 transition-colors"
+                  className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-cyan-500 dark:text-cyan-400 hover:bg-canvas-panel transition-colors"
                   onClick={() => go("/auth")}
                 >
-                  <LogIn className="h-5 w-5 text-cyan-400" />
+                  <LogIn className="h-5 w-5 text-cyan-500 dark:text-cyan-400" />
                   <span>{t("Inloggen")}</span>
                 </button>
               </>
             ) : (
               <button
-                className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-rose-300 hover:bg-white/5 transition-colors"
+                className="w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold text-rose-500 dark:text-rose-400 hover:bg-canvas-panel transition-colors"
                 onClick={handleLogout}
               >
-                <LogOut className="h-5 w-5 text-rose-400" />
+                <LogOut className="h-5 w-5 text-rose-500 dark:text-rose-400" />
                 <span>{t("Uitloggen")}</span>
               </button>
             )}
           </div>
 
           {/* Legal links */}
-          <div className="pt-2 border-t border-white/10 flex flex-col gap-1 px-3">
+          <div className="pt-2 border-t border-canvas-hairline flex flex-col gap-1 px-3">
             <button
               onClick={() => go("/algemene-voorwaarden")}
-              className="flex items-center gap-2 text-left text-xs text-zinc-400 hover:text-zinc-200 py-1 transition"
+              className="flex items-center gap-2 text-left text-xs text-ink-muted hover:text-ink py-1 transition"
             >
               <FileText className="h-3.5 w-3.5" />
               <span>{t("Algemene Voorwaarden")}</span>
             </button>
             <button
               onClick={() => go("/privacybeleid")}
-              className="flex items-center gap-2 text-left text-xs text-zinc-400 hover:text-zinc-200 py-1 transition"
+              className="flex items-center gap-2 text-left text-xs text-ink-muted hover:text-ink py-1 transition"
             >
               <FileText className="h-3.5 w-3.5" />
               <span>{t("Privacybeleid")}</span>
@@ -234,7 +234,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
         </nav>
 
         {/* Footer preferences & CTAs */}
-        <div className="flex flex-col gap-3 border-t border-white/10 px-5 pb-8 pt-4 bg-[#05070f]">
+        <div className="flex flex-col gap-3 border-t border-canvas-hairline px-5 pb-8 pt-4 bg-canvas">
           <div className="flex justify-center pb-1">
             <PreferenceToggles />
           </div>
@@ -243,7 +243,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
             <div className="flex flex-col gap-2">
               <Button
                 onClick={() => go("/register")}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 font-semibold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-base"
+                className="w-full bg-indigo hover:bg-indigo/90 text-white rounded-xl py-6 font-semibold shadow-md flex items-center justify-center gap-2 text-base"
               >
                 <UserPlus className="h-5 w-5" />
                 <span>{t("Aanmelden")}</span>
@@ -251,16 +251,16 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
               <Button
                 onClick={() => go("/auth")}
                 variant="outline"
-                className="w-full border-white/15 bg-white/5 hover:bg-white/10 text-white rounded-xl py-6 font-semibold flex items-center justify-center gap-2 text-base"
+                className="w-full border-canvas-hairline bg-canvas-panel hover:bg-canvas-elevated text-ink rounded-xl py-6 font-semibold flex items-center justify-center gap-2 text-base"
               >
-                <LogIn className="h-4 w-4 text-cyan-400" />
+                <LogIn className="h-4 w-4 text-cyan" />
                 <span>{t("Inloggen")}</span>
               </Button>
             </div>
           ) : (
             <Button
               onClick={() => go(isAdmin ? "/admin" : "/member/dashboard")}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl py-6 font-semibold shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 text-base"
+              className="w-full bg-indigo hover:bg-indigo/90 text-white rounded-xl py-6 font-semibold shadow-md flex items-center justify-center gap-2 text-base"
             >
               <span>{isAdmin ? t("Admin Dashboard") : t("Member Dashboard")}</span>
               <ArrowRight className="h-4 w-4" />

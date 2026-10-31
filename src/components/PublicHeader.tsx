@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import PublicHeaderDesktopMenu from "./PublicHeaderDesktopMenu";
 import PublicHeaderMobileMenu from "./PublicHeaderMobileMenu";
 import BrandLogo from "./BrandLogo";
+import PreferenceToggles from "@/components/PreferenceToggles";
 import { usePreferences } from "@/lib/preferences";
 
 const PublicHeader: React.FC = () => {
@@ -24,29 +25,30 @@ const PublicHeader: React.FC = () => {
     setMenuOpen(false);
   };
 
-  const Logo = <BrandLogo variant="dark" size="md" showSubtitle={false} to="/" />;
+  const Logo = <BrandLogo variant="auto" size="md" showSubtitle={false} to="/" />;
 
   return (
     <>
       <header
-        className={`fixed left-0 top-0 z-40 w-full transition-[background,border-color,backdrop-filter] duration-300 ${
+        className={`fixed left-0 top-0 z-40 w-full transition-[background,border-color,backdrop-filter,box-shadow] duration-300 ${
           scrolled
-            ? "border-b border-canvas-hairline bg-canvas/95 backdrop-blur-xl shadow-level-2"
-            : "border-b border-transparent bg-transparent"
+            ? "border-b border-canvas-hairline bg-canvas/80 backdrop-blur-2xl shadow-level-2"
+            : "border-b border-transparent bg-canvas/20 backdrop-blur-md"
         }`}
       >
-        <div className="mx-auto flex h-[72px] w-full max-w-content items-center justify-between px-6 lg:px-10">
+        <div className="mx-auto flex h-[72px] w-full max-w-content items-center justify-between px-4 sm:px-6 lg:px-10">
           {Logo}
           <PublicHeaderDesktopMenu handleNav={handleNav} />
-        <div className="flex items-center gap-2 md:hidden">
-          <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-canvas-hairline bg-white/5 text-ink transition-colors hover:bg-white/10"
-            aria-label={menuOpen ? t("Sluit menu") : t("Open menu")}
-            onClick={() => setMenuOpen((v) => !v)}
-          >
-            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-        </div>
+          <div className="flex items-center gap-2 lg:hidden">
+            <PreferenceToggles />
+            <button
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-canvas-hairline bg-canvas-elevated/80 text-ink transition-colors hover:bg-canvas-panel"
+              aria-label={menuOpen ? t("Sluit menu") : t("Open menu")}
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+          </div>
         </div>
       </header>
       <PublicHeaderMobileMenu menuOpen={menuOpen} setMenuOpen={setMenuOpen} Logo={Logo} />

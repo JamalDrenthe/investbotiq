@@ -23,7 +23,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   const submenuActive = pathname.startsWith("/alles-over-investbot");
 
   return (
-    <nav className="hidden items-center gap-1 md:flex">
+    <nav className="hidden items-center gap-1 lg:flex">
       <Link to="/" className={`nav-pill ${pathname === "/" ? "nav-pill--active" : ""}`}>
         {t(PUBLIC_NAV_ITEMS[0].title)}
       </Link>

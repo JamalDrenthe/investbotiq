@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
 import BrandLogo from "./BrandLogo";
+import PreferenceToggles from "./PreferenceToggles";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Header = () => {
@@ -82,6 +83,7 @@ const Header = () => {
         </div>
         
         <div className="flex items-center gap-3">
+          <PreferenceToggles />
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="hidden md:flex">

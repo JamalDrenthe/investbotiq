@@ -78,9 +78,9 @@ export default {
 					hairline: 'var(--ds-canvas-hairline)'
 				},
 				paper: {
-					DEFAULT: '#f6f7fb',
-					elevated: '#ffffff',
-					hairline: '#e3e6f2'
+					DEFAULT: 'var(--ds-paper)',
+					elevated: 'var(--ds-paper-elevated)',
+					hairline: 'var(--ds-paper-hairline)'
 				},
 				indigo: {
 					DEFAULT: '#635bff',
@@ -99,9 +99,9 @@ export default {
 					faint: 'hsl(var(--ds-ink-faint-hsl) / <alpha-value>)'
 				},
 				graphite: {
-					DEFAULT: '#0b1020',
-					muted: '#525b7a',
-					faint: '#8b93b2'
+					DEFAULT: 'var(--ds-graphite)',
+					muted: 'var(--ds-graphite-muted)',
+					faint: 'var(--ds-graphite-faint)'
 				}
 			},
 			borderRadius: {

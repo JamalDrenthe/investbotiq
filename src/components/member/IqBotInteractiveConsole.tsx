@@ -456,14 +456,14 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       <div className="relative z-10 mt-8 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-canvas-hairline/60">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold uppercase tracking-wider text-white font-display">
+            <span className="text-sm font-bold uppercase tracking-wider text-ink font-display">
               Ecosysteem Bedrijven (12 Knoppen)
             </span>
-            <span className="rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[10px] font-mono px-2 py-0.5">
+            <span className="rounded-full bg-indigo/20 text-indigo border border-indigo/30 text-[10px] font-mono px-2 py-0.5">
               12 Bedrijven
             </span>
           </div>
-          <span className="text-xs text-ink-on-canvas-muted">
+          <span className="text-xs text-ink-muted">
             Klik op een knop om de video & protocol animatie van dat bedrijf te starten
           </span>
         </div>
@@ -476,12 +476,12 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 key={action.id}
                 type="button"
                 onClick={() => handleSelectAction(action)}
-                className="group relative flex flex-col justify-between p-4 rounded-2xl border text-left transition-all duration-300 border-canvas-hairline bg-canvas-panel/60 hover:bg-canvas-panel hover:border-white/30 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-lg"
+                className="group relative flex flex-col justify-between p-4 rounded-2xl border text-left transition-all duration-300 border-canvas-hairline bg-canvas-panel/60 hover:bg-canvas-panel hover:border-cyan/40 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-lg"
               >
                 <div>
                   <div className="flex items-center justify-between w-full">
                     <div
-                      className={`relative flex h-11 w-11 items-center justify-center rounded-xl bg-white/5 border border-white/10 ${action.borderColor} group-hover:scale-110 transition-transform overflow-hidden p-1.5 shadow-sm group-hover:border-white/30`}
+                      className={`relative flex h-11 w-11 items-center justify-center rounded-xl bg-canvas-elevated border border-canvas-hairline ${action.borderColor} group-hover:scale-110 transition-transform overflow-hidden p-1.5 shadow-sm group-hover:border-cyan/40`}
                     >
                       <img
                         src={action.logoSrc}
@@ -497,26 +497,26 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                         <Icon className={`h-5 w-5 ${action.color}`} />
                       </div>
                     </div>
-                    <span className="text-[10px] font-mono text-zinc-300 uppercase px-2 py-0.5 rounded-md bg-white/5 border border-white/10">
+                    <span className="text-[10px] font-mono text-ink-muted uppercase px-2 py-0.5 rounded-md bg-canvas-elevated border border-canvas-hairline">
                       {action.badge}
                     </span>
                   </div>
 
                   <div className="mt-3.5">
-                    <h3 className="text-base font-bold tracking-tight text-white group-hover:text-cyan-300 transition-colors flex items-center justify-between">
+                    <h3 className="text-base font-bold tracking-tight text-ink group-hover:text-cyan transition-colors flex items-center justify-between">
                       <span>{action.label}</span>
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/5 text-zinc-400 group-hover:bg-cyan-500/20 group-hover:text-cyan-300 transition-colors">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-canvas-elevated text-ink-muted group-hover:bg-cyan/20 group-hover:text-cyan transition-colors">
                         <Play className="h-3 w-3 ml-0.5" />
                       </span>
                     </h3>
-                    <p className="text-[11px] text-ink-on-canvas-muted line-clamp-2 mt-1 leading-relaxed">
+                    <p className="text-[11px] text-ink-muted line-clamp-2 mt-1 leading-relaxed">
                       {action.description}
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4 pt-2.5 border-t border-canvas-hairline/60 flex items-center justify-between text-[11px]">
-                  <span className="text-zinc-500 font-mono">Status:</span>
+                  <span className="text-ink-faint font-mono">Status:</span>
                   <span className="text-mint font-medium flex items-center gap-1 font-mono">
                     <span className="h-1.5 w-1.5 rounded-full bg-mint animate-pulse" />
                     Actief
