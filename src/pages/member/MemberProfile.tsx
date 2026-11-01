@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { withRoleGuard } from "@/utils/withRoleGuard";
 import { updatePassword } from "@/lib/auth";
+import { crmos } from "@/lib/crmos";
 
 const MemberProfile = () => {
   const { user, loading } = useAuth();
@@ -78,6 +79,21 @@ const MemberProfile = () => {
       if (error) throw error;
       if (data.length === 0) throw new Error("Profiel niet gevonden.");
       
+      // Sync naar CRMos
+      if (user.email) {
+        crmos.upsertContact({
+          first_name: profile?.voornaam || user.email.split("@")[0],
+          last_name: profile?.achternaam || undefined,
+          email: user.email,
+          phone: phoneNumber,
+          company: "InvestBotIQ Member",
+          company_tags: ["#investbotiq"],
+          status: "customer",
+        }).catch((err) => {
+          console.warn("[CRMos Sync] Profiel update notice:", err);
+        });
+      }
+
       await refetch();
       toast.success("Profiel bijgewerkt");
     } catch (error) {

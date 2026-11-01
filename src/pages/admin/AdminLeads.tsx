@@ -190,6 +190,21 @@ const AdminLeads = () => {
         .update({ status: "converted" })
         .eq("id", lead.id);
 
+      // 3. Sync update naar CRMos
+      crmos.upsertContact({
+        first_name: lead.general.voornaam,
+        last_name: lead.general.achternaam,
+        email: lead.general.email,
+        phone: lead.general.telefoon || undefined,
+        company: "InvestBotIQ Member",
+        company_tags: ["#investbotiq", "#member"],
+        tags: ["Geconverteerde Member", "InvestBotIQ Member", `Rol: ${lead.role}`],
+        notes: "Geconverteerd naar actief lid via InvestBotIQ Admin Portal.",
+        status: "customer",
+      }).catch((err) => {
+        console.warn("[CRMos Sync] Conversion notice:", err);
+      });
+
       toast.success(`${lead.general.voornaam} is geconverteerd naar Member!`);
       await queryClient.invalidateQueries({ queryKey: ["leads"] });
       await queryClient.invalidateQueries({ queryKey: ["users"] });

@@ -1,5 +1,6 @@
 import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { firestoreDb } from "@/lib/firebase";
+import { crmos } from "@/lib/crmos";
 
 export async function ensureUserProfile(
   userId: string,
@@ -28,17 +29,32 @@ export async function ensureUserProfile(
       created_at: serverTimestamp(),
       updated_at: serverTimestamp(),
     });
-    return;
+  } else {
+    const data = profile.data();
+    const updates: Record<string, unknown> = {};
+    if (data.email !== email) updates.email = email;
+    if (!data.voornaam && voornaam) updates.voornaam = voornaam;
+    if (!data.achternaam && achternaam) updates.achternaam = achternaam;
+
+    if (Object.keys(updates).length > 0) {
+      updates.updated_at = serverTimestamp();
+      await updateDoc(profileRef, updates);
+    }
   }
 
-  const data = profile.data();
-  const updates: Record<string, unknown> = {};
-  if (data.email !== email) updates.email = email;
-  if (!data.voornaam && voornaam) updates.voornaam = voornaam;
-  if (!data.achternaam && achternaam) updates.achternaam = achternaam;
-
-  if (Object.keys(updates).length > 0) {
-    updates.updated_at = serverTimestamp();
-    await updateDoc(profileRef, updates);
+  // Bi-directionele sync met CRMos Contacts Upsert
+  if (email) {
+    crmos.upsertContact({
+      first_name: voornaam || (email.split("@")[0] ?? "Gebruiker"),
+      last_name: achternaam || undefined,
+      email: email.trim(),
+      company: "InvestBotIQ Member",
+      company_tags: ["#investbotiq"],
+      tags: ["InvestBotIQ Account", "Firebase User"],
+      notes: `Geregistreerd account op InvestBotIQ (Firebase UID: ${userId}).`,
+      status: "customer",
+    }).catch((err) => {
+      console.warn("[CRMos Sync] Profiel sync notice:", err);
+    });
   }
 }

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { formatDate } from "@/utils/date-utils";
+import { crmos } from "@/lib/crmos";
 
 interface PersonalInfoCardProps {
   user: LocalUser;
@@ -50,6 +51,21 @@ const PersonalInfoCard = ({ user }: PersonalInfoCardProps) => {
       if (error) throw error;
       if (data.length === 0) throw new Error("Profiel niet gevonden.");
       
+      // Sync naar CRMos
+      if (user.email) {
+        crmos.upsertContact({
+          first_name: (profile as any)?.voornaam || user.email.split("@")[0],
+          last_name: (profile as any)?.achternaam || undefined,
+          email: user.email,
+          phone: phoneNumber,
+          company: "InvestBotIQ",
+          company_tags: ["#investbotiq"],
+          status: "customer",
+        }).catch((err) => {
+          console.warn("[CRMos Sync] PersonalInfo update notice:", err);
+        });
+      }
+
       await refetch();
       toast.success("Profiel bijgewerkt");
     } catch (error) {
