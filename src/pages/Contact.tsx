@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { LumenCtaButton, LumenCtaLink } from "@/components/three/LumenCta";
 import { firestoreDb } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { crmos } from "@/lib/crmos";
 
 export default function Contact() {
   const [name, setName] = useState("");
@@ -51,6 +52,16 @@ export default function Contact() {
           console.warn("Firestore message save notice:", err);
         });
       }
+
+      // Bi-directionele sync met CRMos REST API (Contact upsert + Activity)
+      crmos.syncContactLead({
+        name,
+        email,
+        subject,
+        message,
+      }).catch((crmosErr) => {
+        console.warn("[CRMos Sync] Background sync notice:", crmosErr);
+      });
 
       setSubmitted(true);
       toast.success("Je bericht is succesvol verzonden! We nemen spoedig contact met je op.");

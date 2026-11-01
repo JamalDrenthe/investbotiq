@@ -23,6 +23,7 @@ import {
 import { VACANCIES, Vacancy } from "@/data/careersData";
 import { firestoreDb } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { crmos } from "@/lib/crmos";
 
 interface Props {
   isOpen: boolean;
@@ -93,6 +94,23 @@ export const ApplicationModal: React.FC<Props> = ({
           console.warn("Firestore save notice:", err);
         });
       }
+
+      // Bi-directionele sync met CRMos REST API (Candidate + Contact upsert + Activity)
+      crmos.syncCareerApplication({
+        name,
+        email,
+        phone,
+        linkedin,
+        vacancyId: activeVacancy.id,
+        vacancyTitle: activeVacancy.title,
+        domain: activeVacancy.domain,
+        contractType,
+        hours,
+        cvLink,
+        motivation,
+      }).catch((crmosErr) => {
+        console.warn("[CRMos Sync] Background sync notice:", crmosErr);
+      });
 
       setSubmitted(true);
       toast.success(

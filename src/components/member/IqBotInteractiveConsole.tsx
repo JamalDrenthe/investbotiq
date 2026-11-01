@@ -29,6 +29,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { crmos } from "@/lib/crmos";
 
 export type BotActionId =
   | "vvc"
@@ -256,6 +257,14 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       action: action.id,
       label: action.label,
     });
+
+    if (action.id === "crmos") {
+      crmos.ping().then((res) => {
+        console.log("[CRMos Live REST Telemetry]", res);
+      }).catch((err) => {
+        console.warn("[CRMos Live REST Telemetry]", err);
+      });
+    }
 
     const webhookUrl = (import.meta as any).env?.VITE_IQ_BOT_WEBHOOK_URL;
     if (webhookUrl) {

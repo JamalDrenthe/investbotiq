@@ -30,9 +30,11 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
+  RefreshCw,
 } from "lucide-react";
 import type { Json } from "@/types/data-model";
 import { withRoleGuard } from "@/utils/withRoleGuard";
+import { crmos } from "@/lib/crmos";
 
 type LeadGeneral = {
   [key: string]: Json | undefined;
@@ -74,6 +76,41 @@ const AdminLeads = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [syncingLeadId, setSyncingLeadId] = useState<string | null>(null);
+
+  const handleSyncToCrmos = async (lead: Lead) => {
+    setSyncingLeadId(lead.id);
+    try {
+      const fullName = `${lead.general.voornaam} ${lead.general.achternaam}`.trim();
+      const res = await crmos.upsertContact({
+        first_name: lead.general.voornaam || fullName,
+        last_name: lead.general.achternaam || undefined,
+        email: lead.general.email,
+        phone: lead.general.telefoon || undefined,
+        company: `InvestBotIQ Lead (${lead.role})`,
+        company_tags: ["#investbotiq", `#role_${lead.role}`],
+        tags: [
+          "InvestBotIQ Lead",
+          `Rol: ${lead.role}`,
+          lead.general.woonplaats ? `Locatie: ${lead.general.woonplaats}` : "",
+          lead.general.referral ? `Referral: ${lead.general.referral}` : "",
+        ].filter(Boolean),
+        notes: `Handmatig gesynchroniseerd vanuit InvestBotIQ Admin. Status: ${lead.status}. Kanaal: ${lead.general.hoe_hoorde_u_van_ons || "N/A"}.`,
+        status: lead.status === "converted" ? "customer" : "lead",
+      });
+
+      if (res.success) {
+        toast.success(`Lead "${fullName}" succesvol gesynchroniseerd met CRMos!`);
+      } else {
+        toast.error(`CRMos reactie: ${res.error || "Synchronisatie niet voltooid"}`);
+      }
+    } catch (err) {
+      console.error("Fout bij synchroniseren naar CRMos:", err);
+      toast.error("Fout bij synchroniseren naar CRMos.");
+    } finally {
+      setSyncingLeadId(null);
+    }
+  };
 
   const { data: leads = [], isLoading, error } = useQuery({
     queryKey: ["leads"],
@@ -398,6 +435,17 @@ const AdminLeads = () => {
                         <Eye className="h-4 w-4" />
                       </button>
 
+                      {/* Sync to CRMos Button */}
+                      <button
+                        type="button"
+                        onClick={() => handleSyncToCrmos(lead)}
+                        disabled={syncingLeadId === lead.id}
+                        className="p-2 rounded-lg border border-sky-500/30 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 transition disabled:opacity-50"
+                        title="Synchroniseer lead naar CRMos"
+                      >
+                        <RefreshCw className={`h-4 w-4 ${syncingLeadId === lead.id ? "animate-spin" : ""}`} />
+                      </button>
+
                       {/* Convert to Member Button */}
                       {lead.status !== "converted" && (
                         <button
@@ -498,17 +546,31 @@ const AdminLeads = () => {
             )}
 
             <DialogFooter className="flex flex-row justify-between sm:justify-between items-center gap-2">
-              {selectedLead && selectedLead.status !== "converted" ? (
-                <button
-                  type="button"
-                  onClick={() => handleConvertToMember(selectedLead)}
-                  disabled={isUpdating}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition"
-                >
-                  <UserCheck className="h-4 w-4" />
-                  Zet om naar Member
-                </button>
-              ) : <div />}
+              <div className="flex items-center gap-2">
+                {selectedLead && (
+                  <button
+                    type="button"
+                    onClick={() => handleSyncToCrmos(selectedLead)}
+                    disabled={syncingLeadId === selectedLead.id}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-sky-500/30 bg-sky-500/10 px-3 py-2 text-xs font-semibold text-sky-400 hover:bg-sky-500/20 transition disabled:opacity-50"
+                  >
+                    <RefreshCw className={`h-3.5 w-3.5 ${syncingLeadId === selectedLead.id ? "animate-spin" : ""}`} />
+                    Sync naar CRMos
+                  </button>
+                )}
+
+                {selectedLead && selectedLead.status !== "converted" && (
+                  <button
+                    type="button"
+                    onClick={() => handleConvertToMember(selectedLead)}
+                    disabled={isUpdating}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition"
+                  >
+                    <UserCheck className="h-4 w-4" />
+                    Zet om naar Member
+                  </button>
+                )}
+              </div>
 
               <button
                 type="button"

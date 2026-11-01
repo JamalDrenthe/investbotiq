@@ -9,6 +9,7 @@ import { Confirmation } from "./steps/Confirmation";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { crmos } from "@/lib/crmos";
 
 export type Role = "member" | "student" | "ouder" | "affiliated" | "freelancer" | "ondernemer" | "artiest";
 
@@ -60,6 +61,19 @@ export const MultiStepForm = () => {
       });
 
       if (registrationError) throw registrationError;
+
+      // Bi-directionele sync met CRMos REST API (Contact upsert + Activity)
+      crmos.syncRegistrationLead({
+        name: `${formData.general.voornaam} ${formData.general.achternaam}`.trim(),
+        email: formData.general.email,
+        phone: formData.general.telefoon,
+        role: formData.role,
+        city: formData.general.woonplaats,
+        referral: formData.general.referral,
+        answers: formData.answers,
+      }).catch((crmosErr) => {
+        console.warn("[CRMos Sync] Registration sync notice:", crmosErr);
+      });
 
       toast.success('Aanmelding succesvol verzonden!');
       navigate("/register/success");
