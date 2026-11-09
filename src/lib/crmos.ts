@@ -103,6 +103,25 @@ export interface CRMosApiResponse<T = unknown> {
   message?: string;
 }
 
+/**
+ * Officiële Ecosystem API Keys per bedrijf binnen de holding
+ */
+export const CRM_ECOSYSTEM_KEYS: Record<string, { key: string; tag: string; company: string }> = {
+  master: { key: "crm_live_master_jamaldrenthe_2026_all_ecosystem", tag: "#all", company: "Alle Bedrijven (Master)" },
+  vvc: { key: "crm_live_vvc_verdienende_vrienden_club_2026", tag: "#vvc", company: "VVC" },
+  spontiva: { key: "crm_live_spontiva_recruitment_2026", tag: "#spontiva", company: "Spontiva" },
+  boostplug: { key: "crm_live_boostplug_energy_iot_2026", tag: "#boostplug", company: "Boostplug" },
+  quantum_initium: { key: "crm_live_quantum_initium_enterprise_2026", tag: "#quantum-initium", company: "Quantum Initium" },
+  immigratiepunt: { key: "crm_live_immigratiepunt_portal_2026", tag: "#immigratiepunt", company: "Immigratiepunt" },
+  woningvry: { key: "crm_live_woningvry_realestate_2026", tag: "#woningvry", company: "Woningvry" },
+  djobba: { key: "crm_live_djobba_works_freelance_2026", tag: "#djobba-works", company: "Djobba.works" },
+  trusting_work: { key: "crm_live_trusting_work_staffing_2026", tag: "#trusting-work", company: "Trusting Work" },
+  logs_rent: { key: "crm_live_logs_rent_logistics_2026", tag: "#logs-rent", company: "Logs.rent" },
+  zheavenzy: { key: "crm_live_zheavenzy_atelier_2026", tag: "#zheavenzy", company: "Zheavenzy" },
+  xabi_world: { key: "crm_live_xabi_world_international_2026", tag: "#xabi-world", company: "Xabi World" },
+  crmos: { key: "crm_live_crmos_core_platform_2026", tag: "#crmos", company: "CRMos Platform" },
+};
+
 class CRMosClient {
   private baseUrl: string;
   private apiKey: string;
@@ -190,6 +209,32 @@ class CRMosClient {
   // =========================================================================
   // 1. DATA OPHALEN & REALTIME ZOEKEN (GET)
   // =========================================================================
+
+  /**
+   * Dedicated Health check: GET /api/v1/health
+   */
+  public async getHealth(): Promise<{ status: string; online: boolean; latencyMs: number }> {
+    const start = performance.now();
+    try {
+      const res = await this.request<{ status: string }>("/health", { method: "GET" });
+      const latencyMs = Math.round(performance.now() - start);
+      return {
+        status: res.data?.status || (res.success ? "online" : "offline"),
+        online: res.success,
+        latencyMs,
+      };
+    } catch {
+      const latencyMs = Math.round(performance.now() - start);
+      return { status: "offline", online: false, latencyMs };
+    }
+  }
+
+  /**
+   * VVC Tag Lookup & Verificatie: GET /api/v1/vvc/lookup?tag={tag}
+   */
+  public async vvcLookup(tag: string): Promise<CRMosApiResponse<any>> {
+    return this.request(`/vvc/lookup?tag=${encodeURIComponent(tag)}`, { method: "GET" });
+  }
 
   /**
    * Health/Ping check voor telemetry monitoring van de CRMos REST verbinding
@@ -351,6 +396,21 @@ class CRMosClient {
     return this.request<CRMosCandidate>("/candidates", {
       method: "POST",
       body: JSON.stringify(candidate),
+    });
+  }
+
+  /**
+   * Webhook Registreren (CRMos ➡️ Externe Agent): POST /api/v1/webhooks
+   */
+  public async registerWebhook(payload: {
+    company: string;
+    url: string;
+    events: string[];
+    secret?: string;
+  }): Promise<CRMosApiResponse<unknown>> {
+    return this.request("/webhooks", {
+      method: "POST",
+      body: JSON.stringify(payload),
     });
   }
 
