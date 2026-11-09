@@ -3,11 +3,10 @@ import InfoPageLayout from "@/components/layouts/InfoPageLayout";
 import { CareersHero } from "@/components/careers/CareersHero";
 import { CareersConditions } from "@/components/careers/CareersConditions";
 import { CareersMatrix } from "@/components/careers/CareersMatrix";
-import { CareerDetailCard } from "@/components/careers/CareerDetailCard";
 import { ApplicationProcedure } from "@/components/careers/ApplicationProcedure";
 import { ApplicationModal } from "@/components/careers/ApplicationModal";
 import { VacancyDetailModal } from "@/components/careers/VacancyDetailModal";
-import { VACANCIES, Vacancy } from "@/data/careersData";
+import { Vacancy } from "@/data/careersData";
 import { Send, Mail, Sparkles, Building2 } from "lucide-react";
 import { LumenCtaButton } from "@/components/three/LumenCta";
 
@@ -59,39 +58,6 @@ export default function Careers() {
           onApplyVacancy={(vacancy) => handleOpenApply(vacancy.id)}
           selectedVacancyId={selectedVacancyId}
         />
-
-        {/* All 13 Detailed Job Cards Section */}
-        <section className="py-12 md:py-16 border-b border-canvas-hairline transition-colors">
-          <div className="mx-auto max-w-content px-4 sm:px-6 lg:px-10">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-cyan/10 px-3.5 py-1 text-xs font-mono text-cyan border border-cyan/25 mb-3">
-                  Volledige Functieprofielen
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-display font-bold text-ink tracking-tight">
-                  13 Gedetailleerde Vacatures
-                </h2>
-                <p className="text-sm text-ink-muted mt-1 max-w-xl">
-                  Lees het complete profiel, de taken, vereisten en specifieke beloningsstructuur per rol.
-                </p>
-              </div>
-
-              <div className="text-xs font-mono text-ink-muted">
-                13 van 13 profielen geladen
-              </div>
-            </div>
-
-            <div className="space-y-8">
-              {VACANCIES.map((vacancy) => (
-                <CareerDetailCard
-                  key={vacancy.id}
-                  vacancy={vacancy}
-                  onApply={(v) => handleOpenApply(v.id)}
-                />
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Sollicitatieprocedure 4-stappen */}
         <ApplicationProcedure />
