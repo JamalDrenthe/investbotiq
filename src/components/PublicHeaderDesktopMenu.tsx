@@ -49,7 +49,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
               {submenu.map((item) => (
                 <button
                   key={item.label}
-                  className="w-full rounded-full px-4 py-2.5 text-left text-sm font-medium text-ink-muted transition-colors hover:bg-white/8 hover:text-ink"
+                  className="w-full rounded-full px-4 py-2.5 text-left text-sm font-medium text-ink-muted transition-colors hover:bg-canvas-panel hover:text-ink"
                   onClick={() => handleNav(item.to)}
                 >
                   {t(item.label)}

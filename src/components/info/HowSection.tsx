@@ -27,7 +27,7 @@ export default function HowSection() {
                 <li>
                   <Link
                     to={step.to}
-                    className="group flex items-start gap-5 border-t border-canvas-hairline py-6 transition-colors hover:bg-white/5 last:border-b"
+                    className="group flex items-start gap-5 border-t border-canvas-hairline py-6 transition-colors hover:bg-canvas-panel/50 last:border-b"
                   >
                     <span className="tnum font-display text-sm font-semibold text-cyan">0{i + 1}</span>
                     <span className="font-display text-2xl font-medium tracking-[-0.02em] text-ink transition-colors group-hover:text-gradient-light">

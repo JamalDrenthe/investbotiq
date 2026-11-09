@@ -44,15 +44,15 @@ export const VacancyDetailModal: React.FC<Props> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         hideCloseButton={true}
-        className="w-[94vw] sm:w-[90vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-[2rem] z-[100] max-h-[90vh] flex flex-col"
+        className="w-[94vw] sm:w-[90vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl p-0 overflow-hidden apple-glass border border-canvas-hairline text-ink shadow-2xl rounded-[2rem] z-[100] max-h-[90vh] flex flex-col"
       >
         {/* macOS / Apple Titlebar */}
-        <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02] shrink-0">
+        <div className="px-5 py-3.5 border-b border-canvas-hairline flex items-center justify-between bg-canvas-elevated/40 shrink-0">
           <div className="flex items-center gap-2">
             <span className="h-3 w-3 rounded-full bg-[#ff5f56] inline-block shadow-sm" />
             <span className="h-3 w-3 rounded-full bg-[#febc2e] inline-block shadow-sm" />
             <span className="h-3 w-3 rounded-full bg-[#28c840] inline-block shadow-sm" />
-            <span className="ml-3 text-xs font-mono text-[#86868b]">
+            <span className="ml-3 text-xs font-mono text-ink-muted">
               Vacature [{vacancy.id}/13] · Functiedossier
             </span>
           </div>
@@ -60,7 +60,7 @@ export const VacancyDetailModal: React.FC<Props> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl border border-white/10 p-1.5 text-zinc-400 hover:text-white hover:bg-white/10 transition active:scale-[0.96]"
+            className="rounded-xl border border-canvas-hairline p-1.5 text-ink-muted hover:text-ink hover:bg-canvas-panel transition active:scale-[0.96]"
             title="Sluiten"
           >
             <X className="h-4 w-4" />
@@ -75,27 +75,27 @@ export const VacancyDetailModal: React.FC<Props> = ({
               <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded-md bg-[#2997ff]/15 text-[#2997ff] border border-[#2997ff]/30">
                 [{vacancy.id}/13]
               </span>
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-white/[0.06] text-[#86868b] border border-white/10">
+              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-canvas-elevated text-ink-muted border border-canvas-hairline">
                 {vacancy.domain}
               </span>
               <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-[#30d158]/15 text-[#30d158] border border-[#30d158]/30 font-medium">
                 {vacancy.reward}
               </span>
-              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-white/[0.04] text-white/70 border border-white/10 hidden sm:inline">
+              <span className="font-mono text-xs px-2.5 py-0.5 rounded-md bg-canvas-elevated text-ink-muted border border-canvas-hairline hidden sm:inline">
                 100% Remote · ZZP of Vast
               </span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-white tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-ink tracking-tight">
               {vacancy.title}
             </h2>
-            <p className="text-xs sm:text-sm text-[#86868b] mt-1 font-mono">
+            <p className="text-xs sm:text-sm text-ink-muted mt-1 font-mono">
               Internationale Tech-, AI- & Vastgoedgroep (holding)
             </p>
           </div>
 
           {/* Quick Specs Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] text-xs text-[#86868b] font-mono">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-2xl bg-canvas-panel/60 border border-canvas-hairline text-xs text-ink-muted font-mono">
             <div className="flex items-center gap-2.5">
               <Globe className="h-4 w-4 text-[#30d158] shrink-0" />
               <span>{vacancy.location}</span>
@@ -116,7 +116,7 @@ export const VacancyDetailModal: React.FC<Props> = ({
               <span className="h-1.5 w-1.5 rounded-full bg-[#2997ff]" />
               Over de Rol & Context
             </h3>
-            <p className="text-sm text-zinc-300 leading-relaxed font-light bg-white/[0.02] p-4 rounded-2xl border border-white/[0.06]">
+            <p className="text-sm text-ink-muted leading-relaxed font-light bg-canvas-elevated/50 p-4 rounded-2xl border border-canvas-hairline">
               {vacancy.roleOverview}
             </p>
           </div>
@@ -124,12 +124,12 @@ export const VacancyDetailModal: React.FC<Props> = ({
           {/* Taken & Profiel Dual Column Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Taken */}
-            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
-              <h4 className="text-xs uppercase font-mono tracking-wider text-white flex items-center gap-2 font-bold">
+            <div className="p-5 rounded-2xl bg-canvas-panel/60 border border-canvas-hairline space-y-3">
+              <h4 className="text-xs uppercase font-mono tracking-wider text-ink flex items-center gap-2 font-bold">
                 <CheckCircle2 className="h-4 w-4 text-[#2997ff]" />
                 Taken & Verantwoordelijkheden
               </h4>
-              <ul className="space-y-2.5 text-xs text-zinc-300">
+              <ul className="space-y-2.5 text-xs text-ink-muted">
                 {vacancy.tasks.map((task, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                     <span className="text-[#2997ff] mt-0.5">•</span>
@@ -140,12 +140,12 @@ export const VacancyDetailModal: React.FC<Props> = ({
             </div>
 
             {/* Profiel & Vereisten */}
-            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
-              <h4 className="text-xs uppercase font-mono tracking-wider text-white flex items-center gap-2 font-bold">
+            <div className="p-5 rounded-2xl bg-canvas-panel/60 border border-canvas-hairline space-y-3">
+              <h4 className="text-xs uppercase font-mono tracking-wider text-ink flex items-center gap-2 font-bold">
                 <ShieldCheck className="h-4 w-4 text-[#0071e3]" />
                 Profiel & Vereisten
               </h4>
-              <ul className="space-y-2.5 text-xs text-zinc-300">
+              <ul className="space-y-2.5 text-xs text-ink-muted">
                 {vacancy.profile.map((item, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                     <span className="text-[#2997ff] mt-0.5">•</span>
@@ -157,12 +157,12 @@ export const VacancyDetailModal: React.FC<Props> = ({
           </div>
 
           {/* Beloning & Prestatievergoeding */}
-          <div className="p-5 rounded-2xl bg-gradient-to-r from-[#0071e3]/15 via-[#2997ff]/10 to-[#30d158]/10 border border-white/[0.12] space-y-2.5">
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-[#0071e3]/15 via-[#2997ff]/10 to-[#30d158]/10 border border-canvas-hairline space-y-2.5">
             <h4 className="text-xs uppercase font-mono tracking-wider text-[#30d158] flex items-center gap-2 font-bold">
               <Sparkles className="h-4 w-4 text-[#30d158]" />
               Beloning & Vergoedingsstructuur
             </h4>
-            <ul className="space-y-2 text-xs text-white">
+            <ul className="space-y-2 text-xs text-ink">
               {vacancy.compensation.map((comp, idx) => (
                 <li key={idx} className="flex items-start gap-2.5 leading-relaxed">
                   <span className="text-[#30d158] font-bold">✓</span>
@@ -173,7 +173,7 @@ export const VacancyDetailModal: React.FC<Props> = ({
           </div>
 
           {/* Uniforme Arbeidsvoorwaarden Pill */}
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] flex items-center justify-between text-xs text-[#86868b]">
+          <div className="p-4 rounded-2xl bg-canvas-elevated/40 border border-canvas-hairline flex items-center justify-between text-xs text-ink-muted">
             <div className="flex items-center gap-2">
               <Layers className="h-4 w-4 text-[#2997ff]" />
               <span>Inclusief 8 uniforme arbeidsvoorwaarden (27 vakantiedagen, laptop, ergonomisch budget, workations)</span>
@@ -183,7 +183,7 @@ export const VacancyDetailModal: React.FC<Props> = ({
         </div>
 
         {/* Action Footer */}
-        <div className="p-4 sm:p-5 border-t border-white/[0.08] flex items-center justify-between gap-3 bg-white/[0.02] shrink-0">
+        <div className="p-4 sm:p-5 border-t border-canvas-hairline flex items-center justify-between gap-3 bg-canvas-elevated/40 shrink-0">
           <button
             type="button"
             onClick={onClose}

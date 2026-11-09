@@ -55,7 +55,7 @@ export default function WhySection() {
         <FadeIn delay={0.4} className="mt-12 flex flex-wrap items-center justify-center gap-4">
           <Link
             to="/alles-over-investbot/mission-vision"
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-white/10"
+            className="apple-btn-secondary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-medium text-ink transition-colors active:scale-[0.97]"
           >
             Lees onze Missie & Visie <ArrowRight className="h-4 w-4" />
           </Link>

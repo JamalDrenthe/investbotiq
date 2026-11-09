@@ -22,7 +22,7 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
   const [amountVisible, setAmountVisible] = useState(true);
 
   return (
-    <section className="band-canvas relative isolate min-h-[100svh] w-full overflow-hidden bg-black">
+    <section className="band-canvas relative isolate min-h-[100svh] w-full overflow-hidden transition-colors">
       {/* threeui EnergyOrb — living 3D ambient light source */}
       <ThreeScene
         kind="energy-orb"
@@ -43,23 +43,23 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
 
       <div className="relative z-10 mx-auto grid min-h-[100svh] w-full max-w-content grid-cols-1 items-center gap-12 px-6 pb-24 pt-32 lg:grid-cols-12 lg:px-10 lg:pb-28 lg:pt-36">
         <div className="lg:col-span-7">
-          <motion.div {...fadeUp(0.05)} className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/[0.12] bg-white/[0.06] px-3.5 py-1 text-xs text-[#2997ff] font-medium backdrop-blur-md">
+          <motion.div {...fadeUp(0.05)} className="mb-6 inline-flex items-center gap-2 rounded-full border border-canvas-hairline bg-canvas-elevated/70 px-3.5 py-1 text-xs text-[#2997ff] font-medium backdrop-blur-md">
             <span className="flex h-1.5 w-1.5 rounded-full bg-[#2997ff] animate-pulse" />
             <span>IQ Bot · Next Gen AI Agent</span>
           </motion.div>
 
           <motion.h1
             {...fadeUp(0.12)}
-            className="font-display text-[2.75rem] font-semibold leading-[1.04] tracking-[-0.035em] text-white sm:text-display-lg lg:text-display-xl"
+            className="font-display text-[2.75rem] font-semibold leading-[1.04] tracking-[-0.035em] text-ink sm:text-display-lg lg:text-display-xl"
           >
             {t("Laat de")}{" "}
-            <span className="bg-gradient-to-r from-white via-[#f5f5f7] to-[#86868b] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-ink via-ink to-ink-muted bg-clip-text text-transparent">
               IQ Bot
             </span>{" "}
             {t("automatisch jouw cashflow opbouwen")}
           </motion.h1>
 
-          <motion.p {...fadeUp(0.22)} className="mt-6 max-w-[34rem] text-lg leading-relaxed text-[#86868b] font-normal">
+          <motion.p {...fadeUp(0.22)} className="mt-6 max-w-[34rem] text-lg leading-relaxed text-ink-muted font-normal">
             {t("Geen kennis vereist, geen zorgen. Gewoon laten groeien.")}
           </motion.p>
 
@@ -78,7 +78,7 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
               onClick={onScrollToInfo}
               className="apple-btn-secondary px-5 py-3 rounded-full text-sm font-medium flex items-center gap-2 active:scale-[0.97]"
             >
-              <ArrowDown className="h-4 w-4 text-[#86868b]" />
+              <ArrowDown className="h-4 w-4 text-ink-muted" />
               <span>{t("Hoe het werkt")}</span>
             </button>
           </motion.div>
@@ -94,11 +94,11 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xs uppercase font-mono tracking-wider text-[#86868b]">Cashflow Pool</span>
+                <span className="text-xs uppercase font-mono tracking-wider text-ink-muted">Cashflow Pool</span>
                 <button
                   type="button"
                   onClick={() => setAmountVisible(!amountVisible)}
-                  className="p-1 rounded-full text-[#86868b] hover:text-white transition-colors"
+                  className="p-1 rounded-full text-ink-muted hover:text-ink transition-colors"
                   title={amountVisible ? "Verberg bedrag" : "Toon bedrag"}
                 >
                   {amountVisible ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
@@ -110,23 +110,23 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
               </span>
             </div>
 
-            <div className="tnum mt-5 font-display text-5xl font-semibold tracking-[-0.03em] text-white">
+            <div className="tnum mt-5 font-display text-5xl font-semibold tracking-[-0.03em] text-ink">
               {amountVisible ? "+ €400" : "€ ••••••"}
             </div>
-            <div className="mt-2 text-xs sm:text-sm text-[#86868b]">{t("Maandelijkse cashflow ontvangen")}</div>
+            <div className="mt-2 text-xs sm:text-sm text-ink-muted">{t("Maandelijkse cashflow ontvangen")}</div>
 
-            <div className="mt-6 h-px w-full bg-white/[0.08]" />
+            <div className="mt-6 h-px w-full bg-canvas-hairline" />
 
             <div className="mt-5 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
                 <span className="h-2 w-2 rounded-full bg-[#30d158] shadow-[0_0_10px_rgba(48,209,88,0.9)]" />
-                <span className="text-xs sm:text-sm font-medium text-white">
-                  IQ Bot <span className="text-[#86868b]">· Autonoom</span>
+                <span className="text-xs sm:text-sm font-medium text-ink">
+                  IQ Bot <span className="text-ink-muted">· Autonoom</span>
                 </span>
               </div>
               <Link
                 to="/member/ai-running"
-                className="text-xs text-[#2997ff] hover:text-white transition-colors font-medium inline-flex items-center gap-0.5"
+                className="text-xs text-[#2997ff] hover:text-ink transition-colors font-medium inline-flex items-center gap-0.5"
               >
                 <span>Status</span>
                 <ChevronRight className="h-3.5 w-3.5" />
@@ -138,19 +138,19 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
 
       {/* Apple Hardware Display Video Modal */}
       <Dialog open={showDemoModal} onOpenChange={setShowDemoModal}>
-        <DialogContent className="w-[94vw] max-w-4xl p-0 overflow-hidden border border-white/[0.14] apple-glass text-white shadow-2xl rounded-[2rem] z-[100]">
+        <DialogContent className="w-[94vw] max-w-4xl p-0 overflow-hidden border border-canvas-hairline apple-glass text-ink shadow-2xl rounded-[2rem] z-[100]">
           {/* macOS Titlebar Header */}
-          <div className="px-5 py-3.5 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+          <div className="px-5 py-3.5 border-b border-canvas-hairline flex items-center justify-between bg-canvas-elevated/40">
             <div className="flex items-center gap-2">
               <span className="h-3 w-3 rounded-full bg-[#ff5f56] inline-block shadow-sm" />
               <span className="h-3 w-3 rounded-full bg-[#febc2e] inline-block shadow-sm" />
               <span className="h-3 w-3 rounded-full bg-[#28c840] inline-block shadow-sm" />
-              <span className="ml-3 text-xs font-medium text-[#86868b]">IQ Bot Intelligence Preview — Autonomous Pipeline</span>
+              <span className="ml-3 text-xs font-medium text-ink-muted">IQ Bot Intelligence Preview — Autonomous Pipeline</span>
             </div>
             <button
               type="button"
               onClick={() => setShowDemoModal(false)}
-              className="text-xs text-[#86868b] hover:text-white px-2 py-0.5 rounded-lg border border-white/[0.08] transition active:scale-[0.96]"
+              className="text-xs text-ink-muted hover:text-ink px-2.5 py-1 rounded-lg border border-canvas-hairline transition active:scale-[0.96]"
             >
               Sluiten
             </button>
@@ -169,7 +169,7 @@ export const HeroSection: React.FC<Props> = ({ onScrollToInfo }) => {
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
-              <p className="text-xs text-[#86868b] max-w-md">
+              <p className="text-xs text-ink-muted max-w-md">
                 Bekijk hoe de IQ Bot autonoom liquiditeit analyseert en maandelijkse cashflows structureert over de holding.
               </p>
               <div className="flex items-center gap-2">
