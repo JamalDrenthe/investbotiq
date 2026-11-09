@@ -1,5 +1,4 @@
 export const PUBLIC_NAV_ITEMS = [
-  { title: "Home", to: "/" },
   {
     title: "Alles over Investbot",
     submenu: [
@@ -14,4 +13,3 @@ export const PUBLIC_NAV_ITEMS = [
   { title: "FAQ", to: "/faq" },
   { title: "Contact", to: "/contact" },
 ] as const;
-

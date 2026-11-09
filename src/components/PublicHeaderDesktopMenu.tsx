@@ -19,14 +19,11 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
   const isAdmin = !!user && userRole === "admin";
   const [desktopSubmenuOpen, setDesktopSubmenuOpen] = useState(false);
   const { pathname } = useLocation();
-  const submenu = PUBLIC_NAV_ITEMS[1].submenu;
+  const submenu = PUBLIC_NAV_ITEMS[0].submenu;
   const submenuActive = pathname.startsWith("/alles-over-investbot");
 
   return (
     <nav className="hidden items-center gap-1 lg:flex">
-      <Link to="/" className={`nav-pill ${pathname === "/" ? "nav-pill--active" : ""}`}>
-        {t(PUBLIC_NAV_ITEMS[0].title)}
-      </Link>
       <div
         className="relative"
         onMouseEnter={() => setDesktopSubmenuOpen(true)}
@@ -37,7 +34,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           tabIndex={0}
           onClick={() => setDesktopSubmenuOpen((v) => !v)}
         >
-          {t(PUBLIC_NAV_ITEMS[1].title)}
+          {t(PUBLIC_NAV_ITEMS[0].title)}
           <ChevronDown className={`h-4 w-4 transition-transform ${desktopSubmenuOpen ? "rotate-180" : ""}`} />
         </button>
         <AnimatePresence>
@@ -62,7 +59,8 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           )}
         </AnimatePresence>
       </div>
-      {PUBLIC_NAV_ITEMS.slice(2).map((item) =>
+
+      {PUBLIC_NAV_ITEMS.slice(1).map((item) =>
         "to" in item ? (
           <button
             key={item.title}
@@ -73,6 +71,7 @@ const PublicHeaderDesktopMenu: React.FC<Props> = ({ handleNav }) => {
           </button>
         ) : null,
       )}
+
       <div className="ml-3 flex items-center gap-2">
         <PreferenceToggles />
         {isAdmin ? (

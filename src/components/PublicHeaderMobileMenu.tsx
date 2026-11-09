@@ -44,7 +44,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
   const navigate = useNavigate();
   const isMember = !!user && userRole === "member";
   const isAdmin = !!user && userRole === "admin";
-  const submenu = PUBLIC_NAV_ITEMS[1].submenu;
+  const submenu = PUBLIC_NAV_ITEMS[0].submenu;
 
   const go = (to: string) => {
     setMenuOpen(false);
@@ -115,26 +115,13 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
 
         {/* Scrollable Navigation List */}
         <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
-          {/* Home */}
-          <button
-            className={`w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 text-left text-base font-semibold transition-colors ${
-              location.pathname === "/"
-                ? "bg-indigo/15 text-indigo shadow-[inset_3px_0_0_#635bff]"
-                : "text-ink-muted hover:bg-canvas-panel hover:text-ink"
-            }`}
-            onClick={() => go("/")}
-          >
-            <Home className="h-5 w-5 text-indigo" />
-            <span>{t("Home")}</span>
-          </button>
-
           {/* Alles over Investbot Submenu */}
           <div className="rounded-2xl bg-canvas-panel/50 border border-canvas-hairline p-2 my-1.5">
             <button
               className="w-full flex items-center justify-between px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-indigo"
               onClick={() => setSubmenuOpen((o) => !o)}
             >
-              <span>{t(PUBLIC_NAV_ITEMS[1].title)}</span>
+              <span>{t(PUBLIC_NAV_ITEMS[0].title)}</span>
               <ChevronDown
                 className={`h-4 w-4 transition-transform duration-200 ${
                   submenuOpen ? "rotate-180" : ""
@@ -163,7 +150,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
           </div>
 
           {/* Public Nav items: Tier Plannen, Veiligheid, FAQ, Contact */}
-          {PUBLIC_NAV_ITEMS.slice(2).map((item) =>
+          {PUBLIC_NAV_ITEMS.slice(1).map((item) =>
             "to" in item ? (
               <button
                 key={item.title}
