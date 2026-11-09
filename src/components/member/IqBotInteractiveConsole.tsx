@@ -447,15 +447,6 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
 
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/10 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)]" />
-
-        <div className="absolute top-4 left-4 flex items-center gap-2 rounded-xl bg-black/60 px-3.5 py-1.5 backdrop-blur-md border border-white/10 text-xs">
-          <Bot className="h-4 w-4 text-cyan-400" />
-          <span className="font-semibold text-white">IQ Bot & IQ Agent Core</span>
-          <span className="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            Autonoom Neuraal Model
-          </span>
-        </div>
       </div>
 
       {/* 12 Company Buttons Section */}
