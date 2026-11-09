@@ -25,10 +25,10 @@ export default function AdvantagesSection() {
           </p>
           <div className="mt-6 flex flex-col gap-2.5">
             <Link
-              to="/tier-plannen"
+              to="/flows"
               className="inline-flex items-center gap-2 text-sm font-semibold text-indigo hover:underline"
             >
-              Bekijk hoe de Tiers werken <ArrowRight className="h-4 w-4" />
+              Bekijk hoe de Flows werken <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               to="/veiligheid"

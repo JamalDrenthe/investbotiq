@@ -189,11 +189,11 @@ export default function HoeWerktHet() {
               Klaar om je eigen cashflowtraject te activeren?
             </h2>
             <p className="text-base text-graphite-muted max-w-xl mx-auto">
-              Meld je aan voor een intake of bekijk de specifieke specificaties en opbrengsten van alle Tier Plannen.
+              Meld je aan voor een intake of bekijk de specifieke specificaties en opbrengsten van de Flows.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-              <LumenCtaLink to="/tier-plannen" dot>
-                Bekijk Tier Plannen
+              <LumenCtaLink to="/flows" dot>
+                Bekijk Flows
               </LumenCtaLink>
               <LumenCtaLink to="/register" variant="paper">
                 Aanmelden voor Intake <ArrowRight className="h-4 w-4 ml-1" />

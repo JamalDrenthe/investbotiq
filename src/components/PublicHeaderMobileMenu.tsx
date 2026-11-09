@@ -161,7 +161,7 @@ const PublicHeaderMobileMenu: React.FC<Props> = ({ menuOpen, setMenuOpen, Logo }
                 }`}
                 onClick={() => go(item.to)}
               >
-                {item.to.includes("tier") && <Layers className="h-5 w-5 text-cyan" />}
+                {(item.to.includes("tier") || item.to.includes("flows")) && <Layers className="h-5 w-5 text-cyan" />}
                 {item.to.includes("veiligheid") && <Shield className="h-5 w-5 text-mint" />}
                 {item.to.includes("vacatures") && <Briefcase className="h-5 w-5 text-indigo" />}
                 {item.to.includes("faq") && <HelpCircle className="h-5 w-5 text-amber" />}

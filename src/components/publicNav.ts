@@ -7,7 +7,7 @@ export const PUBLIC_NAV_ITEMS = [
       { label: "Missie & Visie", to: "/alles-over-investbot/mission-vision" },
     ],
   },
-  { title: "Tier Plannen", to: "/tier-plannen" },
+  { title: "Flows", to: "/flows" },
   { title: "Veiligheid", to: "/veiligheid" },
   { title: "Vacatures", to: "/vacatures" },
   { title: "FAQ", to: "/faq" },

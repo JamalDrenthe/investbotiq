@@ -60,10 +60,10 @@ export default function WhySection() {
             Lees onze Missie & Visie <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            to="/tier-plannen"
+            to="/flows"
             className="inline-flex items-center gap-2 rounded-full border border-cyan/20 bg-cyan/10 px-6 py-3 text-sm font-semibold text-cyan transition-colors hover:bg-cyan/20"
           >
-            Bekijk de Tier Plannen →
+            Bekijk Flows →
           </Link>
         </FadeIn>
       </div>

@@ -76,6 +76,7 @@ const App = () => (
             <Route path="/alles-over-investbot/wat-is-het" element={<WatIsInvestBotIQ />} />
             <Route path="/alles-over-investbot/hoe-werkt-het" element={<HoeWerktHet />} />
             <Route path="/alles-over-investbot/mission-vision" element={<MissieVisie />} />
+            <Route path="/flows" element={<TierPlannen />} />
             <Route path="/tier-plannen" element={<TierPlannen />} />
             <Route path="/veiligheid" element={<Veiligheid />} />
 

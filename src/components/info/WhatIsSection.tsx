@@ -25,10 +25,10 @@ export default function WhatIsSection() {
             Lees meer over de IQ Bot <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
-            to="/tier-plannen"
+            to="/flows"
             className="inline-flex items-center gap-1.5 text-base font-medium text-graphite-muted hover:text-graphite hover:underline"
           >
-            Bekijk Tier Plannen →
+            Bekijk Flows →
           </Link>
         </div>
       </FadeIn>

@@ -7,7 +7,7 @@ import { ThreeScene } from "@/components/three/ThreeScene";
 const STEPS = [
   { title: "Aanmelden", to: "/register" },
   { title: "Activeer de Bot", to: "/alles-over-investbot/hoe-werkt-het" },
-  { title: "Groei elke maand automatisch", to: "/tier-plannen" },
+  { title: "Groei elke maand automatisch", to: "/flows" },
 ];
 
 export default function HowSection() {

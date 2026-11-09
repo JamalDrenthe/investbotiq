@@ -11,7 +11,7 @@ export default function CTASection() {
         </h2>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <LumenCtaLink to="/tier-plannen" dot>Lees meer over onze Tier Strategie</LumenCtaLink>
+          <LumenCtaLink to="/flows" dot>Lees meer over onze Flows Strategie</LumenCtaLink>
           <LumenCtaLink to="/veiligheid" variant="paper">Bekijk onze Veiligheidsaanpak</LumenCtaLink>
         </div>
       </div>

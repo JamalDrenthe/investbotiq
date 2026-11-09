@@ -10,7 +10,7 @@ import CTASection from "@/components/tier-plannen/CTASection";
 export default function TierPlannen() {
   return (
     <InfoPageLayout
-      title="Het Tier Plan – Jouw route naar structurele cashflow"
+      title="Flows – Jouw route naar structurele cashflow"
       subtitle="Stap voor stap naar financiële autonomie, zonder verrassingen."
     >
       <TierExplanationSection />
