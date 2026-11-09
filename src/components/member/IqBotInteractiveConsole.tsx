@@ -456,12 +456,6 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
             Autonoom Neuraal Model
           </span>
         </div>
-
-        <div className="absolute bottom-3 inset-x-0 text-center pointer-events-none px-4">
-          <span className="inline-block text-[11px] text-zinc-300 bg-black/70 px-3.5 py-1 rounded-full backdrop-blur-md border border-white/10">
-            Interactieve 3D weergave · Beweeg uw cursor om de bot te besturen · Klik hieronder op een bedrijf
-          </span>
-        </div>
       </div>
 
       {/* 12 Company Buttons Section */}
