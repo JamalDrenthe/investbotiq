@@ -459,21 +459,7 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
       </div>
 
       {/* 12 Company Buttons Section */}
-      <div className="relative z-10 mt-8 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1 border-b border-canvas-hairline/60">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-bold uppercase tracking-wider text-ink font-display">
-              Ecosysteem Bedrijven (12 Knoppen)
-            </span>
-            <span className="rounded-full bg-indigo/20 text-indigo border border-indigo/30 text-[10px] font-mono px-2 py-0.5">
-              12 Bedrijven
-            </span>
-          </div>
-          <span className="text-xs text-ink-muted">
-            Klik op een knop om de video & protocol animatie van dat bedrijf te starten
-          </span>
-        </div>
-
+      <div className="relative z-10 mt-6 space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
           {COMPANY_ACTIONS.map((action) => {
             const Icon = action.icon;
