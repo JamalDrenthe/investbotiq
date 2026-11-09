@@ -353,7 +353,8 @@
 }
 
 .lumen-cta:active {
-  transform: translateY(0);
+  transform: scale(0.97);
+  filter: brightness(0.95);
 }
 
 .lumen-cta:focus-visible {
@@ -681,6 +682,10 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+.nav-pill:active {
+  transform: scale(0.96);
+}
+
 .nav-pill--active {
   color: var(--ds-text-on-canvas);
   background: rgba(99, 91, 255, 0.16);
@@ -987,6 +992,10 @@ html.theme-transitioning *::after {
 
 .apple-glass-card:hover {
   transform: translateY(-2px);
+}
+
+.apple-glass-card:active {
+  transform: scale(0.99);
 }
 
 .apple-hardware-frame {

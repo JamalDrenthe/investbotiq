@@ -301,6 +301,9 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
   };
 
   const handleSelectAction = (action: BotActionConfig) => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { navigator.vibrate(8); } catch {}
+    }
     setSelectedAction(action);
     setIsLoading(true);
     setIsPlaying(false);
@@ -485,7 +488,7 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
                 key={action.id}
                 type="button"
                 onClick={() => handleSelectAction(action)}
-                className="group relative flex flex-col justify-between p-4 rounded-2xl border text-left transition-all duration-300 border-canvas-hairline bg-canvas-panel/60 hover:bg-canvas-panel hover:border-cyan/40 hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-lg"
+                className="group relative flex flex-col justify-between p-4 rounded-2xl border text-left transition-all duration-200 apple-glass-card hover:-translate-y-0.5 active:scale-[0.96] shadow-sm hover:shadow-xl cursor-pointer"
               >
                 <div>
                   <div className="flex items-center justify-between w-full">
@@ -543,8 +546,25 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
           hideCloseButton={true}
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
-          className="w-[94vw] sm:w-[90vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-3xl z-[100]"
+          className="w-[94vw] sm:w-[90vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0 overflow-hidden bg-[#070a14] border border-white/20 text-white shadow-2xl rounded-[2rem] z-[100]"
         >
+          {/* macOS / Apple Titlebar */}
+          <div className="px-5 py-3 border-b border-white/[0.08] flex items-center justify-between bg-white/[0.02]">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-[#ff5f56] inline-block shadow-sm" />
+              <span className="h-3 w-3 rounded-full bg-[#febc2e] inline-block shadow-sm" />
+              <span className="h-3 w-3 rounded-full bg-[#28c840] inline-block shadow-sm" />
+              <span className="ml-3 text-xs font-medium text-[#86868b]">{selectedAction?.label} · IQ Agent Protocol Preview</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="text-xs text-[#86868b] hover:text-white px-2 py-0.5 rounded-lg border border-white/[0.08] transition active:scale-[0.96]"
+            >
+              Sluiten
+            </button>
+          </div>
+
           <DialogHeader className="p-3.5 sm:p-4.5 pb-2.5 sm:pb-3 border-b border-white/10 flex flex-row items-center justify-between space-y-0">
             <div className="flex items-center gap-3">
               <div
