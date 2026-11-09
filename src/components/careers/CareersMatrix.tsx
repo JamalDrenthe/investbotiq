@@ -145,11 +145,11 @@ export const CareersMatrix: React.FC<Props> = ({
                           <button
                             type="button"
                             onClick={() => onSelectVacancy(vacancy)}
-                            className="inline-flex items-center gap-1 rounded-lg border border-canvas-hairline bg-canvas-elevated px-2.5 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-canvas-panel transition shadow-sm"
-                            title="Bekijk functieprofiel"
+                            className="inline-flex items-center gap-1.5 rounded-lg border border-canvas-hairline bg-canvas-elevated px-3 py-1.5 text-xs text-ink-muted hover:text-ink hover:bg-canvas-panel hover:border-cyan/40 transition active:scale-[0.96] shadow-sm font-medium"
+                            title="Open popup met meer informatie over deze rol"
                           >
-                            <Eye className="h-3.5 w-3.5" />
-                            <span className="hidden md:inline">Details</span>
+                            <Eye className="h-3.5 w-3.5 text-cyan" />
+                            <span>Meer informatie</span>
                           </button>
                           <button
                             type="button"

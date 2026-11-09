@@ -6,6 +6,7 @@ import { CareersMatrix } from "@/components/careers/CareersMatrix";
 import { CareerDetailCard } from "@/components/careers/CareerDetailCard";
 import { ApplicationProcedure } from "@/components/careers/ApplicationProcedure";
 import { ApplicationModal } from "@/components/careers/ApplicationModal";
+import { VacancyDetailModal } from "@/components/careers/VacancyDetailModal";
 import { VACANCIES, Vacancy } from "@/data/careersData";
 import { Send, Mail, Sparkles, Building2 } from "lucide-react";
 import { LumenCtaButton } from "@/components/three/LumenCta";
@@ -13,6 +14,8 @@ import { LumenCtaButton } from "@/components/three/LumenCta";
 export default function Careers() {
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [selectedVacancyId, setSelectedVacancyId] = useState<string>("01");
+  const [selectedDetailVacancy, setSelectedDetailVacancy] = useState<Vacancy | null>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
 
   const handleOpenApply = (vacancyId?: string) => {
     if (vacancyId) {
@@ -23,10 +26,8 @@ export default function Careers() {
 
   const handleSelectVacancy = (vacancy: Vacancy) => {
     setSelectedVacancyId(vacancy.id);
-    const element = document.getElementById(`vacature-${vacancy.id}`);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    setSelectedDetailVacancy(vacancy);
+    setIsDetailOpen(true);
   };
 
   const handleScrollToMatrix = () => {
@@ -131,6 +132,14 @@ export default function Careers() {
           isOpen={isApplyOpen}
           onClose={() => setIsApplyOpen(false)}
           initialVacancyId={selectedVacancyId}
+        />
+
+        {/* Detailed Vacancy Info Popup Modal */}
+        <VacancyDetailModal
+          isOpen={isDetailOpen}
+          onClose={() => setIsDetailOpen(false)}
+          vacancy={selectedDetailVacancy}
+          onApply={(v) => handleOpenApply(v.id)}
         />
       </div>
     </InfoPageLayout>
