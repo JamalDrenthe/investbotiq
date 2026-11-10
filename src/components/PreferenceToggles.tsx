@@ -5,7 +5,7 @@ import { usePreferences } from "@/lib/preferences";
 /**
  * Light/dark + NL/EN preference toggles rendered in the site chrome.
  * Both persist to localStorage; the theme toggle sets an explicit override,
- * while the default ("auto") keeps the route-driven theme.
+ * while the default ("auto") is dark.
  */
 const PreferenceToggles: React.FC = () => {
   const { effectiveTheme, setTheme, lang, setLang, t } = usePreferences();

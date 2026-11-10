@@ -1,16 +1,13 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
 import { EN } from "@/lib/en";
 
 export type Language = "nl" | "en";
-/** `auto` keeps the route-driven default: dark on app surfaces, light elsewhere. */
+/** `auto` keeps the default: dark everywhere. */
 export type ThemeMode = "auto" | "light" | "dark";
 export type EffectiveTheme = "light" | "dark";
 
 const LANG_KEY = "investbotiq.lang";
 const THEME_KEY = "investbotiq.theme";
-
-const CANVAS_ROUTE_PREFIXES = ["/member", "/admin", "/auth", "/register"];
 
 const readStored = <T extends string>(key: string, allowed: readonly T[]): T | null => {
   try {
@@ -34,7 +31,6 @@ interface PreferencesContextValue {
 const PreferencesContext = createContext<PreferencesContextValue | null>(null);
 
 export function PreferencesProvider({ children }: { children: React.ReactNode }) {
-  const { pathname } = useLocation();
   const [lang, setLangState] = useState<Language>(
     () => readStored(LANG_KEY, ["nl", "en"] as const) ?? "nl",
   );
@@ -60,12 +56,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
     }
   };
 
-  const effectiveTheme: EffectiveTheme =
-    theme === "auto"
-      ? CANVAS_ROUTE_PREFIXES.some((prefix) => pathname.startsWith(prefix))
-        ? "dark"
-        : "light"
-      : theme;
+  const effectiveTheme: EffectiveTheme = theme === "auto" ? "dark" : theme;
 
   useEffect(() => {
     const root = document.documentElement;

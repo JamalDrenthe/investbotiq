@@ -3,7 +3,7 @@ import { Link, type LinkProps } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export type LumenCtaVariant = "gradient" | "ghost" | "paper";
-export type LumenCtaSize = "md" | "sm";
+export type LumenCtaSize = "md" | "sm" | "lg";
 
 type BaseProps = {
   variant?: LumenCtaVariant;
@@ -19,6 +19,7 @@ function classes({ variant = "gradient", size = "md", className }: BaseProps) {
     variant === "ghost" && "lumen-cta--ghost",
     variant === "paper" && "lumen-cta--paper",
     size === "sm" && "lumen-cta--sm",
+    size === "lg" && "lumen-cta--lg",
     className,
   );
 }

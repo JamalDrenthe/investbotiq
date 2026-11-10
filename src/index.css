@@ -422,6 +422,12 @@
   font-size: 13px;
 }
 
+.lumen-cta--lg {
+  height: 52px;
+  padding: 0 34px;
+  font-size: 15px;
+}
+
 /* ------------------------------------------------------------------
    Bands, cards and type utilities from DESIGN.md
    ------------------------------------------------------------------ */
