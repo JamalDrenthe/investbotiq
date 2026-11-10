@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import {
   Bot,
   ShieldCheck,
-  Activity,
   Zap,
   RefreshCw,
-  ArrowUpRight,
   TrendingUp,
   Terminal,
   Radio,
-  Layers,
   Cpu,
   Lock,
   Network,
@@ -141,16 +138,6 @@ export const MemberIntelligenceTab: React.FC = () => {
               <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo/20 text-cyan border border-indigo/30 shadow-[0_0_15px_rgba(99,91,255,0.3)]">
                 <Bot className="h-6 w-6" />
               </div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-mint/30 bg-mint/10 px-3.5 py-1 text-xs font-semibold text-mint">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-mint"></span>
-                </span>
-                Autonoom Actief
-              </span>
-              <span className="rounded-full border border-canvas-hairline bg-white/5 px-3 py-1 text-xs font-medium text-ink-on-canvas-muted font-mono">
-                12 Ecosysteem Partners Gekoppeld
-              </span>
             </div>
 
             <div>
@@ -158,7 +145,7 @@ export const MemberIntelligenceTab: React.FC = () => {
                 IQ Bot & IQ Agent
               </h1>
               <p className="mt-1 text-sm text-ink-on-canvas-muted max-w-2xl">
-                Realtime overzicht van de autonome IQ Bot, IQ Agents en de 12 aangesloten ecosysteem-bedrijven van Investbotiq.
+                Realtime overzicht van de autonome IQ Bot en IQ Agents van Investbotiq.
               </p>
             </div>
           </div>
@@ -177,55 +164,6 @@ export const MemberIntelligenceTab: React.FC = () => {
               <p className="text-[11px] uppercase tracking-wider text-ink-on-canvas-faint font-semibold">AI Confidentiescore</p>
               <p className="text-lg font-bold text-cyan font-mono">99.4%</p>
             </div>
-          </div>
-        </div>
-
-        {/* Live Metrics Row */}
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 border-t border-canvas-hairline pt-6">
-          <div className="rounded-2xl border border-canvas-hairline/60 bg-canvas-panel/50 p-4">
-            <div className="flex items-center gap-2 text-ink-on-canvas-faint text-xs font-medium">
-              <Activity className="h-4 w-4 text-cyan" />
-              Uitvoeringssnelheid
-            </div>
-            <p className="mt-2 text-xl sm:text-2xl font-bold font-mono text-white">
-              0.42 <span className="text-xs text-ink-on-canvas-faint font-sans font-normal">ms / tick</span>
-            </p>
-            <p className="mt-1 text-[11px] text-mint flex items-center gap-1 font-medium">
-              <ArrowUpRight className="h-3 w-3" /> Ultra-low latency
-            </p>
-          </div>
-
-          <div className="rounded-2xl border border-canvas-hairline/60 bg-canvas-panel/50 p-4">
-            <div className="flex items-center gap-2 text-ink-on-canvas-faint text-xs font-medium">
-              <Zap className="h-4 w-4 text-amber" />
-              Compounding Frequentie
-            </div>
-            <p className="mt-2 text-xl sm:text-2xl font-bold font-mono text-white">
-              24/7 <span className="text-xs text-ink-on-canvas-faint font-sans font-normal">continu</span>
-            </p>
-            <p className="mt-1 text-[11px] text-ink-on-canvas-muted">Geautomatiseerd per blok</p>
-          </div>
-
-          <div className="rounded-2xl border border-canvas-hairline/60 bg-canvas-panel/50 p-4">
-            <div className="flex items-center gap-2 text-ink-on-canvas-faint text-xs font-medium">
-              <ShieldCheck className="h-4 w-4 text-mint" />
-              Volatiliteit Shield
-            </div>
-            <p className="mt-2 text-xl sm:text-2xl font-bold font-mono text-mint">
-              100% <span className="text-xs text-ink-on-canvas-faint font-sans font-normal">beveiligd</span>
-            </p>
-            <p className="mt-1 text-[11px] text-mint">Max. 0.05% stop-buffer</p>
-          </div>
-
-          <div className="rounded-2xl border border-canvas-hairline/60 bg-canvas-panel/50 p-4">
-            <div className="flex items-center gap-2 text-ink-on-canvas-faint text-xs font-medium">
-              <Layers className="h-4 w-4 text-indigo" />
-              Geactiveerde Tiers
-            </div>
-            <p className="mt-2 text-xl sm:text-2xl font-bold font-mono text-white">
-              Tier 1 + 2 <span className="text-xs text-ink-on-canvas-faint font-sans font-normal">actief</span>
-            </p>
-            <p className="mt-1 text-[11px] text-cyan font-medium">Tier 3 gepland</p>
           </div>
         </div>
       </div>

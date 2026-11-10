@@ -426,15 +426,8 @@ export const IqBotInteractiveConsole: React.FC<IqBotInteractiveConsoleProps> = (
               </span>
             </div>
             <p className="text-xs sm:text-sm text-ink-on-canvas-muted mt-0.5">
-              Activeer de interactieve IQ Agents van alle 12 aangesloten ecosysteem-bedrijven.
+              Activeer de interactieve IQ Agents en realtime bedrijfsprotocollen.
             </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 self-start sm:self-auto">
-          <div className="inline-flex items-center gap-2 rounded-full border border-mint/40 bg-mint/10 px-3.5 py-1 text-xs font-mono font-medium text-mint">
-            <Activity className="h-3.5 w-3.5" />
-            <span>12 Ecosysteem Partners Actief</span>
           </div>
         </div>
       </div>

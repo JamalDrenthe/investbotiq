@@ -10,7 +10,7 @@ export default function WatIsInvestBotIQ() {
   return (
     <InfoPageLayout
       title="Wat is IQ Bot & IQ Agent?"
-      subtitle="Slimme automatisering. Gestructureerde cashflow. 12 Ecosysteem partners."
+      subtitle="Slimme automatisering. Gestructureerde cashflow."
     >
       <IntroductionSection />
       <FeaturesSection />
